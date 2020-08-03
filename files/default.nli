@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2010.02.23,
+%D        version=2010.02.28,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -53,9 +53,9 @@
 
 \defineletterelement[\v!reference][\v!a]
   {\setbox\scratchbox\hbox\!!to\hsize
-     {\getcommacommandsize[\csname\????ls\currentcorrespondenceelement\c!list\endcsname]%
+     {\getcommacommandsize[\letterstylevalue\currentcorrespondenceelement\c!list]%
       \ifnum\commalistsize<\plustwo\hfill\fi
-      \processcommacommand[\csname\????ls\currentcorrespondenceelement\c!list\endcsname]\formatreferencelista\unskip}%
+      \processcommacommand[\letterstylevalue\currentcorrespondenceelement\c!list]\formatreferencelista\unskip}%
    \ifx\currentcorrespondenceelement\v!reference\global\letter!height!reference\htdp\scratchbox\fi
    \box\scratchbox}
 
@@ -93,7 +93,7 @@
 %      {\processcommacommand[\@@@@lsreferencelist]\formatreferencelistb}}
 
 \defineletterelement[\v!reference][\v!b]
-  {\vtop{\processcommacommand[\csname\????ls\currentcorrespondenceelement\c!list\endcsname]\formatreferencelistb}}
+  {\vtop{\processcommacommand[\letterstylevalue\currentcorrespondenceelement\c!list]\formatreferencelistb}}
 
 \startsetups[\v!letter:\v!reference:\v!b]
 
@@ -133,7 +133,7 @@
 
 \defineletterelement[\v!reference][\v!c]
   {\hbox\!!to\hsize
-     {\processcommacommand[\csname\????ls\currentcorrespondenceelement\c!list\endcsname]\formatreferencelistc}}
+     {\processcommacommand[\letterstylevalue\currentcorrespondenceelement\c!list]\formatreferencelistc}}
 
 \startsetups[\v!letter:\v!reference:\v!c]
 
@@ -167,7 +167,7 @@
 \defineletterelement[\v!reference][\v!d]
   {\vtop
      {\scratchtoks\emptytoks
-      \processcommacommand[\csname\????ls\currentcorrespondenceelement\c!list\endcsname]\formatreferencelistd
+      \processcommacommand[\letterstylevalue\currentcorrespondenceelement\c!list]\formatreferencelistd
       \setuptabulate[\c!before=,\c!after=]%
       \starttabulate[|l|l|]
       \the\scratchtoks
@@ -215,7 +215,7 @@
 
 \defineletterelement[\v!reference][\v!e]
   {\hbox\!!to\hsize
-     {\processcommacommand[\csname\????ls\currentcorrespondenceelement\c!list\endcsname]\formatreferenceliste\hss}}
+     {\processcommacommand[\letterstylevalue\currentcorrespondenceelement\c!list]\formatreferenceliste\hss}}
 
 \startsetups[\v!letter:\v!reference:\v!e]
 

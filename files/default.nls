@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2009.10.10,
+%D        version=2010.02.28,
 %D          title=\CONTEXT\ Letter Style,
 %D       subtitle=Blockstyle initalization,
 %D         author=Wolfgang Schuster,
@@ -43,7 +43,8 @@
   [\v!option]
   [\c!method=\v!buffer,
    \c!dispatch=\v!yes,
-   \c!addressee=\v!yes]
+   \c!addressee=\v!yes,
+   \c!backaddress=\v!no]
 
 \setupletterstyle
   [\v!head,\v!nexthead,\v!lefthead,\v!righthead]

@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=corres,
-%D        version=2008.01.31,
+%D        version=2008.07.05,
 %D          title=\CONTEXT\ Letter Extension,
 %D       subtitle=XML Handling,
 %D         author=Wolfgang Schuster,
@@ -21,7 +21,6 @@
 \usemodule[corres]
 
 \setupletter
-  [\v!data]
   [\c!prefix=\XMLflush{prefix},
    \c!suffix=\XMLflush{suffix},
    \c!initials=\XMLflush{initials},
@@ -29,13 +28,12 @@
    \c!informalname=\XMLflush{informalname}]
 
 \setupletter
-  [\v!address]
-  [\c!address=\XMLflush{address}]
+  [\c!toaddress=\XMLflush{address}]
 
 \startsetups[letter:opening]
-\lettervalue\v!data\c!prefix
-\doiflettervalue\v!data\c!formalname\space
-\lettervalue\v!data\c!formalname
+\lettervalue\c!prefix
+\doiflettervalue\c!formalname\space
+\lettervalue\c!formalname
 \stopsetups
 
 \startsetups[contact:handle]

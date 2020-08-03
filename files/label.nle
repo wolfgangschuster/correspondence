@@ -2,7 +2,7 @@
 %D   [       file=label,
 %D        version=2008.07.03,
 %D          title=\CONTEXT\ Letter Extension,
-%D       subtitle=Labels,
+%D       subject=Labels,
 %D         author=Wolfgang Schuster,
 %D           date=\currentdate,
 %D      copyright=Wolfgang Schuster]
@@ -103,14 +103,23 @@
 \setuplabeltext[\s!it][\v!letter:\c!invoice=Nr.~fattura]
 \setuplabeltext[\s!es][\v!letter:\c!invoice=No. de factura]
 
+%D Label: attention
+
+\setuplabeltext[\s!en][\v!letter:\c!attention=] % Attention
+\setuplabeltext[\s!nl][\v!letter:\c!attention=]
+\setuplabeltext[\s!de][\v!letter:\c!attention=]
+\setuplabeltext[\s!fr][\v!letter:\c!attention=]
+\setuplabeltext[\s!it][\v!letter:\c!attention=]
+\setuplabeltext[\s!es][\v!letter:\c!attention=]
+
 %D Label: subject
 
-\setuplabeltext[\s!en][\v!letter:\c!subject=Subject: ]
-\setuplabeltext[\s!nl][\v!letter:\c!subject=Onderwerp: ]
-\setuplabeltext[\s!de][\v!letter:\c!subject=Betrifft: ]
-\setuplabeltext[\s!fr][\v!letter:\c!subject=Concernant: ]
-\setuplabeltext[\s!it][\v!letter:\c!subject=Oggetto: ]
-\setuplabeltext[\s!es][\v!letter:\c!subject=Asunto: ]
+\setuplabeltext[\s!en][\v!letter:\c!subject=] % Subject
+\setuplabeltext[\s!nl][\v!letter:\c!subject=] % Onderwerp
+\setuplabeltext[\s!de][\v!letter:\c!subject=] % Betrifft
+\setuplabeltext[\s!fr][\v!letter:\c!subject=] % Concernant
+\setuplabeltext[\s!it][\v!letter:\c!subject=] % Oggetto
+\setuplabeltext[\s!es][\v!letter:\c!subject=] % Asunto
 
 %D Label: cc
 

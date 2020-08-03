@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-letter,
-%D        version=2008.05.28,
+%D        version=2008.07.06,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Framework for Letters,
 %D         author=Wolfgang Schuster,
@@ -73,7 +73,7 @@
 \startmodule[letter]
 
 \setupmodule
-  [\c!style=,            % default letter style
+  [\c!style=cont-ltr,    % default letter style
    \c!extension=,        % default letter extension
    \c!interface=default] % default letter interface
 
@@ -182,21 +182,29 @@
 %D The \tex{setupletter} macro could be used from a interface, I define
 %D only the macro and nothing else. You could also redefine the macro later
 %D because it is not used from the raw interface.
-
-%\def\setupletter
-%  {\dodoubleempty\dosetupletter}
-%
-%\def\dosetupletter[#1][#2]%
-%  {\ifsecondargument
-%     \dodosetupletter[#1][#2]%
-%   \else\iffirstargument
-%     \dodosetupletter[\v!option][#1]%
-%   \fi\fi}
-%
-%\def\dodosetupletter[#1][#2]%
-%  {\def\dododosetupletter##1%
-%     {\getparameters[\????ld##1][#2]}%
-%   \processcommalist[#1]\dododosetupletter}
+%D 
+%D The first version of the \tex{setupletter} macro used two arguments
+%D for each value:
+%D 
+%D \starttyping
+%D \def\setupletter
+%D   {\dodoubleempty\dosetupletter}
+%D 
+%D \def\dosetupletter[#1][#2]%
+%D   {\ifsecondargument
+%D      \dodosetupletter[#1][#2]%
+%D    \else\iffirstargument
+%D      \dodosetupletter[\v!option][#1]%
+%D    \fi\fi}
+%D 
+%D \def\dodosetupletter[#1][#2]%
+%D   {\def\dododosetupletter##1%
+%D      {\getparameters[\????ld##1][#2]}%
+%D    \processcommalist[#1]\dododosetupletter}
+%D \stoptyping
+%D 
+%D The next version use only one argument for normal values and use
+%D the second argument only for settings on the reference line.
 
 \def\setupletter
   {\dodoubleempty\dosetupletter}
@@ -226,16 +234,21 @@
 %D A few extra macros to test for content of the letter values, don't rely
 %D on them at the moment because they could change or I will remove, rename,
 %D rewrite etc. them.
-
-%\def\doiflettervalue#1#2%
-%  {\doiftextelse{\lettervalue{#1}{#2}}
-%     \firstofoneargument
-%     \gobbleoneargument}
-%
-%\def\doifelselettervalue#1#2%
-%  {\doiftextelse{\lettervalue{#1}{#2}}
-%     \firstoftwoarguments
-%     \secondoftwoarguments}
+%D 
+%D With the change of the \tex{setupletter} command it was also necessary
+%D to change the definition for lettervalue tests.
+%D 
+%D \starttyping
+%D \def\doiflettervalue#1#2%
+%D   {\doiftextelse{\lettervalue{#1}{#2}}
+%D      \firstofoneargument
+%D      \gobbleoneargument}
+%D 
+%D \def\doifelselettervalue#1#2%
+%D   {\doiftextelse{\lettervalue{#1}{#2}}
+%D      \firstoftwoarguments
+%D      \secondoftwoarguments}
+%D \stoptyping
 
 \def\doiflettervalue#1%
   {\doiftextelse{\lettervalue{#1}}
@@ -324,7 +337,7 @@
 \def\douseletterinterface[#1]%
   {\def\dodouseletterinterface##1%
      {\readfile{##1.\letter!suffix!interface}\donothing\donothing}%
-   \processcommalist[#1]\dodouseletterinterface}
+   \processcommacommand[#1]\dodouseletterinterface}
 
 %D \subsubject{letter extension}
 %D 
@@ -352,7 +365,7 @@
 \def\douseletterextension[#1]%
   {\def\dodouseletterextension##1%
      {\readfile{##1.\letter!suffix!extension}\donothing\donothing}%
-   \processcommalist[#1]\dodouseletterextension}
+   \processcommacommand[#1]\dodouseletterextension}
 
 %D \subsubject{letter styles}
 %D 
@@ -377,7 +390,7 @@
 \def\douseletterstyle[#1]%
   {\def\dodouseletterstyle##1%
      {\readfile{##1.\letter!suffix!style}\donothing\donothing}%
-   \processcommalist[#1]\dodouseletterstyle}
+   \processcommacommand[#1]\dodouseletterstyle}
 
 %D \macros
 %D   {letterstylevalue,lettervalue}
@@ -392,8 +405,15 @@
 \def\letterstylevalue#1#2%
   {\csname\????ls#1#2\endcsname}
 
-%\def\lettervalue#1#2%
-%  {\csname\????ld#1#2\endcsname}
+%D The old definition of \tex{lettervalue} required two arguments.
+%D 
+%D \starttyping
+%D \def\lettervalue#1#2%
+%D   {\csname\????ld#1#2\endcsname}
+%D \stoptyping
+%D 
+%D The new definition needs only one arguments because \tex{setupletter}
+%D needs only one argument for the values in the new version.
 
 \def\lettervalue#1%
   {\csname\????ld#1\endcsname}
@@ -487,12 +507,16 @@
   {\setvalue{\????ls\v!option#1}{\v!yes}%
    \doifnotinset{#1}\letter!list!descriptions
      {\appendtocommalist{#1}\letter!list!descriptions}%
-   \definedescription[\v!letter#1][\c!width=\zeropoint]}
+   \definedescription
+     [\v!letter#1]
+     [\c!location=\v!top,
+      \c!inbetween=\nowhitespace]}
 
 \def\dosetletterdescription[#1]%
-  {\csname\e!start\v!letter#1\endcsname
-   \setups[letter:#1]%
-   \csname\e!stop \v!letter#1\endcsname}
+  {\doiftext{\setups[letter:#1]}
+     {\csname\e!start\v!letter#1\endcsname{\labeltext{\v!letter:#1}}
+      \setups[letter:#1]%
+      \csname\e!stop \v!letter#1\endcsname}}
 
 \def\doflushletterdescription
   {\def\dodoflushletterdescription##1%
@@ -775,8 +799,8 @@
      {\overlayfigure{\@@@@lsoptionbackgroundimage}}]
 
 \def\letter!list!backgrounds
-  {\v!color,\v!letternext,\v!lettermain,\v!head,\v!foot,%
-   \v!backaddress,\v!graphic,\v!address,\v!reference,\v!location,%
+  {\v!graphic,\v!letternext,\v!lettermain,\v!head,\v!foot,%
+   \v!backaddress,\v!address,\v!reference,\v!location,%
    \v!topmark,\v!botmark,\v!cutmark,\v!endmark,\v!usermark}
 
 %D Settings at the begin of every letter.
@@ -802,6 +826,11 @@
 
   \the\letter!toks!header
   \the\letter!toks!footer
+
+  \setupbackgrounds
+    [\v!paper]
+    [\c!background=\v!color,
+     \c!backgroundcolor=\@@@@lsoptionbackgroundcolor]
 
   \setupbackgrounds
     [\v!page]
@@ -835,6 +864,7 @@
 \startsetups[letter:place]
 
   \setups[letter:initialize] % Settings at the begin
+  \setups[letter:optimize]   % Interface dependend
   \setups[letter:layout]     % Page layout
   \setups[letter:reset]      % Reset layers
   \setups[letter:layer]      % Place layers

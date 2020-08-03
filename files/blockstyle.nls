@@ -16,6 +16,9 @@
    \v!special\v!notation,\v!inside\v!address,\v!title,
    \v!opening,\v!subject,\v!content,\v!closing,\v!appendices}
 
+\setupletter
+  [\c!alternative=\v!none]
+
 \setupletterstyle
   [\v!option]
   [\c!backaddress=\v!no,

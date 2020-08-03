@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2008.07.03,
+%D        version=2008.07.06,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -8,6 +8,8 @@
 %D      copyright=Public Domain]
 
 %M \loadsetups[letter.xml]
+
+%D \subject{Constants and Variables}
 
 \unprotect
 
@@ -32,9 +34,12 @@
                   fromurl: fromurl
                    toname: toname
                 toaddress: toaddress
-                enclosing: enclosing
+                enclosure: enclosure
                      copy: copy
                postscript: postscript
+                attention: attention
+             distribution: distribution
+               salutation: salutation
 \stopconstants
 
 \startvariables            all
@@ -43,7 +48,7 @@
                      data: data
                    sender: sender
                  dispatch: dispatch
-                enclosing: enclosing
+                enclosure: enclosure
                      copy: copy
                   nobreak: nobreak
                      memo: memo
@@ -58,6 +63,12 @@
 
 \useletterstyle    [dinb]  % layout
 \useletterextension[label] % labels
+
+%D \subject{Reference line}
+%D 
+%D Dimen value to save the height of the reference line.
+
+\newdimen\letter!height!reference
 
 %D We come now to the new macros defined in this file, they are meant to place the
 %D information about date, phone number and more information. You could select on of
@@ -86,10 +97,12 @@
    \hfill}
 
 \setvalue{\v!reference\v!line\v!a}%
-  {\hbox\!!to\hsize
+  {\setbox\scratchbox\hbox\!!to\hsize
      {\getcommacommandsize[\@@@@ldlist]% \@@@@ldreference?
       \ifnum\commalistsize<\plustwo\hfill\fi
-      \processcommacommand[\@@@@ldlist]\formatreferencelista\unskip}}
+      \processcommacommand[\@@@@ldlist]\formatreferencelista\unskip}%
+   \global\letter!height!reference\dimexpr\ht\scratchbox+\dp\scratchbox\relax
+   \box\scratchbox}
 
 \startsetups[letter:reference:\v!a]
 
@@ -98,6 +111,10 @@
   [\c!hoffset=\backspace,
    \c!voffset=\dimexpr\letterstylevalue\v!address\c!voffset+\letterstylevalue\v!address\c!height+\plusthree\c!mm\relax,
    \c!width=\textwidth]
+
+\setupletterstyle
+  [\v!firstpage]
+  [\c!topspace=\dimexpr\letterstylevalue\v!reference\c!voffset+\letter!height!reference+\plustwo\lineheight\relax]
 
 \stopsetups
 
@@ -241,12 +258,12 @@
 
 \startsetups[letter:reference:\v!none]
 
-\setupletterstyle
-  [\v!firstpage]
-  [\c!topspace=\dimexpr\letterstylevalue\v!address\c!voffset+\letterstylevalue\v!address\c!height+\plustwo\lineheight\relax]
+  % Use the topspace value from the style
 
 \stopsetups
 
+%D \subject{Setup commands}
+%D 
 %D \macros
 %D   {setupletter,setlettervalue}
 %D 
@@ -270,44 +287,48 @@
 %D number of arguments but the new definition will move to the core file as soon
 %D as I replace \tex{setupletter} in the core.
 
-%\def\setupletter
-%  {\dodoubleempty\dosetupletter}
-%
-%\def\dosetupletter[#1][#2]%
-%  {\ifsecondargument
-%     \dodosetupletter[#1][#2]%
-%   \else
-%     \dodosetupletter[#1][]%
-%   \fi}
-%
-%\def\dodosetupletter[#1][#2]%
-%  {\doifelsenothing{#2}
-%     {\getparameters[\????ld][#1]}
-%     {\def\dododosetupletter##1%
-%        {\getparameters[\????ld##1][#2]}%
-%      \processcommalist[#1]\dododosetupletter}}
-%
-%\def\lettervalue#1%
-%  {\csname\????ld#1\endcsname}
-%
-%\def\doiflettervalue#1%
-%  {\doiftextelse{\lettervalue{#1}}
-%     \firstofoneargument
-%     \gobbleoneargument}
-%
-%\def\doifelselettervalue#1%
-%  {\doiftextelse{\lettervalue{#1}}
-%     \firstoftwoarguments
-%     \secondoftwoarguments}
-%
-%\definecomplexorsimple\setlettervalue
-%
-%\def\complexsetlettervalue[#1]#2%
-%  {\setvalue{\????ld#1}{#2}}
-%
-%\def\simplesetlettervalue#1#2%
-%  {\setvalue{\????ld#1}{#2}}
+%D \starttyping
+%D \def\setupletter
+%D   {\dodoubleempty\dosetupletter}
+%D 
+%D \def\dosetupletter[#1][#2]%
+%D   {\ifsecondargument
+%D      \dodosetupletter[#1][#2]%
+%D    \else
+%D      \dodosetupletter[#1][]%
+%D    \fi}
+%D 
+%D \def\dodosetupletter[#1][#2]%
+%D   {\doifelsenothing{#2}
+%D      {\getparameters[\????ld][#1]}
+%D      {\def\dododosetupletter##1%
+%D         {\getparameters[\????ld##1][#2]}%
+%D       \processcommalist[#1]\dododosetupletter}}
+%D 
+%D \def\lettervalue#1%
+%D   {\csname\????ld#1\endcsname}
+%D 
+%D \def\doiflettervalue#1%
+%D   {\doiftextelse{\lettervalue{#1}}
+%D      \firstofoneargument
+%D      \gobbleoneargument}
+%D 
+%D \def\doifelselettervalue#1%
+%D   {\doiftextelse{\lettervalue{#1}}
+%D      \firstoftwoarguments
+%D      \secondoftwoarguments}
+%D 
+%D \definecomplexorsimple\setlettervalue
+%D 
+%D \def\complexsetlettervalue[#1]#2%
+%D   {\setvalue{\????ld#1}{#2}}
+%D 
+%D \def\simplesetlettervalue#1#2%
+%D   {\setvalue{\????ld#1}{#2}}
+%D \stoptyping
 
+%D \subject{Letter environment}
+%D 
 %D \macros
 %D   {startletter}
 %D 
@@ -338,7 +359,7 @@
    \def\stopletter
      {\setups[letter:place]\egroup
       \setupsubpagenumber[\c!state=\@@@@lsoptionstate]}%
-   \startbuffer[lettercontent][startletter][stopletter]}
+   \dostartbuffer[lettercontent][startletter][stopletter]}
 
 %D Patched version of the \tex{flushbufferline} macro for \MKII,
 %D the changes are definition as long and removing of \tex{string}
@@ -374,7 +395,7 @@
   [\c!content={\getbuffer[lettercontent]}]
 
 \def\startlettercontent
-  {\startbuffer[lettercontent][startlettercontent][stoplettercontent]}
+  {\dostartbuffer[lettercontent][startlettercontent][stoplettercontent]}
 
 %D After the definition of all macros I could now put the content
 %D in the corresponding setups, this is only important if you want
@@ -387,6 +408,8 @@
 \lettervalue\c!fromaddress
 \stopsetups
 
+%D \subject{Addressee field}
+%D 
 %D The address field is separated into two different fields.
 %D The upper field is meant for dispatch information, the official height
 %D in germany is 3 lines but this would lead to different heights dependent
@@ -435,21 +458,29 @@
 \stopsetups
 
 \startsetups[letter:title]
-\lettervalue\c!title
+\doifelselettervalue\c!title
+  {\lettervalue\c!title}
+  {\doiflettervalue\c!attention
+     {\labeltext{\v!letter:\c!attention}\lettervalue\c!attention}}
 \stopsetups
 
 \startsetups[letter:subject]
-\lettervalue\c!subject
+\labeltext{\v!letter:\c!subject}\lettervalue\c!subject
 \stopsetups
 
 \startsetups[letter:opening]
-\lettervalue\c!opening
+\doifelselettervalue\c!opening
+  {\lettervalue\c!opening}
+  {\doiflettervalue\c!salutation
+     {\lettervalue\c!salutation}}  
 \stopsetups
 
 \startsetups[letter:content]
 \lettervalue\c!content
 \stopsetups
 
+%D \subject{Closing and appendices}
+%D 
 %D It is possible to attach a signature to the closing command, before the signature
 %D a skip is inserted but only if the the signature key has a value. The height of the
 %D closing environment itself has a height of 4 lines to provide a free space for your
@@ -467,26 +498,35 @@
 \stopsetups
 
 \startsetups[letter:appendices]
-\let\\\endgraf
+\let\\\crlf
 \doflushletterdescription
 \stopsetups
 
-\dodefineletterdescription[\v!enclosing]
+\dodefineletterdescription[\v!enclosure]
 
-\startsetups[letter:enclosing]
-\lettervalue\c!enclosing
+\startsetups[letter:enclosure]
+\processaction
+  [\lettervalue\c!enclosure]
+  [  \v!empty=>\vrule\!!height\zeropoint\!!height\zeropoint\!!width\hsize\relax\ifvmode\nowhitespace\fi,
+   \s!unknown=>\lettervalue\c!enclosure]
 \stopsetups
 
 \dodefineletterdescription[\v!copy]
 
 \startsetups[letter:copy]
-\lettervalue\c!copy
+\processaction
+  [\lettervalue\c!copy]
+  [  \v!empty=>\vrule\!!height\zeropoint\!!height\zeropoint\!!width\hsize\relax\ifvmode\nowhitespace\fi,
+   \s!unknown=>\lettervalue\c!copy]
 \stopsetups
 
 \dodefineletterdescription[\v!postscript]
 
 \startsetups[letter:postscript]
-\lettervalue\c!postscript
+\processaction
+  [\lettervalue\c!postscript]
+  [  \v!empty=>\vrule\!!height\zeropoint\!!height\zeropoint\!!width\hsize\relax\ifvmode\nowhitespace\fi,
+   \s!unknown=>\lettervalue\c!postscript]
 \stopsetups
 
 \setvalue{\v!letter:\v!backaddress:\v!a}%
@@ -526,13 +566,16 @@
 
 \defineblankmethod [\v!nobreak] {\penalty\plustenthousand}
 
+%D \subject{Additional settings}
+%D 
 %D I set alternative a as default value for alternative, the only content
 %D is the date with a label. f you dont want a label choose alternative c
 %D or change the label.
 
-\startsetups[letter:before]
+\startsetups[letter:optimize]
 
-  \page
+  \setbox\scratchbox\hbox % trial typesetting to get the heigth of the reference line
+    {\executeifdefined{\v!reference\v!line\@@@@ldalternative}{\v!reference\v!line\v!a}}
 
   \setups[letter:reference:\@@@@ldalternative]
 
@@ -573,14 +616,15 @@
 
 \setupletterstyle
   [\v!closing]
-  [\c!after={\blank[\v!line]}]
+  [\c!after={\blank[\v!line]},
+   \c!inbetween={\blank[2*\v!line]}]
 
 \setupletterstyle
   [\v!closing]
   [\v!frame]
   [\c!frame=\v!off,
    \c!location=\v!top,
-   \c!inbetween={\blank[2*\v!line]},
+   \c!inbetween=\letterstylevalue\v!closing\c!inbetween,
    \c!align=\v!right,
    \c!offset=\zeropoint,
    \c!height=\v!fit]

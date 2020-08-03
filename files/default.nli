@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2008.12.16,
+%D        version=2009.02.09,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -182,7 +182,7 @@
 
 \long\def\doformatreferencelistd#1%
   {\doifelse{#1}\v!line
-     {\TB[\v!line]}
+     {\NC\NC\NC\NR} % why did \TB not work?
      {\NC \doattributes{\????ld#1}\c!titlestyle\c!titlecolor
             {\labeltext{\v!letter:#1}\lettervalue{#1\c!separator}}%
       \NC\doattributes{\????ld#1}\c!textstyle\c!textcolor{\lettervalue{#1}}
@@ -290,7 +290,7 @@
           {\setvalue{\????ld\c!toaddress}{\getvalue{\????ld\????ld#1}}}}%
    \fi\fi
    \def\stopletter
-     {\directsetup{\v!letter:\v!place}\egroup}%
+     {\directsetup{\v!letter:\v!place}\egroup\setupsubpagenumber[\c!state=\v!start]}%
    \dostartbuffer[lettercontent][startletter][stopletter]}
 
 %D Patched version of the \tex{flushbufferline} macro for \MKII,
@@ -591,7 +591,7 @@
   \setbox\scratchbox\hbox % trial typesetting to get the heigth of the reference line
     {\executeifdefined{\v!letter:\v!reference:\@@@@lsreferencealternative}{\getvalue{\v!letter:\v!reference:\v!a}}}
 
-  %\setups[\v!letter:\v!reference:\@@@@lsreferencealternative]
+  \setups[\v!letter:\v!reference:\@@@@lsreferencealternative]
 
 \stopsetups
 

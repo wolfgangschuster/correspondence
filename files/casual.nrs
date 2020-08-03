@@ -1,0 +1,200 @@
+%D \module
+%D   [       file=casual,
+%D        version=2009.02.09,
+%D          title=\CONTEXT\ Resume Style,
+%D       subtitle=Casual Style,
+%D         author=Wolfgang Schuster,
+%D           date=\currentdate,
+%D      copyright=Wolfgang Schuster,
+%D          email=schuster.wolfgang@googlemail.com,
+%D        license=Public Domain]
+
+% This style tries to mimic the moderncv casual style.
+
+\unprotect
+
+%D I take the layout from the default style.
+
+\useresumestyle[default]
+
+%D You can select between different color styles for the elements.
+
+\startsetups casual:blue
+
+  \definecolorgroup
+    [casual]
+    [0.65:0.65:0.65,
+     0.45:0.45:0.45,
+     0.35:0.35:0.35,
+     0.35:0.35:0.35,
+     0.25:0.50:0.75,
+     0.20:0.40:0.65,
+     0.20:0.40:0.65,
+     0.25:0.50:0.75]
+
+\stopsetups
+
+\startsetups casual:orange
+
+  \definecolorgroup
+    [casual]
+    [0.65:0.65:0.65,
+     0.45:0.45:0.45,
+     0.35:0.35:0.35,
+     0.35:0.35:0.35,
+     1.00:0.65:0.20,
+     0.95:0.55:0.15,
+     0.95:0.55:0.15,
+     0.95:0.55:0.15]
+
+\stopsetups
+
+\startsetups casual:green
+
+  \definecolorgroup
+    [casual]
+    [0.65:0.65:0.65,
+     0.45:0.45:0.45,
+     0.35:0.35:0.35,
+     0.35:0.35:0.35,
+     0.55:0.85:0.35,
+     0.30:0.65:0.15,
+     0.30:0.65:0.15,
+     0.30:0.65:0.15]
+
+\stopsetups
+
+\startsetups casual:red
+
+  \definecolorgroup
+    [casual]
+    [0.65:0.65:0.65,
+     0.45:0.45:0.45,
+     0.35:0.35:0.35,
+     0.35:0.35:0.35,
+     1.00:0.30:0.30,
+     0.95:0.20:0.20,
+     0.95:0.20:0.20,
+     0.95:0.20:0.20]
+
+\stopsetups
+
+\startsetups casual:grey
+
+  \definecolorgroup
+    [casual]
+    [0.65:0.65:0.65,
+     0.45:0.45:0.45,
+     0.35:0.35:0.35,
+     0.35:0.35:0.35,
+     0.75:0.75:0.75,
+     0.35:0.35:0.35,
+     0.35:0.35:0.35,
+     0.35:0.35:0.35]
+
+\stopsetups
+
+\processaction
+  [\resumestylevalue\v!option\c!color]
+  [      blue=>\directsetup{casual:blue},
+       orange=>\directsetup{casual:orange},
+        green=>\directsetup{casual:green},
+          red=>\directsetup{casual:red},
+         grey=>\directsetup{casual:grey},
+   \s!unknown=>\directsetup{casual:blue}]
+
+\setupresumestyle
+  [\v!firstpage]
+  [\c!topspace=6cm,
+   \c!height=\v!fit]
+
+%D Quick and dirty solution, I will write a better one in the future
+
+\setvalue{\v!resume:\v!head:\v!casual}%
+  {\hbox to\hsize\bgroup
+     \framed[\c!offset=2\points,\c!strut=\v!no,\c!framecolor=casual:1]{\resumevalue{image}}%
+     \hfill
+     \hbox\bgroup
+       \doattributes{\????rs firstname}\c!style\c!color  {\resumevalue{firstname}}%
+       \space
+       \doattributes{\????rs familyname}\c!style\c!color{\resumevalue{familyname}}%
+     \egroup
+   \egroup
+   \blank[\v!small]
+   \blackrule[\c!height=2\linewidth,\c!width=\hsize,\c!color=casual:1]
+   \blank[\v!line]
+   \doattributes{\????rs quote}\c!style\c!color{\resumevalue{quote}}}
+
+\setvalue{\v!resume:\v!foot:\v!casual}%
+  {\doattributes{\????rs street}\c!style\c!color{\resumevalue{street}} -- \doattributes{\????rs town}\c!style\c!color{\resumevalue{town}}\par
+   \doattributes{\????rs mobile}\c!style\c!color{\resumevalue{mobile}}\quad\color[casual:8]{\symbol{bullet}}\quad
+   \doattributes{\????rs  phone}\c!style\c!color{\resumevalue {phone}}\quad\color[casual:8]{\symbol{bullet}}\quad
+   \doattributes{\????rs    fax}\c!style\c!color{\resumevalue   {fax}}\quad\color[casual:8]{\symbol{bullet}}\quad
+   \doattributes{\????rs  email}\c!style\c!color{\resumevalue {email}}\quad\color[casual:8]{\symbol{bullet}}\quad
+   \doattributes{\????rs   info}\c!style\c!color{\resumevalue  {info}}}
+
+\setvalue{\v!resume:\v!nextfoot:\v!casual}%
+  {\color[casual:4]{\it\subpagenumber/\numberofsubpages}}
+
+\setupresumestyle
+  [\v!head,\v!foot,\v!nextfoot]
+  [\c!alternative=\v!casual]
+
+\setupresumestyle
+  [\v!head]
+  [\c!hoffset=\backspace,
+   \c!voffset=2cm,
+   \c!width=\textwidth,
+   \c!height=3.5cm,
+   \c!frame=\v!off,
+   \c!align=\v!middle,
+   \c!state=\v!start]
+
+\setupresumestyle
+  [\v!foot,\v!nextfoot]
+  [\v!option]
+  [\c!state={\v!first,\v!next}]
+
+\setupresumestyle
+  [\v!foot,\v!nextfoot]
+  [\v!frame]
+  [\c!frame=\v!off,
+   \c!width=\textwidth,
+   \c!height=2cm,
+   \c!align=\v!middle]
+
+\setupresumestyle
+  [\v!foot,\v!nextfoot]
+  [\v!layer]
+  [\c!preset=\v!left\v!bottom,
+   \c!hoffset=\backspace,
+   \c!voffset=2cm]
+
+\setupresumestyle
+  [\v!nextfoot]
+  [\c!align={\v!left,\v!lohi}]
+
+% Why do I use setupresumestyle, I use in the letter module
+% for the same thing setupletter, I should change this
+
+\setupresumestyle
+  [firstname]
+  [style=\c!tf\c!d,
+   color=casual:1]
+
+\setupresumestyle
+  [familyname]
+  [style=\c!tf\c!d,
+   color=casual:2]
+
+\setupresumestyle
+  [quote]
+  [style=\c!tf,
+   color=casual:3]
+
+\setupresumestyle
+  [street,town,mobile,phone,fax,email,info]
+  [\c!style=\v!italic,
+   \c!color=casual:4]
+
+\protect \endinput

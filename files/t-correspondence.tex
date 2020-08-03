@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-correspondence,
-%D        version=2008.12.23,
+%D        version=2008.02.09,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Correspondence,
 %D         author=Wolfgang Schuster,
@@ -92,6 +92,11 @@
   \setinterfaceelement {flush}     {flush}
 \stopinterface
 
+% Placeholders for the messages:
+%
+% 1: letter|resume / interface|style|extension / filename
+% 2: letter|resume / interface|style|extension / filename
+
 \definemessageconstant {correspondence}
 
 \startmessages all library: correspondence
@@ -160,19 +165,21 @@
 
 \def\dodosetupcorrespondencelayer[#1][#2][#3][#4][#5]%
   {\def\dododosetupcorrespondencelayer##1%
-     {\ifcsname dosetupcorrespondencelayer##1\endcsname
-        \@EA\@EA\csname dosetupcorrespondencelayer##1\endcsname
-      \else
-        \@EA\@EA\csname dosetupcorrespondencelayer\v!option\endcsname
-      \fi[#1][#2][#3][#5]}%
-   \processcommalist[#4]\dododosetupcorrespondencelayer}
+     {\def\dodododosetupcorrespondencelayer####1%
+        {\ifcsname dosetupcorrespondencelayer####1\endcsname
+           \@EA\@EA\csname dosetupcorrespondencelayer####1\endcsname
+         \else
+           \@EA\@EA\csname dosetupcorrespondencelayer\v!option\endcsname
+         \fi[#1][#2][##1][#5]}%
+      \processcommalist[#4]\dodododosetupcorrespondencelayer}%
+   \processcommalist[#3]\dododosetupcorrespondencelayer}
 
 \def\dosetupcorrespondencelayerlayer[#1][#2][#3][#4]%
   {\setuplayer[#1:#3][#4]%
    \getparameters[#2#3\v!layer][#4]}
 
 \def\dosetupcorrespondencelayerframe[#1][#2][#3][#4]%
-  {\getparameters[#2#3\v!frame][#4]}
+  {\setuplocalframed[#2#3\v!frame][#4]}
 
 \def\dosetupcorrespondencelayeroption[#1][#2][#3][#4]%
   {\getparameters[#2#3][#4]}
@@ -287,7 +294,8 @@
       \c!height=\paperheight]%
    \dodosetupcorrespondencelayer
      [#1][#2][#3][\v!option]%
-     [\c!symbol=,
+     [\c!state=\v!stop,
+      \c!symbol=,
       \c!alternative=\v!a,
       \c!separator=\crlf,
       \c!offset=\zeropoint,
@@ -319,15 +327,6 @@
          \doadaptrightskip{\correspondencestylevalue{#2}{#3}\c!rightmargin}%
          \doattributes{#2#3}\c!style\c!color{#4}}}}
 
-\def\dosetheaderfooterlayer[#1]%
-  {\processaction
-     [#1]
-     [   v!yes=>\chardef\headerfooter\plusone,
-      \v!first=>\chardef\headerfooter\plustwo,
-       \v!next=>\chardef\headerfooter\plusthree,
-       \v!left=>\chardef\headerfooter\plusfour,
-      \v!right=>\chardef\headerfooter\plusfive]}
-
 \def\dodosetheaderfooterlayer#1{\csname @@headfoot@@#1\endcsname}
 
 \setvalue{@@headfoot@@\v!start    }{\!!doneatrue            }
@@ -342,13 +341,13 @@
 \setvalue{@@headfoot@@\v!subpage  }{\!!donedfalse           }
 
 \def\dosetheaderfooterlayer[#1][#2][#3]%
-  {\!!doneafalse
-   \!!donebfalse
-   \!!donecfalse
-   \!!donedfalse
+  {\!!doneafalse % first page
+   \!!donebfalse % even numbered pages
+   \!!donecfalse % odd numbered pages
+   \!!donedfalse % real pagenumber
    \processcommacommand[\csname#2#3\c!state\endcsname]\dodosetheaderfooterlayer
    \doifnotvalue{#2#3\v!layer\c!state}\v!stop{\setuplayer[#1:#3][\c!state=\v!start]}%
-   \ifnum\subpagenumber=\plusone
+   \ifnum\if!!doned\pagenumber\else\subpagenumber\fi=\plusone
      \if!!donea\dosetcorrespondencelayer[#1][#2][#3]\fi
    \else
      \ifodd\if!!doned\pagenumber\else\subpagenumber\fi
@@ -356,6 +355,29 @@
      \else
        \if!!doneb\dosetcorrespondencelayer[#1][#2][#3]\fi
    \fi\fi}
+
+% Alternative version of the macro above for the experimental
+% interface because \subpagenumber can't be used in \ifdim.
+%
+% \newcount\correspondencepagenumber
+%
+% \appendtoks\global\advance\correspondencepagenumber\plusone\to\everyaftershipout
+%
+% \def\dosetheaderfooterlayer[#1][#2][#3]%
+%   {\!!doneafalse % first page
+%    \!!donebfalse % even numbered pages
+%    \!!donecfalse % odd numbered pages
+%    \!!donedfalse % real pagenumber
+%    \processcommacommand[\csname#2#3\c!state\endcsname]\dodosetheaderfooterlayer
+%    \doifnotvalue{#2#3\v!layer\c!state}\v!stop{\setuplayer[#1:#3][\c!state=\v!start]}%
+%    \ifnum\if!!doned\pagenumber\else\correspondencepagenumber\fi=\plusone
+%      \if!!donea\dosetcorrespondencelayer[#1][#2][#3]\fi
+%    \else
+%      \ifodd\if!!doned\pagenumber\else\correspondencepagenumber\fi
+%        \if!!donec\dosetcorrespondencelayer[#1][#2][#3]\fi
+%      \else
+%        \if!!doneb\dosetcorrespondencelayer[#1][#2][#3]\fi
+%    \fi\fi}
 
 %D Sections
 

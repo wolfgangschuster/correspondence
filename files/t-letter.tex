@@ -35,12 +35,13 @@
 
 %D \subject{Setup commands}
 %D 
-%D \macros{setupletterstyle}
+%D \macros
+%D   {setupletterstyle}
 %D 
 %D The layout for the first page could be set with the \mono{firstpage}
 %D key and the layout for the second and all following pages with the
 %D \mono{secondpage} key. You could use any key and value from
-%D \tex{setuplayout} to set your own letter layout.
+%D \type{\setuplayout} to set your own letter layout.
 %D 
 %D \showsetup{setupletterstyle:layout}
 %D 
@@ -48,7 +49,7 @@
 %D and \mono{footer} keys, the text itself I written as argument as one of
 %D the three keys. The command itself has no option to use different texts
 %D for odd and even pages (if you really want this in a letter) but you could
-%D solve this with the macro \tex{doifoddpageelse}, I will give you a short
+%D solve this with the macro \type{\doifoddpageelse}, I will give you a short
 %D example below.
 
 \setvalue{\v!letter:\????ls:\v!firstpage }{\v!layout}
@@ -65,7 +66,7 @@
 %D on them at the moment because they could change or I will remove, rename,
 %D rewrite etc. them.
 %D 
-%D With the change of the \tex{setupletter} command it was also necessary
+%D With the change of the \type{\setupletter} command it was also necessary
 %D to change the definition for lettervalue tests.
 
 \def\doiflettervalue         {\doifcorrespondencevalue         \????ld}
@@ -137,8 +138,8 @@
 %D \stopsetups
 %D \stoptyping
 %D 
-%D The interface itself is loaded with the \tex{useletterinterface}
-%D command but you could also use the optional argument for \tex{usemodule}
+%D The interface itself is loaded with the \type{\useletterinterface}
+%D command but you could also use the optional argument for \type{\usemodule}
 %D to load it. The first is only used in this file but it makes sense
 %D to use it also in a wrapper file for your own interface.
 %D
@@ -162,7 +163,7 @@
 %D \stopitemize
 %D 
 %D The syntax to load a letterextension file is the same as for a interface
-%D and you could also argument for \tex{usemodule}.
+%D and you could also argument for \type{\usemodule}.
 %D 
 %D \showsetup{useletterextension}
 
@@ -180,8 +181,8 @@
 %D load on demand and share between your letters.
 %D 
 %D You could load a style file in the same way as the other to files,
-%D the first is \tex{useletterstyle} and the second the optional argument
-%D for \tex{usemodule}.
+%D the first is \type{\useletterstyle} and the second the optional argument
+%D for \type{\usemodule}.
 %D 
 %D \showsetup{useletterstyle}
 
@@ -190,7 +191,7 @@
 %D \macros
 %D   {letterstylevalue,lettervalue}
 %D 
-%D The two commands \tex{letterstylevalue} and \tex{lettervalue} could
+%D The two commands \type{\letterstylevalue} and \type{\lettervalue} could
 %D be used to access the values for the keys used in the letterstyle
 %D settings and the letter values for information.
 
@@ -200,14 +201,14 @@
 \def\letterstylevalue#1#2%
   {\csname\????ls#1#2\endcsname}
 
-%D The old definition of \tex{lettervalue} required two arguments.
+%D The old definition of \type{\lettervalue} required two arguments.
 %D 
 %D \starttyping
 %D \def\lettervalue#1#2%
 %D   {\csname\????ld#1#2\endcsname}
 %D \stoptyping
 %D 
-%D The new definition needs only one arguments because \tex{setupletter}
+%D The new definition needs only one arguments because \type{\setupletter}
 %D needs only one argument for the values in the new version.
 
 \def\lettervalue#1%
@@ -329,7 +330,7 @@
 \stopsetups
 
 %D Footer block, you could use it to place information about your company
-%D but take care set \mono{repeat=yes} if you want to place it on every page,
+%D but take care set \type {repeat=yes} if you want to place it on every page,
 %D you should disable the footer for the second and following pages inb this
 %D case.
 
@@ -377,7 +378,7 @@
 \stopsetups
 
 %D Two additional layers from Hans Hagen's own letter module, it provide
-%D for users who used \mono{m-letter.tex} and want to switch to my module.
+%D for users who used \filename{m-letter.tex} and want to switch to my module.
 %D 
 %D I need they also for my pragma letter interface.
 

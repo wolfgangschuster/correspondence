@@ -1,7 +1,10 @@
 Letter module for ConTeXt.
 
-The letter module provides a environment to input the data
-for private and business letters.
+The module and all included files are copyright of Wolfgang
+Schuster and published under public domain.
+
+The letter module provides a environment to write private
+and business letters.
 
 Style files are responsible for the layout of the letter,
 the command \setupletterstyle could be used to change the

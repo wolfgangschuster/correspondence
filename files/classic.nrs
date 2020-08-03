@@ -1,0 +1,195 @@
+%D \module
+%D   [       file=classic,
+%D        version=2009.02.09,
+%D          title=\CONTEXT\ Resume Style,
+%D       subtitle=Classic Style,
+%D         author=Wolfgang Schuster,
+%D           date=\currentdate,
+%D      copyright=Wolfgang Schuster,
+%D          email=schuster.wolfgang@googlemail.com,
+%D        license=Public Domain]
+
+% This style tries to mimic the moderncv classic style.
+
+\unprotect
+
+\useresumestyle[default]
+
+\startsetups classic:blue
+
+  \definecolorgroup
+    [classic]
+    [0.00:0.00:0.00,
+     0.00:0.00:0.00,
+     0.35:0.35:0.35,
+     0.35:0.35:0.35,
+     0.25:0.50:0.75,
+     0.25:0.50:0.75,
+     0.20:0.40:0.65,
+     0.20:0.40:0.65]
+
+\stopsetups
+
+\startsetups classic:orange
+
+  \definecolorgroup
+    [classic]
+    [0.00:0.00:0.00,
+     0.00:0.00:0.00,
+     0.35:0.35:0.35,
+     0.35:0.35:0.35,
+     0.95:0.55:0.15,
+     1.00:0.65:0.20,
+     0.95:0.55:0.15,
+     0.95:0.55:0.15]
+
+\stopsetups
+
+\startsetups classic:green
+
+  \definecolorgroup
+    [classic]
+    [0.00:0.00:0.00,
+     0.00:0.00:0.00,
+     0.35:0.35:0.35,
+     0.35:0.35:0.35,
+     0.30:0.65:0.15,
+     0.55:0.85:0.35,
+     0.30:0.65:0.15,
+     0.30:0.65:0.15]
+
+\stopsetups
+
+\startsetups classic:red
+
+  \definecolorgroup
+    [classic]
+    [0.00:0.00:0.00,
+     0.00:0.00:0.00,
+     0.35:0.35:0.35,
+     0.35:0.35:0.35,
+     0.95:0.20:0.20,
+     1.00:0.30:0.30,
+     0.95:0.20:0.20,
+     0.95:0.20:0.20]
+
+\stopsetups
+
+\startsetups classic:grey
+
+  \definecolorgroup
+    [classic]
+    [0.00:0.00:0.00,
+     0.00:0.00:0.00,
+     0.35:0.35:0.35,
+     0.35:0.35:0.35,
+     0.35:0.35:0.35,
+     0.75:0.75:0.75,
+     0.35:0.35:0.35,
+     0.35:0.35:0.35]
+
+\stopsetups
+
+\processaction
+  [\resumestylevalue\v!option\c!color]
+  [      blue=>\directsetup{classic:blue},
+       orange=>\directsetup{classic:orange},
+        green=>\directsetup{classic:green},
+          red=>\directsetup{classic:red},
+         grey=>\directsetup{classic:grey},
+   \s!unknown=>\directsetup{classic:blue}]
+
+\setupresumestyle
+  [\v!firstpage]
+  [\c!topspace=9cm,
+   \c!header=0cm,
+   \c!height=\v!fit]
+
+\setvalue{\v!resume:\v!head:\v!classic}%
+  {\hbox to \hsize\bgroup
+     \vbox\bgroup
+       \hbox\bgroup
+         \doattributes{\????rd firstname}\c!style\c!color  {\resumevalue{firstname}}%
+         \space
+         \doattributes{\????rd familyname}\c!style\c!color{\resumevalue{familyname}}%
+       \egroup
+       \hbox{\doattributes{\????rd title}\c!style\c!color{\resumevalue{title}}}
+     \egroup
+     \hfill
+     \framed
+       [\c!location=\v!bottom,
+        \c!align=\v!left,
+        \c!width=\v!fit,
+        \c!frame=\v!off,
+        \c!foregroundstyle=\v!italic,
+        \c!foregroundcolor=classic:5]
+       {\resumevalue{street}\\
+        \resumevalue  {town}\\
+        \resumevalue{mobile}\\
+        \resumevalue {phone}\\
+        \resumevalue   {fax}\\
+        \resumevalue {email}\\
+        \resumevalue {info}}%
+     \space
+     \framed[\c!offset=2\points,\c!strut=\v!no]{\resumevalue{image}}%
+   \egroup}
+
+\setvalue{\v!resume:\v!nextfoot:\v!classic}%
+  {\color[classic:4]{\it\subpagenumber/\numberofsubpages}}
+
+\setupresumestyle
+  [\v!head,\v!nextfoot]
+  [\c!alternative=\v!classic]
+
+\setupresumestyle
+  [\v!head]
+  [\c!hoffset=\backspace,
+   \c!voffset=2cm,
+   \c!frame=\v!off,
+   \c!width=\textwidth,
+   \c!height=7cm]
+
+\setupresumestyle
+  [\v!nextfoot]
+  [\v!option]
+  [\c!state={\v!first,\v!next}]
+
+\setupresumestyle
+  [\v!nextfoot]
+  [\v!frame]
+  [\c!frame=\v!off,
+   \c!width=\textwidth,
+   \c!height=2cm,
+   \c!align={\v!left,\v!lohi}]
+
+\setupresumestyle
+  [\v!nextfoot]
+  [\v!layer]
+  [\c!preset=\v!left\v!bottom,
+   \c!hoffset=\backspace,
+   \c!voffset=2cm]
+
+% Why do I use setupresumestyle, I use in the letter module
+% for the same thing setupletter, I should change this
+
+\setupresume
+  [quote]
+  [\c!style=\v!italic,
+   \c!color=classic:4]
+
+\setupresume
+  [firstname]
+  [\c!style=\c!tf\c!d,
+   \c!color=classic:1]
+
+\setupresume
+  [familyname]
+  [\c!style=\c!tf\c!d,
+   \c!color=classic:2]
+
+\setupresume
+  [title]
+  [\c!style=\c!it\c!b,
+   \c!color=classic:3]
+
+\protect \endinput

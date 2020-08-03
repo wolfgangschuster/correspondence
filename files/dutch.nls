@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=dutch,
-%D        version=2008.04.24,
+%D        version=2008.12.28,
 %D          title=\CONTEXT\ Letter Style,
 %D       subtitle=Dutch NEN Style,
 %D         author=Wolfgang Schuster,
@@ -57,13 +57,11 @@
    \c!bottomframe=\v!yes]
 
 \setupletterstyle
-  [\v!address]
   [\v!dispatch]
   [\c!height=\lineheight]
 
 \setupletterstyle
-  [\v!address]
-  [\v!content]
+  [\v!addressee]
   [\c!height=\v!fit]
 
 \setupletterstyle

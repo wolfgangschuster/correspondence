@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-00,
-%D      version=2012.08.26,
+%D      version=2012.09.21,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Correspondence,
 %D       author=Wolfgang Schuster,
@@ -80,6 +80,7 @@
   \setinterfaceconstant {organization}    {organization}
   \setinterfaceconstant {zip}             {zip}
   \setinterfaceconstant {country}         {country}
+  \setinterfaceconstant {addressentry}    {addressentry}
 \stopinterface
 
 \startinterface all
@@ -487,7 +488,6 @@
          {\scratchdimen}
          {\unhcopy\scratchbox}
          {\correspondencedescriptionparameter\c!distance}%
-       \edef\p_correspondence_description_textcommand{\detokenize\expandafter{\correspondencedescriptionparameter\c!textcommand}}%
        \ctxlua{thirddata.correspondence.description_split(\!!bs\correspondencedescriptionparameter\c!textcommand\!!es)}%
        \expandcheckedcsname\????correspondencedescriptionlocation{\correspondencedescriptionparameter\c!location}\v!left
        \correspondencedescriptionparameter\c!after

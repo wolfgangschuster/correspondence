@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-01,
-%D      version=2012.06.10,
+%D      version=2012.09.21,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Letters,
 %D       author=Wolfgang Schuster,
@@ -26,6 +26,7 @@
 \unprotect
 
 \usemodule[cor-00]
+\usemodule[cor-06]
 
 \startmodule[\v!letter]
 
@@ -544,6 +545,12 @@
          {\setupletterlayout
             [\v!firstpage]
             [\c!topspace=\dimexpr\namedletterlayerparameter\v!reference\c!y+\ht\scratchbox+\namedletterlayerparameter\v!reference\c!distance\relax]}}%
+  \fi
+\to \t_correspondence_before
+
+\appendtoks % provide this also for the other modules
+  \ifx\currentcorrespondence\v!letter
+    \doifsomething{\correspondenceparameter\c!addressentry}{\edef\currentaddressentry{\correspondenceparameter\c!addressentry}}%
   \fi
 \to \t_correspondence_before
 

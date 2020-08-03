@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-00,
-%D      version=2012.01.15,
+%D      version=2012.01.21,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Correspondence,
 %D       author=Wolfgang Schuster,
@@ -138,6 +138,7 @@
 \installnamespace {correspondenceoption}
 \installnamespace {correspondencedescription}
 \installnamespace {correspondencedescriptionlocation}
+\installnamespace {correspondencedescriptionformat}
 \installnamespace {correspondencestyle}
 \installnamespace {correspondenceelement}
 \installnamespace {correspondencelayout}
@@ -367,6 +368,10 @@
 
 \installsimplecommandhandler \????correspondencedescription {correspondencedescription} \????correspondencedescription
 
+\let\m_correspondence_description_string\empty
+\let\m_correspondence_description_format\empty
+\let\m_correspondence_description_items \empty
+
 \unexpanded\def\correspondence_description_define[#environment][#element]%
   {\def\currentcorrespondencedescription{#environment:#element}%
    \checkcorrespondencedescriptionparent}
@@ -393,6 +398,7 @@
          {\scratchdimen}
          {\unhcopy\scratchbox}
          {\correspondencedescriptionparameter\c!distance}%
+       \ctxlua{thirddata.correspondence.description_split("\correspondencedescriptionparameter\c!textcommand")}%
        \expandcheckedcsname\????correspondencedescriptionlocation{\correspondencedescriptionparameter\c!location}\v!left
        \correspondencedescriptionparameter\c!after
        \doifsomethingelse{\correspondencedescriptionparameter\c!spaceafter}{\blank[\correspondencedescriptionparameter\c!spaceafter]}{\endgraf}%
@@ -403,23 +409,41 @@
    \endgroup}
 
 \setvalue{\????correspondencedescriptionlocation\v!left}%
-  {\EveryPar{\hangindent\scratchdimen\hangafter\zerocount}%
+  {\doadaptleftskip\scratchdimen
    \setbox\scratchbox\hbox to \scratchdimen{\box\scratchbox\hss}%
-   \noindent\llap{\box\scratchbox}\correspondencedescriptionparameter\c!textcommand}
+   \noindent\llap{\box\scratchbox}\correspondence_description_place_text}
 
 \setvalue{\????correspondencedescriptionlocation\v!top}%
   {\noindent\box\scratchbox
-   \doisomethingelse{\correspondencedescriptionparameter\c!spaceinbetween}
+   \doifsomethingelse{\correspondencedescriptionparameter\c!spaceinbetween}
      {\blank[\correspondencedescriptionparameter\c!spaceinbetween]}
      {\nobreak\endgraf}%
-   \correspondencedescriptionparameter\c!textcommand}
+   \doadaptleftskip {\correspondencedescriptionparameter\c!leftmargin }%
+   \doadaptrightskip{\correspondencedescriptionparameter\c!rightmargin}%
+   \correspondence_description_place_text}
 
 \setvalue{\????correspondencedescriptionlocation\v!text}%
-  {\noindent\scratchbox\scratchbox\correspondencedescriptionparameter\c!textcommand}
+  {\noindent\box\scratchbox\correspondence_description_place_text}
+
+\unexpanded\def\correspondence_description_place_text
+  {\expandcheckedcsname\????correspondencedescriptionformat\m_correspondence_description_format\v!none}
+
+\setvalue{\????correspondencedescriptionformat\v!list}%
+  {\def\correspondence_description_format_item#text{\startitem#text\stopitem}%
+   \dontleavehmode\vtop\bgroup
+     \leftskip\zeropoint % prevent additional offset when “location=left” is used
+     \startitemize[\v!packed,\correspondencedescriptionparameter\c!symbol]%
+     \processcommacommand[\m_correspondence_description_items]\correspondence_description_format_item
+     \stopitemize
+   \egroup}
+
+\setvalue{\????correspondencedescriptionformat\v!none}%
+  {\m_correspondence_description_items}
 
 \setupcorrespondencedescription
   [\c!width=\v!fit,
-   \c!distance=1em]
+   \c!distance=1em,
+   \c!symbol=dash]
 
 % Elements
 

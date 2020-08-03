@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-00,
-%D      version=2012.01.15,
+%D      version=2012.01.21,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Correspondence,
 %D       author=Wolfgang Schuster,
@@ -470,10 +470,7 @@
 
 \unexpanded\def\definecorrespondencedescription[#1][#2]%
   {\edef\currentcorrespondencedescription{#1:#2}%
-   \setupcurrentcorrespondencedescription
-     [\s!parent=\????correspondencedescription,
-      \c!width=\v!fit,
-      \c!distance=1em]}
+   \expandafter\let\csname\????correspondencedescription\currentcorrespondencedescription\s!parent\endcsname\????correspondencedescription}
 
 \unexpanded\def\setupcorrespondencedescription[#1][#2][#3]%
   {\def\dosetupcorrespondencedescription##1%
@@ -517,13 +514,19 @@
 
 \setvalue{\????correspondencedescriptionlocation\v!top}%
   {\noindent\box\scratchbox
-   \doisomethingelse{\correspondencedescriptionparameter\c!spaceinbetween}
+   \doifsomethingelse{\correspondencedescriptionparameter\c!spaceinbetween}
      {\blank[\correspondencedescriptionparameter\c!spaceinbetween]}
      {\nobreak\endgraf}%
    \correspondencedescriptionparameter\c!textcommand}
 
 \setvalue{\????correspondencedescriptionlocation\v!text}%
-  {\noindent\scratchbox\scratchbox\correspondencedescriptionparameter\c!textcommand}
+  {\noindent\box\scratchbox\correspondencedescriptionparameter\c!textcommand}
+
+\getparameters
+  [\????correspondencedescription]
+  [\c!width=\v!fit,
+   \c!distance=1em,
+   \c!symbol=dash]
 
 % Elements
 

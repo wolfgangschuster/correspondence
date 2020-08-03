@@ -274,3 +274,17 @@ function correspondence.letter.reference_e(environment,list)
         end        
     end )
 end
+
+function thirddata.correspondence.description_split(list)
+    local format, items = nil, nil
+    if string.find(list,":") then
+        format, items = string.splitup(list,":")
+    else
+        items  = list
+    end
+    -- the macros are empty be default, change this only when necessary
+    context.unprotect()
+    if format then context.setvalue("m_correspondence_description_format",format) end
+    if items  then context.setvalue("m_correspondence_description_items" ,items ) end
+    context.protect()
+end

@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2008.06.02,
+%D        version=2008.07.03,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -45,6 +45,8 @@
                  dispatch: dispatch
                 enclosing: enclosing
                      copy: copy
+                  nobreak: nobreak
+                     memo: memo
 \stopvariables
 
 %D We have at the moment only the values from the core module, I use the settings
@@ -77,7 +79,7 @@
    \convertargument#1\to\ascii
    \vbox
      {\vbox{\doattributes{\????ld\ascii}\c!titlestyle\c!titlecolor
-        {\doformatreferencelista{\labeltext\ascii}}}
+        {\doformatreferencelista{\labeltext{\v!letter:\ascii}}}}
       \vtop{\doattributes{\????ld\ascii}\c!textstyle\c!textcolor
         {\doformatreferencelista{\lettervalue\ascii}}}}%
    \egroup
@@ -109,7 +111,7 @@
      {\blank[\v!line]}
      {\hbox
         {\doattributes{\????ld#1}\c!titlestyle\c!titlecolor
-           {\labeltext{#1}\lettervalue{#1\c!separator}}%
+           {\labeltext{\v!letter:#1}\lettervalue{#1\c!separator}}%
          \doattributes{\????ld#1}\c!textstyle\c!textcolor
            {\lettervalue{#1}}}}%
    \egroup}
@@ -167,7 +169,7 @@
   {\doifelse{#1}\v!line
      {\NC\NC\NC\NR} % ugly but working
      {\NC \doattributes{\????ld#1}\c!titlestyle\c!titlecolor
-            {\labeltext{#1}\lettervalue{#1\c!separator}}%
+            {\labeltext{\v!letter:#1}\lettervalue{#1\c!separator}}%
       \NC\doattributes{\????ld#1}\c!textstyle\c!textcolor{\lettervalue{#1}}
       \NC\NR}}
 
@@ -214,7 +216,7 @@
      {\hbox}%
      {\vbox
         {\vbox{\doattributes{\????ld\ascii}\c!titlestyle\c!titlecolor
-           {\doformatreferenceliste{\labeltext\ascii}}}
+           {\doformatreferenceliste{\labeltext{\v!letter:\ascii}}}}
          \vtop{\doattributes{\????ld\ascii}\c!textstyle\c!textcolor
            {\doformatreferenceliste{\lettervalue\ascii}}}}}%
    \egroup}
@@ -323,11 +325,15 @@
 \def\dostartletter[#1][#2]%
   {\ifsecondargument
      \setupletter[#1]%
-     \setvalue{\????ld\c!toaddress}{#2}%
+     \doifundefinedelse{\????ld\????ld#2}
+       {\setvalue{\????ld\c!toaddress}{#2}}
+       {\setvalue{\????ld\c!toaddress}{\getvalue{\????ld\????ld#2}}}%
    \else\iffirstargument
      \doifassignmentelse{#1}
        {\setupletter[#1]}
-       {\setvalue{\????ld\c!toaddress}{#1}}%
+       {\doifundefinedelse{\????ld\????ld#1}
+          {\setvalue{\????ld\c!toaddress}{#1}}
+          {\setvalue{\????ld\c!toaddress}{\getvalue{\????ld\????ld#1}}}}%
    \fi\fi
    \def\stopletter
      {\setups[letter:place]\egroup
@@ -483,12 +489,42 @@
 \lettervalue\c!postscript
 \stopsetups
 
+\setvalue{\v!letter:\v!backaddress:\v!a}%
+  {\lettervalue\c!fromname
+   \doiflettervalue\c!fromaddress\\
+   \lettervalue\c!fromaddress}
+
+\setvalue{\v!letter:\v!backaddress:\v!b}%
+  {\lettervalue\c!fromname
+   \doiflettervalue\c!fromaddress\\
+   \lettervalue\c!fromaddress}
+
+\resetvalue{\v!letter:\v!backaddress:\v!c}
+
+\setvalue{\v!letter:\v!backaddress:\v!d}%
+  {\doifelselettervalue\c!backaddress
+     {\lettervalue\c!backaddress}
+     {\lettervalue\c!fromname
+      \doiflettervalue\c!fromaddress\\
+      \lettervalue\c!fromaddress}}
+
 \startsetups[letter:backaddress]
 \def\\{\lettervalue{\c!backaddress\c!separator}}
-\lettervalue\c!fromname
-\doiflettervalue\c!fromaddress\\
-\lettervalue\c!fromaddress
+\processaction
+  [\lettervalue\c!backaddress]
+  [    \v!yes=>\getvalue{\v!letter:\v!backaddress:\v!a},
+      \v!auto=>\getvalue{\v!letter:\v!backaddress:\v!b},
+        \v!no=>\getvalue{\v!letter:\v!backaddress:\v!c},
+   \s!unknown=>\getvalue{\v!letter:\v!backaddress:\v!d}]  
 \stopsetups
+
+%D To prevent a pagebreak between the last line of the text and
+%D the siganture a nonbreakable vertical space is necessary.
+%D The vertical space is inserted in the style file with the normal
+%D before and after commands where we control the distance between
+%D the elements.
+
+\defineblankmethod [\v!nobreak] {\penalty\plustenthousand}
 
 %D I set alternative a as default value for alternative, the only content
 %D is the date with a label. f you dont want a label choose alternative c

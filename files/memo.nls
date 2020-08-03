@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=memo,
-%D        version=2008.05.28,
+%D        version=2008.07.03,
 %D          title=\CONTEXT\ Letter Style,
 %D       subtitle=Memo style,
 %D         author=Wolfgang Schuster,
@@ -48,25 +48,23 @@
    \v!special\v!notation=\v!no,
    \c!title=\v!no]
 
-\setuplabeltext[\s!en][\c!date=Date: ]
-
 \startsetups[letter:\v!date\v!line]
-\labeltext\c!date\lettervalue\c!date
+\labeltext{\v!memo:\c!date}\lettervalue\c!date
 \stopsetups
 
 \startsetups[letter:\v!letter\v!head]
 \let\\\crlf
-\labeltext\c!fromname\lettervalue\c!fromname
+\labeltext{\v!memo:\c!fromname}\lettervalue\c!fromname
 \stopsetups
 
 \startsetups[letter:\v!inside\v!address]
 \let\\\crlf
-\labeltext\c!toname\lettervalue\c!toname
+\labeltext{\v!memo:\c!toname}\lettervalue\c!toname
 \stopsetups
 
 \startsetups[letter:subject]
 \let\\\crlf
-\labeltext\c!subject\lettervalue\c!subject
+\labeltext{\v!memo:\c!subject}\lettervalue\c!subject
 \stopsetups
 
 \protect \endinput

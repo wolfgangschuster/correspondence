@@ -27,7 +27,7 @@
    \c!footer=10mm]
 
 \setupletterstyle
-  [\v!title,\v!subject,\v!opening,\v!content,\v!appendices]
+  [\v!title,\v!subject,\v!opening,\v!appendices]
   [\c!before=,
    \c!after={\blank[line]}]
 
@@ -40,6 +40,10 @@
   [\v!subject]
   [\c!after={\blank[2*line]},
    \c!style=\v!bold]
+
+\setupletterstyle
+  [\v!content]
+  [\c!after={\blank[nobreak,line]}]
 
 \setupletterstyle
   [\v!closing]

@@ -11,10 +11,10 @@ only the labels for the {\em memo} style are not included.
 
 \start
 
-\setuplinetable      [nx=2,stretch=no,width=.125\textwidth]
+\setuplinetable      [nx=2,stretch=yes,width=.125\textwidth]
 \setuplinetable[r][1][style=bold]
 
-\startlinetable
+\startbuffer[labeltext]
 \NC label \NC english \NC dutch \NC german \NC french \NC italian \NC spanish \NC\NR
 \startprocesscommalist
   [name,room,yourref,yourmail,myref,mymail,customer,invoice,
@@ -29,7 +29,9 @@ only the labels for the {\em memo} style are not included.
   \NC \mainlanguage[es]\labeltext{letter:#1}
   \NC\NR
 \stopprocesscommalist
-\stoplinetable
+\stopbuffer
+
+\processlinetablebuffer[labeltext]
 
 \stop
 

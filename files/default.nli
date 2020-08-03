@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2009.09.20,
+%D        version=2010.02.23,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -304,7 +304,7 @@
    \def\ps     ##1{\doglobal\appendtoks\setvalue{\????ld\c!postscript}{##1}\to\letter!local!commands\doglobal\appendtocommalist\c!postscript\letter!list!descriptions}%
    \def\cc     ##1{\doglobal\appendtoks\setvalue{\????ld\c!copy      }{##1}\to\letter!local!commands\doglobal\appendtocommalist\c!copy      \letter!list!descriptions}%
    \def\encl   ##1{\doglobal\appendtoks\setvalue{\????ld\c!enclosure }{##1}\to\letter!local!commands\doglobal\appendtocommalist\c!enclosure \letter!list!descriptions}%
-   \setbox\scratchbox\hbox{\getbuffer[lettercontent]}%
+   \setbox\scratchbox\vbox{\getbuffer[lettercontent]}%
    \flushtoks\letter!local!commands}
 
 \def\gobblelettervalues

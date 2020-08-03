@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2008.04.23,
+%D        version=2008.04.24,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -36,6 +36,7 @@
 
 \startvariables            all
 
+                        e: e
                      data: data
                    sender: sender
                  dispatch: dispatch
@@ -88,7 +89,7 @@
 \setupletterstyle
   [\v!reference]
   [\c!hoffset=\backspace,
-   \c!voffset=\dimexpr\letterstylevalue\v!address\c!voffset+\letterstylevalue\v!address\c!height+\plusfive\c!mm\relax,
+   \c!voffset=\dimexpr\letterstylevalue\v!address\c!voffset+\letterstylevalue\v!address\c!height+\plusthree\c!mm\relax,
    \c!width=\textwidth]
 
 \stopsetups
@@ -150,11 +151,7 @@
 
 \startsetups[letter:reference:\v!c]
 
-\setupletterstyle
-  [\v!reference]
-  [\c!hoffset=\backspace,
-   \c!voffset=\dimexpr\letterstylevalue\v!address\c!voffset+\letterstylevalue\v!address\c!height+\plusfive\c!mm\relax,
-   \c!width=\textwidth]
+\setups[letter:reference:\v!a]
 
 \stopsetups
 
@@ -194,6 +191,36 @@
   [\v!frame]
   [\c!width=\dimexpr\paperwidth-\letterstylevalue{\v!reference\v!layer}\c!hoffset-\cutspace\relax,
    \c!height=\v!fit]
+
+\stopsetups
+
+%D Alternative e, nearly the same as a but you could control the width of the
+%D fields with the width key for \tex{setupletter}.
+
+\long\def\doformatreferenceliste#1%
+  {\def\\{\egroup\hbox\bgroup}%
+   \setupinterlinespace\hbox\bgroup#1\egroup\par}
+
+\long\def\formatreferenceliste#1%
+  {\bgroup
+   \convertargument#1\to\ascii
+   \doifelselettervalue{\ascii\c!width}
+     {\hbox\!!to\lettervalue{\ascii\c!width}}
+     {\hbox}%
+     {\vbox
+        {\vbox{\doattributes{\????ld\ascii}\c!titlestyle\c!titlecolor
+           {\doformatreferenceliste{\labeltext\ascii}}}
+         \vtop{\doattributes{\????ld\ascii}\c!textstyle\c!textcolor
+           {\doformatreferenceliste{\lettervalue\ascii}}}}}%
+   \egroup}
+
+\setvalue{\v!reference\v!line\v!e}%
+  {\hbox\!!to\hsize
+     {\processcommacommand[\@@@@ldlist]\formatreferenceliste\hss}}
+
+\startsetups[letter:reference:\v!e]
+
+\setups[letter:reference:\v!a]
 
 \stopsetups
 
@@ -340,7 +367,7 @@
 
 \startsetups[letter:address]
 \let\\\endgraf
-\offinterlineskip\endgraf
+\offinterlineskip\vskip-\lineheight
 \localframed
   [\????ls\v!address\v!dispatch]
   {\setups[letter:address:dispatch]}
@@ -428,6 +455,7 @@
 \setupletter
   [\c!alternative=\v!a,
    \c!list=\v!date,
+   \c!width=\zeropoint,
    \c!backaddress\c!separator=\textcomma\space]
 
 \setupletter
@@ -467,8 +495,8 @@
   [\c!frame=\v!off,
    \c!location=\v!top,
    \c!inbetween={\blank[2*\v!line]},
-   \c!align=\v!middle,
+   \c!align=\v!right,
    \c!offset=\zeropoint,
-   \c!height=\plusfour\lineheight]
+   \c!height=\v!fit]
 
 \protect \endinput

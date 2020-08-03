@@ -11,7 +11,7 @@
       Letter module for ConTeXt.
     </TPM:Description>
     <TPM:Author>Wolfgang Schuster</TPM:Author>
-    <TPM:RunFiles size="70981">
+    <TPM:RunFiles size="73194">
       tex/context/third/letter/base/t-letter.tex
       tex/context/third/letter/interface/default.nli
       tex/context/third/letter/interface/pragma.nli
@@ -25,6 +25,7 @@
       tex/context/third/letter/style/dinb.nls
       tex/context/third/letter/style/pragma.nls
       tex/context/third/letter/style/knuth.nls
+      tex/context/third/letter/style/dutch.nls
       tex/context/interface/third/letter.xml
       tpm/t-letter.tpm
    </TPM:RunFiles>

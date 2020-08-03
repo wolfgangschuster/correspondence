@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-letter,
-%D        version=2008.07.07,
+%D        version=2008.07.08,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Framework for Letters,
 %D         author=Wolfgang Schuster,
@@ -134,9 +134,14 @@
       \v!secondpage=>{\definelayout[\v!letter\v!secondpage][#2]},
           \v!header=>{\dosetupletterheader[#2][#3]},
           \v!footer=>{\dosetupletterfooter[#2][#3]},
-          \v!option=>{\getparameters[\????ls\v!option][#2]},
+          \v!option=>{\dosetupletteroption[\v!option][#2]},
         \v!foldmark=>{\dododosetupletterstyle[\v!topmark,\v!botmark,\v!cutmark][#2][#3]},
          \s!unknown=>{\dododosetupletterstyle[#1][#2][#3]}]}
+
+%D Set the values for normal options.
+
+\def\dosetupletteroption[#1][#2]%
+  {\getparameters[\????ls#1][#2]}
 
 %D Setup of the layers and their frames.
 
@@ -147,7 +152,9 @@
            {\dododododosetupletterstyle[##1][\v!option][#2]}
            {\ExpandSecondAfter\doifinsetelse{##1}\letter!list!descriptions
               {\setupdescriptions[\v!letter##1][#2]}
-              {\dododododosetupletterstyle[##1][\v!layer,\v!frame,\v!option][#2]}}}
+              {\ExpandSecondAfter\doifinsetelse{##1}\letter!list!layers
+                 {\dododododosetupletterstyle[##1][\v!layer,\v!frame,\v!option][#2]}
+                 {\dosetupletteroption[##1][#2]}}}}
         {\dododododosetupletterstyle[##1][#2][#3]}}%
    \processcommacommand[#1]\dodododosetupletterstyle}
 
@@ -156,7 +163,7 @@
      {\processaction
         [##1]
         [    \v!layer=>{\dododododosetupletterstyle[#1][\v!layer\v!a,\v!layer\v!b][#3]},
-         \v!layer\v!a=>{\setuplayer[#1][#3]},
+         \v!layer\v!a=>{\setuplayer[\v!letter:#1][#3]},
          \v!layer\v!b=>{\getparameters[\????ls#1\v!layer][#3]},
              \v!frame=>{\getparameters[\????ls#1\v!frame][#3]},
             \v!option=>{\getparameters[\????ls#1][#3]},
@@ -422,6 +429,8 @@
 \def\lettervalue#1%
   {\csname\????ld#1\endcsname}
 
+\let\letter!list!layers\empty
+
 \def\letter!list!marking
   {\v!topmark,\v!botmark,\v!cutmark,\v!endmark,\v!usermark}
 
@@ -433,9 +442,11 @@
 
 \def\dododefineletterlayer[#1]%
   {\setvalue{\????ls\v!option#1}{\v!yes}%
+   \doifnotinset{#1}\letter!list!layers
+     {\appendtocommalist{#1}\letter!list!layers}%
    \presetlocalframed[\????ls#1\v!frame]%
    \definelayer
-     [#1]
+     [\v!letter:#1]
      [\c!width=\paperwidth,
       \c!height=\paperheight]%
    \setupletterstyle
@@ -464,7 +475,7 @@
      {\dodosetletterlayer[#1][\setups{letter:#1}]}}
 
 \def\dodosetletterlayer[#1][#2]%
-  {\setlayer[#1]
+  {\setlayer[\v!letter:#1]
      {\localframed[\????ls#1\v!frame]
         {\doadaptleftskip {\letterstylevalue{#1}\c!leftmargin}%
          \doadaptrightskip{\letterstylevalue{#1}\c!rightmargin}%
@@ -484,6 +495,7 @@
       \c!align=,
       \c!leftmargin=\zeropoint,
       \c!rightmargin=\zeropoint,
+      \c!alternative=\v!a,
       \c!style=,
       \c!color=]}
 
@@ -826,9 +838,11 @@
 
 \def\letter!list!backgrounds
   {\v!letter:\c!backgroundimage,\v!letter:\c!background,%
-   \v!letternext,\v!lettermain,\v!head,\v!foot,\v!backaddress,%
-   \v!address,\v!reference,\v!location,\v!nexthead,\v!nextfoot,%
-   \v!topmark,\v!botmark,\v!cutmark,\v!endmark,\v!usermark}
+   \v!letter:\v!letternext,\v!letter:\v!lettermain,\v!letter:\v!head,%
+   \v!letter:\v!foot,\v!letter:\v!backaddress,\v!letter:\v!address,%
+   \v!letter:\v!reference,\v!letter:\v!location,\v!letter:\v!nexthead,%
+   \v!letter:\v!nextfoot,\v!letter:\v!topmark,\v!letter:\v!botmark,
+   \v!letter:\v!cutmark,\v!letter:\v!endmark,\v!letter:\v!usermark}
 
 %D Settings at the begin of every letter.
 
@@ -902,7 +916,7 @@
 
 %D Reset the layer content.
 
-\def\letter!list!layers
+\def\letter!list!resetlayers
   {\v!topmark,\v!botmark,\v!cutmark,\v!endmark,\v!usermark,\v!letternext,\v!lettermain}
 
 \def\dodoresetletterlayer#1%
@@ -910,7 +924,7 @@
 
 \startsetups[letter:reset]
 
-  \processcommacommand[\letter!list!layers]\dodoresetletterlayer
+  \processcommacommand[\letter!list!resetlayers]\dodoresetletterlayer
   
   \setuplayer[\v!letternext][\c!state=\v!continue]
 

@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2008.05.18,
+%D        version=2008.07.08,
 %D          title=\CONTEXT\ Letter Style,
 %D       subtitle=Blockstyle initalization,
 %D         author=Wolfgang Schuster,
@@ -9,7 +9,7 @@
 
 \unprotect
 
-\def\doresetletterlayer  #1{\dodefineletterlayer  [#1]}
+\def\doresetletterlayer  #1{\dododefineletterlayer[#1]}
 \def\doresetlettersection#1{\dodefinelettersection[#1]}
 
 \processcommacommand[\letter!list!layers  ]\doresetletterlayer

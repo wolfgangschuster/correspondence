@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2008.07.06,
+%D        version=2008.07.08,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -40,6 +40,7 @@
                 attention: attention
              distribution: distribution
                salutation: salutation
+                addressee: addressee
 \stopconstants
 
 \startvariables            all
@@ -52,6 +53,7 @@
                      copy: copy
                   nobreak: nobreak
                      memo: memo
+                addressee: addressee
 \stopvariables
 
 %D We have at the moment only the values from the core module, I use the settings
@@ -96,7 +98,7 @@
    \egroup
    \hfill}
 
-\setvalue{\v!reference\v!line\v!a}%
+\setvalue{\v!letter:\v!reference:\v!a}%
   {\setbox\scratchbox\hbox\!!to\hsize
      {\getcommacommandsize[\@@@@ldlist]% \@@@@ldreference?
       \ifnum\commalistsize<\plustwo\hfill\fi
@@ -133,7 +135,7 @@
            {\lettervalue{#1}}}}%
    \egroup}
 
-\setvalue{\v!reference\v!line\v!b}%
+\setvalue{\v!letter:\v!reference:\v!b}%
   {\vtop % why not \vbox?
      {\processcommacommand[\@@@@ldlist]\formatreferencelistb}}
 
@@ -169,7 +171,7 @@
      {\lettervalue\ascii}%
    \egroup}
 
-\setvalue{\v!reference\v!line\v!c}%
+\setvalue{\v!letter:\v!reference:\v!c}%
   {\hbox\!!to\hsize
      {\processcommacommand[\@@@@ldlist]\formatreferencelistc}}
 
@@ -193,7 +195,7 @@
 \def\formatreferencelistd#1%
   {\appendtoks\doformatreferencelistd{#1}\to\scratchtoks}
 
-\setvalue{\v!reference\v!line\v!d}%
+\setvalue{\v!letter:\v!reference:\v!d}%
   {\vtop % why not \vbox?
      {\scratchtoks\emptytoks
       \processcommacommand[\@@@@ldlist]\formatreferencelistd
@@ -238,7 +240,7 @@
            {\doformatreferenceliste{\lettervalue\ascii}}}}}%
    \egroup}
 
-\setvalue{\v!reference\v!line\v!e}%
+\setvalue{\v!letter:\v!reference:\v!e}%
   {\hbox\!!to\hsize
      {\processcommacommand[\@@@@ldlist]\formatreferenceliste\hss}}
 
@@ -254,7 +256,7 @@
 %D method to get this result to use alternative c and remove all values from
 %D the reference but the none key is better.
 
-\resetvalue{\v!reference\v!line\v!none}
+\resetvalue{\v!letter:\v!reference:\v!none}
 
 \startsetups[letter:reference:\v!none]
 
@@ -423,18 +425,34 @@
 %D If you hace problem to put all information in the limited space you could
 %D try to reduce the font size or reduce the interlinespace in the field.
 
-\presetlocalframed[\????ls\v!address\v!dispatch]
-\presetlocalframed[\????ls\v!address\v!content]
+\presetlocalframed[\????ls\v!dispatch]
+\presetlocalframed[\????ls\v!addressee]
 
 \startsetups[letter:address]
 \let\\\endgraf
 \offinterlineskip\vskip-\lineheight
-\localframed
-  [\????ls\v!address\v!dispatch]
-  {\setups[letter:address:dispatch]}
-\localframed
-  [\????ls\v!address\v!content]
-  {\setups[letter:address:content]}
+\doif\@@@@lsoptiondispatch \v!yes{\setups[letter:place:dispatch]}
+\doif\@@@@lsoptionaddressee\v!yes{\setups[letter:place:addressee]}
+\stopsetups
+
+\startsetups[letter:place:dispatch]
+
+  \localframed
+    [\????ls\v!dispatch]
+    {\doadaptleftskip {\letterstylevalue\v!addressee\c!leftmargin}%
+     \doadaptrightskip{\letterstylevalue\v!addressee\c!rightmargin}%
+     \doattributes{\????ls\v!addressee}\c!style\c!color{\setups[letter:address:dispatch]}}
+
+\stopsetups
+
+\startsetups[letter:place:addressee]
+
+  \localframed
+    [\????ls\v!addressee]
+    {\doadaptleftskip {\letterstylevalue\v!addressee\c!leftmargin}%
+     \doadaptrightskip{\letterstylevalue\v!addressee\c!rightmargin}%
+     \doattributes{\????ls\v!addressee}\c!style\c!color{\setups[letter:address:content]}}
+
 \stopsetups
 
 \startsetups[letter:address:dispatch]
@@ -454,7 +472,7 @@
 %D a not defined alternative the definition a is choosen.
 
 \startsetups[letter:reference]
-\executeifdefined{\v!reference\v!line\@@@@ldalternative}{\v!reference\v!line\v!a}
+\executeifdefined{\v!letter:\v!reference:\@@@@ldalternative}{\getvalue{\v!letter:\v!reference:\v!a}}
 \stopsetups
 
 \startsetups[letter:title]
@@ -487,14 +505,14 @@
 %D own handwritten signature and to have a little bit space between the closing text
 %D and the appendices.
 
-\presetlocalframed[\????ls\v!closing\v!frame]
+\setvalue{\v!letter:\v!closing:\v!a}%
+  {\lettervalue\c!closing
+   \doiflettervalue\c!signature{\letterstylevalue\v!closing\c!inbetween}%
+   \lettervalue\c!signature}
 
 \startsetups[letter:closing]
-\dontleavehmode\localframed
-  [\????ls\v!closing\v!frame]
-  {\lettervalue\c!closing
-   \doiflettervalue\c!signature{\letterstylevalue{\v!closing\v!frame}\c!inbetween}
-   \lettervalue\c!signature}
+\let\\\crlf
+\executeifdefined{\v!letter:\v!closing:\@@@@lsclosingalternative}{\getvalue{\v!letter:\v!closing:\v!a}}
 \stopsetups
 
 \startsetups[letter:appendices]
@@ -529,19 +547,19 @@
    \s!unknown=>\lettervalue\c!postscript]
 \stopsetups
 
-\setvalue{\v!letter:\v!backaddress:\v!a}%
+\setvalue{\v!letter:\v!backaddress:\v!yes}%
   {\lettervalue\c!fromname
    \doiflettervalue\c!fromaddress\\
    \lettervalue\c!fromaddress}
 
-\setvalue{\v!letter:\v!backaddress:\v!b}%
+\setvalue{\v!letter:\v!backaddress:\v!auto}%
   {\lettervalue\c!fromname
    \doiflettervalue\c!fromaddress\\
    \lettervalue\c!fromaddress}
 
-\resetvalue{\v!letter:\v!backaddress:\v!c}
+\resetvalue{\v!letter:\v!backaddress:\v!no}
 
-\setvalue{\v!letter:\v!backaddress:\v!d}%
+\setvalue{\v!letter:\v!backaddress:\s!unknown}%
   {\doifelselettervalue\c!backaddress
      {\lettervalue\c!backaddress}
      {\lettervalue\c!fromname
@@ -550,12 +568,7 @@
 
 \startsetups[letter:backaddress]
 \def\\{\lettervalue{\c!backaddress\c!separator}}
-\processaction
-  [\lettervalue\c!backaddress]
-  [    \v!yes=>\getvalue{\v!letter:\v!backaddress:\v!a},
-      \v!auto=>\getvalue{\v!letter:\v!backaddress:\v!b},
-        \v!no=>\getvalue{\v!letter:\v!backaddress:\v!c},
-   \s!unknown=>\getvalue{\v!letter:\v!backaddress:\v!d}]  
+\executeifdefined{\v!letter:\v!backaddress:\@@@@ldbackaddress}{\getvalue{\v!letter:\v!backaddress:\s!unknown}}
 \stopsetups
 
 %D To prevent a pagebreak between the last line of the text and
@@ -575,7 +588,7 @@
 \startsetups[letter:optimize]
 
   \setbox\scratchbox\hbox % trial typesetting to get the heigth of the reference line
-    {\executeifdefined{\v!reference\v!line\@@@@ldalternative}{\v!reference\v!line\v!a}}
+    {\executeifdefined{\v!letter:\v!reference:\@@@@ldalternative}{\getvalue{\v!letter:\v!reference:\v!a}}}
 
   \setups[letter:reference:\@@@@ldalternative]
 
@@ -583,50 +596,39 @@
 
 \setupletter
   [\c!alternative=\v!a,
+   \c!backaddress=\v!yes,
    \c!list=\v!date,
+   \c!date=\currentdate,
    \c!width=\zeropoint,
    \c!backaddress\c!separator=\textcomma\space]
 
-\setupletter
-  [\c!date=\currentdate]
-
 \setupletterstyle
   [\v!option]
-  [\c!before=\setups{letter:before}]
+  [\c!dispatch=\v!yes,
+   \c!addressee=\v!yes]
 
 \setupletterstyle
-  [\v!address]
-  [\v!dispatch,\v!content]
+  [\v!dispatch,\v!addressee]
   [\c!align=\v!right,
    \c!width=\hsize,
+   \c!leftmargin=\zeropoint,
+   \c!rightmargin=\zeropoint,
    \c!offset=\zeropoint,
    \c!frame=\v!off]
 
 \setupletterstyle
-  [\v!address]
   [\v!dispatch]
   [\c!location=\v!bottom,
    \c!height=\dimexpr(\vsize/9)*3\relax]
 
 \setupletterstyle
-  [\v!address]
-  [\v!content]
+  [\v!addressee]
   [\c!location=\v!top,
    \c!height=\dimexpr(\vsize/9)*6\relax]
 
 \setupletterstyle
   [\v!closing]
   [\c!after={\blank[\v!line]},
-   \c!inbetween={\blank[2*\v!line]}]
-
-\setupletterstyle
-  [\v!closing]
-  [\v!frame]
-  [\c!frame=\v!off,
-   \c!location=\v!top,
-   \c!inbetween=\letterstylevalue\v!closing\c!inbetween,
-   \c!align=\v!right,
-   \c!offset=\zeropoint,
-   \c!height=\v!fit]
+   \c!inbetween={\blank[\v!nobreak,2*\v!line]}]
 
 \protect \endinput

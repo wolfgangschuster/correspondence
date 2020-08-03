@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-01,
-%D      version=2012.09.21,
+%D      version=2012.11.19,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Letters,
 %D       author=Wolfgang Schuster,
@@ -127,7 +127,7 @@
    \correspondenceparameter\c!fromaddress}
 
 \defineletterelement[\v!layer][\v!head][\v!left]
-  {\framed[\c!frame=\v!off,\c!align=\c!flushleft,\c!width=\v!broad,\c!offset=\zeropoint]\bgroup
+  {\framed[\c!frame=\v!off,\c!align=\v!flushleft,\c!width=\v!broad,\c!offset=\zeropoint]\bgroup
      \begingroup
        \def\currentcorrespondencestyle{\v!letter:\c!fromname}%
        \usecorrespondencestylestyleandcolor\c!style\c!color
@@ -145,7 +145,7 @@
    \egroup}
 
 \defineletterelement[\v!layer][\v!head][\v!middle]
-  {\framed[\c!frame=\v!off,\c!align=\c!middle,\c!width=\v!broad,\c!offset=\zeropoint]\bgroup
+  {\framed[\c!frame=\v!off,\c!align=\v!middle,\c!width=\v!broad,\c!offset=\zeropoint]\bgroup
      \begingroup
        \def\currentcorrespondencevalue{\v!letter:\c!fromname}%
        \usecorrespondencestylestyleandcolor\c!style\c!color
@@ -163,7 +163,7 @@
    \egroup}
 
 \defineletterelement[\v!layer][\v!head][\v!right]
-  {\framed[\c!frame=\v!off,\c!align=\c!flushright,\c!width=\v!broad,\c!offset=\zeropoint]\bgroup
+  {\framed[\c!frame=\v!off,\c!align=\v!flushright,\c!width=\v!broad,\c!offset=\zeropoint]\bgroup
      \begingroup
        \def\currentcorrespondencestyle{\v!letter:\c!fromname}%
        \usecorrespondencestylestyleandcolor\c!style\c!color

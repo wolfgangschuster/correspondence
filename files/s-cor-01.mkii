@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-01,
-%D      version=2012.06.10,
+%D      version=2012.11.19,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Letters,
 %D       author=Wolfgang Schuster,
@@ -41,7 +41,7 @@
 \def\defineletterdescription {\dodoubleargument\definecorrespondencedescription [\v!letter]}
 
 \def\defineletterelements    {\dotripleargument\definecorrespondenceelements    [\v!letter]}
-\def\setupletterelements     {\dotripleargument\setupcorrespondenceelements     [\v!letter]}
+\def\setupletterelements     {\dotripleargument\definecorrespondenceelements    [\v!letter]}
 
 \def\setupletterstyle        {\dotripleargument\setupcorrespondencestyle        [\v!letter]}
 \def\setupletterlayer        {\dotripleargument\setupcorrespondencelayer        [\v!letter]}
@@ -119,7 +119,7 @@
    \correspondenceparameter\c!fromaddress}
 
 \defineletterelement[\v!layer][\v!head][\v!left]
-  {\framed[\c!frame=\v!off,\c!align=\c!flushleft,\c!width=\v!broad,\c!offset=\zeropoint]\bgroup
+  {\framed[\c!frame=\v!off,\c!align=\v!flushleft,\c!width=\v!broad,\c!offset=\zeropoint]\bgroup
      \def\currentcorrespondencestyle{\v!letter:\c!fromname}%
      \dostartattributes{\????correspondencestyle\currentcorrespondencestyle}\c!style\c!color
        \correspondenceparameter\c!fromname
@@ -135,7 +135,7 @@
    \egroup}
 
 \defineletterelement[\v!layer][\v!head][\v!middle]
-  {\framed[\c!frame=\v!off,\c!align=\c!middle,\c!width=\v!broad,\c!offset=\zeropoint]\bgroup
+  {\framed[\c!frame=\v!off,\c!align=\v!middle,\c!width=\v!broad,\c!offset=\zeropoint]\bgroup
      \def\currentcorrespondencestyle{\v!letter:\c!fromname}%
      \dostartattributes{\????correspondencestyle\currentcorrespondencestyle}\c!style\c!color
        \correspondenceparameter\c!fromname
@@ -151,7 +151,7 @@
    \egroup}
 
 \defineletterelement[\v!layer][\v!head][\v!right]
-  {\framed[\c!frame=\v!off,\c!align=\c!flushright,\c!width=\v!broad,\c!offset=\zeropoint]\bgroup
+  {\framed[\c!frame=\v!off,\c!align=\v!flushright,\c!width=\v!broad,\c!offset=\zeropoint]\bgroup
      \def\currentcorrespondencestyle{\v!letter:\c!fromname}%
      \dostartattributes{\????correspondencestyle\currentcorrespondencestyle}\c!style\c!color
        \correspondenceparameter\c!fromname

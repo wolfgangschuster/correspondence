@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=casual,
-%D        version=2009.03.31,
+%D        version=2010.08.11,
 %D          title=\CONTEXT\ Resume Style,
 %D       subtitle=Casual Style,
 %D         author=Wolfgang Schuster,
@@ -10,10 +10,6 @@
 %D        license=Public Domain]
 
 \unprotect
-
-%D I take the layout from the default style.
-
-\useresumestyle[modern]
 
 %D You can select between different color styles for the elements.
 
@@ -135,7 +131,7 @@
    \blackrule[\c!height=2\linewidth,\c!width=\hsize,\c!color=resume:1]
    \doifresumevalue\v!quote{\blank[\v!line]\attributedresumevalue\v!quote}}
 
-% see beow for a better version
+% see below for a better version
 %
 % \setvalue{\v!resume:\v!foot:\v!casual}%
 %   {\attributedresumevalue\v!street\space -- \attributedresumevalue\v!town\par

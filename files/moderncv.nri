@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=moderncv,
-%D        version=2009.09.20,
+%D        version=2010.08.21,
 %D          title=\CONTEXT\ Resume Interface,
 %D       subtitle=moderncv Interface,
 %D         author=Wolfgang Schuster,
@@ -66,9 +66,13 @@
 
 \def\ModerncvSectionCommand#1#2%
   {\hbox to \hsize
-     {\blackrule[\c!width=\measure{hintscolumnwidth},\c!height=1ex,\c!depth=-.5ex,\c!color=resume:6]%
-      \hskip\measure{separatorcolumnwidth}%
+     {\hskip\dimexpr\measure{hintscolumnwidth}+\measure{separatorcolumnwidth}\relax
       \vtop{\hsize\measure{maincolumnwidth}#2}}}
+
+\def\ModerncvSectionTextcommand
+  {\llap
+     {\blackrule[\c!width=\measure{hintscolumnwidth},\c!height=1ex,\c!depth=-.5ex,\c!color=resume:6]%
+      \hskip\measure{separatorcolumnwidth}}}
 
 \setuphead
   [\v!section]
@@ -76,7 +80,8 @@
    \c!incrementnumber=\v!no,
    \c!before={\blank[2*\v!medium]},
    \c!after={\blank[\v!medium]},
-   \c!command=\ModerncvSectionCommand]
+   \c!command=\ModerncvSectionCommand,
+   \c!deeptextcommand=\ModerncvSectionTextcommand]
 
 \def\ModerncvSubsectionCommand#1#2%
   {\hbox to \hsize
@@ -104,14 +109,19 @@
    \egroup
    \doifelsenothing{#1}{\blank[.25em]}{\blank[#1]}}
 
-\def\cvdoubleitem#1#2#3#4%
-  {\cvline{#1}
+\def\cvdoubleitem
+  {\dosingleempty\docvdoubleitem}
+
+\def\docvdoubleitem[#1]#2#3#4#5%
+  {\cvline
+     [#1]
+     {#2}
      {\hbox\bgroup
-        \vtop{\hsize\measure{doubleitemmaincolumnwidth}#2}%
+        \vtop{\hsize\measure{doubleitemmaincolumnwidth}#3}%
         \hfill
-        \vtop{\hsize\measure{hintscolumnwidth}\raggedleft#3}%
+        \vtop{\hsize\measure{hintscolumnwidth}\raggedleft#4}%
         \hskip\measure{separatorcolumnwidth}%
-        \vtop{\hsize\measure{doubleitemmaincolumnwidth}#4}%
+        \vtop{\hsize\measure{doubleitemmaincolumnwidth}#5}%
       \egroup}}
 
 \def\cvlistitem
@@ -131,25 +141,38 @@
         \doifsomething{#3}{\doifelsenothing{#1}{--}{#1}~\vtop{\hsize\measure{listdoubleitemmaincolumnwidth}#3}}%
       \egroup}}
 
-\def\cventry#1#2#3#4#5#6%
-  {\cvline{#1}
-     {{\bf#2}%
-      \doifsomething{#3}{, {\it#3}}%
-      \doifsomething{#4}{, {#4}}%
-      \doifsomething{#5}{, {#5}}%
-      .%
-      \doifsomething{#6}{\crlf\tx#6}}}
+\def\cventry
+  {\dosingleempty\docventry}
 
-\def\cvlanguage#1#2#3%
-  {\cvline{#1}
+\def\docventry[#1]#2#3#4#5#6#7%
+  {\cvline
+     [#1]
+     {#2}
+     {{\bf#3}%
+      \doifsomething{#4}{, {\it#4}}%
+      \doifsomething{#5}{, {#5}}%
+      \doifsomething{#6}{, {#6}}%
+      .%
+      \doifsomething{#7}{\crlf\tx#7}}}
+
+\def\cvlanguage
+  {\dosingleempty\docvlanguage}
+
+\def\docvlanguage[#1]#2#3#4%
+  {\cvline
+     [#1]
+     {#2}
      {\hbox\bgroup
-        \vtop{\hsize\dimexpr.225\measure{maincolumnwidth}\relax\bf#2}%
+        \vtop{\hsize\dimexpr.225\measure{maincolumnwidth}\relax\bf#3}%
         \hfill
-        \vtop{\hsize\dimexpr.725\measure{maincolumnwidth}\relax\raggedleft\itx#3}%
+        \vtop{\hsize\dimexpr.725\measure{maincolumnwidth}\relax\raggedleft\itx#4}%
       \egroup}}
 
-\def\cvcomputer#1#2#3#4%
-  {\cvdoubleitem{#1}{\tx#2}{#3}{\tx#4}}
+\def\cvcomputer
+  {\dosingleempty\docvcomputer}
+
+\def\docvcomputer[#1]#2#3#4#5%
+  {\cvdoubleitem[#1]{#2}{\tx#3}{#4}{\tx#5}}
 
 %D Page optimation, change the topspace to produce a distance of 2.5em
 %D between the bottom of the header and the first line of text.

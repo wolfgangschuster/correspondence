@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2009.07.18,
+%D        version=2009.07.22,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -250,11 +250,20 @@
 
 \newtoks\letter!local!commands
 
+\chardef\letterenvironmentmode\zerocount
+
 \def\startletter
   {\begingroup
    \dodoubleempty\dostartletter}
 
 \def\dostartletter[#1][#2]%
+  {\ifcase\letterenvironmentmode\relax
+     \@EA\dostartbufferletter
+   \else
+     \@EA\dostartcontentletter
+   \fi[#1][#2]}
+
+\long\def\dostartcontentletter[#1][#2]#3\stopletter
   {\ifsecondargument
      \getparameters[\????ld][#1]%
      \doifundefinedelse{\????ld\????ld#2}
@@ -267,17 +276,29 @@
           {\setvalue{\????ld\c!toaddress}{#1}}
           {\setvalue{\????ld\c!toaddress}{\getvalue{\????ld\????ld#1}}}}%
    \fi\fi
-   \begingroup
-   \obeylines
-   \dodostartletter}
-
-\long\def\dodostartletter#1\stopletter
-  {\endgroup
-   \scratchtoks{#1}%
-   \@EA\setbuffer\@EA[lettercontent]\the\scratchtoks\endbuffer
+   \setbuffer[lettercontent]#3\endbuffer
    \processlettervalues
    \directsetup{\v!letter:\v!place}%
    \endgroup}
+
+\def\dostartbufferletter[#1][#2]%
+  {\def\stopletter
+     {\processlettervalues
+      \directsetup{\v!letter:\v!place}%
+      \endgroup}
+   \ifsecondargument
+     \getparameters[\????ld][#1]%
+     \doifundefinedelse{\????ld\????ld#2}
+       {\setvalue{\????ld\c!toaddress}{#2}}
+       {\setvalue{\????ld\c!toaddress}{\getvalue{\????ld\????ld#2}}}%
+   \else\iffirstargument
+     \doifassignmentelse{#1}
+       {\getparameters[\????ld][#1]}
+       {\doifundefinedelse{\????ld\????ld#1}
+          {\setvalue{\????ld\c!toaddress}{#1}}
+          {\setvalue{\????ld\c!toaddress}{\getvalue{\????ld\????ld#1}}}}%
+   \fi\fi
+   \dostartbuffer[lettercontent][startletter][stopletter]}
 
 \def\processlettervalues
   {\globalletempty\letter!list!descriptions

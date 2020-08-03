@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-correspondence,
-%D        version=2010.04.04,
+%D        version=2010.08.11,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Correspondence,
 %D         author=Wolfgang Schuster,
@@ -161,7 +161,7 @@
    \getparameters[#2#3\v!layer][#4]}
 
 \def\dosetupcorrespondencelayerframe[#1][#2][#3][#4]%
-  {\setuplocalframed[#2#3\v!frame][#4]}
+  {\getparameters[#2#3\v!frame][#4]}
 
 \def\dosetupcorrespondencelayeroption[#1][#2][#3][#4]%
   {\getcheckedparameters[#1\v!layer\v!option:#3][#2#3][#4]}
@@ -504,7 +504,7 @@ correspondence.files = {
         name        = "t-correspondence.tex",
         path        = "tex/context/third/letter/base/",
         type        = "base",
-        version     = "2010.06.23",
+        version     = "2010.08.11",
         description = "Core module"
     } ,
     {

@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-00,
-%D      version=2012.06.10,
+%D      version=2012.08.26,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Correspondence,
 %D       author=Wolfgang Schuster,
@@ -487,7 +487,8 @@
          {\scratchdimen}
          {\unhcopy\scratchbox}
          {\correspondencedescriptionparameter\c!distance}%
-       \ctxlua{thirddata.correspondence.description_split("\correspondencedescriptionparameter\c!textcommand")}%
+       \edef\p_correspondence_description_textcommand{\detokenize\expandafter{\correspondencedescriptionparameter\c!textcommand}}%
+       \ctxlua{thirddata.correspondence.description_split(\!!bs\correspondencedescriptionparameter\c!textcommand\!!es)}%
        \expandcheckedcsname\????correspondencedescriptionlocation{\correspondencedescriptionparameter\c!location}\v!left
        \correspondencedescriptionparameter\c!after
        \doifsomethingelse{\correspondencedescriptionparameter\c!spaceafter}{\blank[\correspondencedescriptionparameter\c!spaceafter]}\endgraf
@@ -575,9 +576,9 @@
 \unexpanded\def\correspondence_paragraph_beg[#environment][#element]%
   {\begingroup
    \correspondence_parameters{#environment}{#element}\v!paragraph
-   \dosingleempty\correspondence_paragraph_beg_parameters}%
+   \dodoubleempty\correspondence_paragraph_beg_parameters}%
 
-\unexpanded\def\correspondence_paragraph_beg_parameters[#parameters]%
+\unexpanded\def\correspondence_paragraph_beg_parameters[#parameters][#dummy]% #dummy removes the linebreak before the first line
   {\iffirstargument
      \setupcurrentcorrespondenceparagraph[#parameters]%
    \fi
@@ -595,33 +596,33 @@
    \doifsomethingelse{\correspondenceparagraphparameter\c!spaceafter }{\blank[\correspondenceparagraphparameter\c!spaceafter ]}\endgraf
    \endgroup}
 
-\unexpanded\def\correspondence_paragraph_lefttext
-  {\edef\p_correspondence_paragraph_lefttext{\correspondenceparagraphparameter\c!lefttext}%
-   \ifx\p_correspondence_paragraph_lefttext\empty \else
-     \margindata
-       [\v!inleft]
-       [\c!style=\correspondenceparagraphparameter\c!leftstyle,
-        \c!color=\correspondenceparagraphparameter\c!leftcolor]
-       [\c!align=\correspondenceparagraphparameter\c!leftalign]
-       {\correspondenceparagraphparameter\c!lefttext}%
-   \fi}
-
-\unexpanded\def\correspondence_paragraph_righttext
-  {\edef\p_correspondence_paragraph_righttext{\correspondenceparagraphparameter\c!righttext}%
-   \ifx\p_correspondence_paragraph_righttext\empty \else
-     \margindata
-       [\v!inright]
-       [\c!style=\correspondenceparagraphparameter\c!rightstyle,
-        \c!color=\correspondenceparagraphparameter\c!rightcolor]
-       [\c!align=\correspondenceparagraphparameter\c!rightalign]
-       {\correspondenceparagraphparameter\c!righttext}%
-   \fi}
+% \unexpanded\def\correspondence_paragraph_lefttext
+%   {\edef\p_correspondence_paragraph_lefttext{\correspondenceparagraphparameter\c!lefttext}%
+%    \ifx\p_correspondence_paragraph_lefttext\empty \else
+%      \margindata
+%        [\v!inleft]
+%        [\c!style=\correspondenceparagraphparameter\c!leftstyle,
+%         \c!color=\correspondenceparagraphparameter\c!leftcolor]
+%        [\c!align=\correspondenceparagraphparameter\c!leftalign]
+%        {\correspondenceparagraphparameter\c!lefttext}%
+%    \fi}
+%
+% \unexpanded\def\correspondence_paragraph_righttext
+%   {\edef\p_correspondence_paragraph_righttext{\correspondenceparagraphparameter\c!righttext}%
+%    \ifx\p_correspondence_paragraph_righttext\empty \else
+%      \margindata
+%        [\v!inright]
+%        [\c!style=\correspondenceparagraphparameter\c!rightstyle,
+%         \c!color=\correspondenceparagraphparameter\c!rightcolor]
+%        [\c!align=\correspondenceparagraphparameter\c!rightalign]
+%        {\correspondenceparagraphparameter\c!righttext}%
+%    \fi}
 
 \unexpanded\def\correspondence_paragraph_text
   {\edef\p_correspondence_paragraph_text{\correspondenceparagraphparameter\c!text}%
    \ifx\p_correspondence_paragraph_text\empty \else
-     \correspondence_paragraph_lefttext  % margin texts are only placed when there is normal text,
-     \correspondence_paragraph_righttext % for margin only texts one can use “left”, “right” or “both”
+    %\correspondence_paragraph_lefttext  % margin texts are only placed when there is normal text,
+    %\correspondence_paragraph_righttext % for margin only texts one can use “left”, “right” or “both”
      \begingroup
        \usecorrespondenceparagraphstyleandcolor\c!textstyle\c!textcolor
        \correspondenceparagraphparameter\c!text
@@ -632,22 +633,124 @@
 \setvalue{\????correspondenceparagraphalternative\s!default}%
   {\getbufferdata[\????correspondenceparagraphbuffer\currentcorrespondenceparagraph]}
 
-\setvalue{\????correspondenceparagraphalternative\v!left}%
-  {\correspondence_paragraph_lefttext
-   \getbufferdata[\????correspondenceparagraphbuffer\currentcorrespondenceparagraph]}
-
-\setvalue{\????correspondenceparagraphalternative\v!right}%
-  {\correspondence_paragraph_righttext
-   \getbufferdata[\????correspondenceparagraphbuffer\currentcorrespondenceparagraph]}
-
-\setvalue{\????correspondenceparagraphalternative\v!both}%
-  {\correspondence_paragraph_lefttext
-   \correspondence_paragraph_righttext
-   \getbufferdata[\????correspondenceparagraphbuffer\currentcorrespondenceparagraph]}
+% \setvalue{\????correspondenceparagraphalternative\v!left}%
+%   {\correspondence_paragraph_lefttext
+%    \getbufferdata[\????correspondenceparagraphbuffer\currentcorrespondenceparagraph]}
+%
+% \setvalue{\????correspondenceparagraphalternative\v!right}%
+%   {\correspondence_paragraph_righttext
+%    \getbufferdata[\????correspondenceparagraphbuffer\currentcorrespondenceparagraph]}
+%
+% \setvalue{\????correspondenceparagraphalternative\v!both}%
+%   {\correspondence_paragraph_lefttext
+%    \correspondence_paragraph_righttext
+%    \getbufferdata[\????correspondenceparagraphbuffer\currentcorrespondenceparagraph]}
 
 \setvalue{\????correspondenceparagraphalternative\v!top}%
   {\correspondence_paragraph_text
    \doifsomethingelse{\correspondenceparagraphparameter\c!spaceinbetween}{\blank[\correspondenceparagraphparameter\c!spaceinbetween]}{\dosomebreak\nobreak}%
+   \getbufferdata[\????correspondenceparagraphbuffer\currentcorrespondenceparagraph]}
+
+\unexpanded\def\correspondence_paragraph_leftmargin
+  {\edef\p_correspondence_paragraph_lefttext{\correspondenceparagraphparameter\c!lefttext}%
+   \ifx\p_correspondence_paragraph_lefttext\empty \else
+     \margindata
+       [\v!inleft]
+       [\c!style=\correspondenceparagraphparameter\c!leftstyle,
+        \c!color=\correspondenceparagraphparameter\c!leftcolor]
+       [\c!align=\correspondenceparagraphparameter\c!leftalign]
+       {\p_correspondence_paragraph_lefttext}%
+   \fi}
+
+\unexpanded\def\correspondence_paragraph_rightmargin
+  {\edef\p_correspondence_paragraph_righttext{\correspondenceparagraphparameter\c!righttext}%
+   \ifx\p_correspondence_paragraph_righttext\empty \else
+     \margindata
+       [\v!inright]
+       [\c!style=\correspondenceparagraphparameter\c!rightstyle,
+        \c!color=\correspondenceparagraphparameter\c!rightcolor]
+       [\c!align=\correspondenceparagraphparameter\c!rightalign]
+       {\p_correspondence_paragraph_righttext}%
+   \fi}
+
+\setvalue{\????correspondenceparagraphalternative\v!margin}%
+  {\correspondence_paragraph_leftmargin
+   \correspondence_paragraph_rightmargin
+   \getbufferdata[\????correspondenceparagraphbuffer\currentcorrespondenceparagraph]}
+
+% \unexpanded\def\correspondence_paragraph_leftcolumn
+%   {\ifzeropt\p_correspondence_paragraph_leftwidth \else
+%      \vtop\bgroup
+%        \hsize\p_correspondence_paragraph_leftwidth
+%        \usecorrespondenceparagraphstyleandcolor\c!leftstyle\c!leftcolor
+%        \begstrut\correspondenceparagraphparameter\c!lefttext\endstrut
+%      \egroup
+%      \hskip\p_correspondence_paragraph_leftmargin
+%    \fi}
+%
+% \unexpanded\def\correspondence_paragraph_middlecolumn
+%   {\vtop\bgroup
+%      \hsize\dimexpr\hsize
+%        \ifzeropt\p_correspondence_paragraph_leftwidth \relax \else - \dimexpr\p_correspondence_paragraph_leftwidth  + \p_correspondence_paragraph_rightwidth  \relax \fi
+%        \ifzeropt\p_correspondence_paragraph_leftmargin\relax \else - \dimexpr\p_correspondence_paragraph_leftmargin + \p_correspondence_paragraph_rightmargin \relax \fi
+%      \relax
+%      \usecorrespondenceparagraphstyleandcolor\c!style\c!color
+%      \getbufferdata[\????correspondenceparagraphbuffer\currentcorrespondenceparagraph]% 
+%    \egroup}
+%
+% \unexpanded\def\correspondence_paragraph_rightcolumn
+%   {\ifzeropt\p_correspondence_paragraph_rightwidth \else
+%      \hskip\p_correspondence_paragraph_rightmargin
+%      \vtop\bgroup
+%        \hsize\p_correspondence_paragraph_rightwidth
+%        \usecorrespondenceparagraphstyleandcolor\c!rightstyle\c!rightcolor
+%        \begstrut\correspondenceparagraphparameter\c!righttext\endstrut
+%      \egroup
+%    \fi}
+%
+% \setvalue{\????correspondenceparagraphalternative\v!columns}% 
+%   {\edef\p_correspondence_paragraph_leftwidth  {\correspondenceparagraphparameter\c!leftwidth  }% 
+%    \edef\p_correspondence_paragraph_rightwidth {\correspondenceparagraphparameter\c!rightwidth }% 
+%    \edef\p_correspondence_paragraph_leftmargin {\correspondenceparagraphparameter\c!leftmargin }% 
+%    \edef\p_correspondence_paragraph_rightmargin{\correspondenceparagraphparameter\c!rightmargin}% 
+%    \dontleavehmode\hbox to \hsize\bgroup
+%      \correspondence_paragraph_leftcolumn
+%      \correspondence_paragraph_middlecolumn
+%      \correspondence_paragraph_rightcolumn
+%    \hss\egroup}
+
+\unexpanded\def\correspondence_paragraph_leftcolumn
+  {\edef\p_correspondence_paragraph_leftwidth {\correspondenceparagraphparameter\c!leftwidth }%
+   \edef\p_correspondence_paragraph_leftmargin{\correspondenceparagraphparameter\c!leftmargin}%
+   \ifzeropt\p_correspondence_paragraph_leftwidth \else
+     \setbox\scratchbox\vtop\bgroup
+       \dontinterfere
+       \hsize\p_correspondence_paragraph_leftwidth
+       \usecorrespondenceparagraphstyleandcolor\c!leftstyle\c!leftcolor
+       \begstrut\correspondenceparagraphparameter\c!lefttext\endstrut
+     \egroup
+     \llap{\box\scratchbox\hskip\p_correspondence_paragraph_leftmargin}%
+     \doadaptleftskip{\dimexpr\p_correspondence_paragraph_leftwidth+\p_correspondence_paragraph_leftmargin\relax}%
+   \fi}
+
+\unexpanded\def\correspondence_paragraph_rightcolumn
+  {\edef\p_correspondence_paragraph_rightwidth {\correspondenceparagraphparameter\c!rightwidth }%
+   \edef\p_correspondence_paragraph_rightmargin{\correspondenceparagraphparameter\c!rightmargin}%
+   \ifzeropt\p_correspondence_paragraph_rightwidth \else
+     \setbox\scratchbox\vtop\bgroup
+       \dontinterfere
+       \hsize\p_correspondence_paragraph_rightwidth
+       \usecorrespondenceparagraphstyleandcolor\c!rightstyle\c!rightcolor
+       \begstrut\correspondenceparagraphparameter\c!righttext\endstrut
+     \egroup
+     \rlap{\hskip\dimexpr\hsize-\leftskip-\rightskip-\p_correspondence_paragraph_rightwidth+\p_correspondence_paragraph_rightmargin\relax\box\scratchbox}%
+     \doadaptrightskip{\dimexpr\p_correspondence_paragraph_rightwidth+\p_correspondence_paragraph_rightmargin\relax}%
+   \fi}
+
+\setvalue{\????correspondenceparagraphalternative\v!columns}%
+  {\dontleavehmode
+   \correspondence_paragraph_leftcolumn
+   \correspondence_paragraph_rightcolumn
    \getbufferdata[\????correspondenceparagraphbuffer\currentcorrespondenceparagraph]}
 
 \setupcorrespondenceparagraph
@@ -655,7 +758,11 @@
     \c!spaceafter=\v!line,
    \c!alternative=\s!default,
      \c!leftalign=\v!flushleft,
-    \c!rightalign=\v!flushleft]
+    \c!rightalign=\v!flushleft,
+     \c!leftwidth=\zeropoint,
+    \c!rightwidth=\zeropoint,
+    \c!leftmargin=\zeropoint,
+   \c!rightmargin=\zeropoint]
 
 % Heading
 

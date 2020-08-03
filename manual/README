@@ -1,0 +1,12 @@
+Letter module for ConTeXt.
+
+The letter module provides a environment to input the data
+for private and business letters.
+
+Style files are responsible for the layout of the letter,
+the command \setupletterstyle could be used to change the
+default to own preferences.
+
+Besides the default interface another two are include in
+the bundle, you have to load either with the module or in
+the document with \useletterinterface.

@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2009.03.31,
+%D        version=2009.05.10,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -219,12 +219,6 @@
 %D the opening and closing with the optional argument, the values are
 %D local in this case and not global like the values you could set with
 %D \tex{setupletter}.
-
-\long\def\dosetbuffer[#1]#2\endbuffer % added \long
-  {\begingroup
-   \setcurrentbuffer{#1}%
-   \mksetbuffer{#2}%
-   \endgroup}
 
 \def\startletter
   {\bgroup\dodoubleempty\dostartletter}

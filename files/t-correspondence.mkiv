@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-correspondence,
-%D        version=2009.04.27,
+%D        version=2009.05.10,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Correspondence,
 %D         author=Wolfgang Schuster,
@@ -20,11 +20,13 @@
 
 \definemessageconstant {correspondence}
 
-\setinterfacemessage{correspondence}{title}{correspondence}
-\setinterfacemessage{correspondence}{1}    {loading -- -- --}
-\setinterfacemessage{correspondence}{2}    {-- -- -- not found}
-\setinterfacemessage{correspondence}{3}    {correspage set -- processed (size --)}
-\setinterfacemessage{correspondence}{4}    {--: --}
+\startinterface all
+  \setinterfacemessage{correspondence}{title}{correspondence}
+  \setinterfacemessage{correspondence}{1}    {loading -- -- --}
+  \setinterfacemessage{correspondence}{2}    {-- -- -- not found}
+  \setinterfacemessage{correspondence}{3}    {correspage set -- processed (size --)}
+  \setinterfacemessage{correspondence}{4}    {--: --}
+\stopinterface
 
 %D Page numbering
 
@@ -499,7 +501,7 @@ correspondence.files = {
         name        = "t-correspondence.tex",
         path        = "tex/context/third/letter/base/",
         type        = "base",
-        version     = "2009.04.27",
+        version     = "2009.05.10",
         description = "Core module"
     } ,
     {
@@ -521,7 +523,7 @@ correspondence.files = {
         name        = "default.nli",
         path        = "tex/context/third/letter/interface/",
         type        = "interface",
-        version     = "2009.03.31",
+        version     = "2009.05.10",
         description = "Default letter interface"
 
     } ,

@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-01,
-%D      version=2012.01.15,
+%D      version=2012.02.04,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Letters,
 %D       author=Wolfgang Schuster,
@@ -57,8 +57,9 @@
 \def\defineletterelement     {\doquadrupleargument\definecorrespondenceelement  [\v!letter]}
 \def\letterelement           {\doquadrupleargument\placecorrespondenceelement   [\v!letter]}
 
-\def\namedletterlayerparameter#1{\namedcorrespondencelayerparameter{\v!letter:#1}}
-\def\namedletterframeparameter#1{\namedcorrespondenceframeparameter{\v!letter:#1}}
+\def\namedletterlayerparameter  #1{\namedcorrespondencelayerparameter  {\v!letter:#1}}
+\def\namedletterframeparameter  #1{\namedcorrespondenceframeparameter  {\v!letter:#1}}
+\def\namedlettersectionparameter#1{\namedcorrespondencesectionparameter{\v!letter:#1}}
 
 % Layers
 
@@ -170,14 +171,14 @@
    \correspondenceparameter\c!fromname\hrule}
 
 \defineletterelement[\v!layer][\v!head][\v!setups]
-  {\texsetup{\v!letter:\v!layer:\v!head}}
+  {\directsetup{\v!letter:\v!layer:\v!head}}
 
 % layer: nexthead
 
 \defineletterelement[\v!layer][\v!nexthead][\v!gbrief]
   {\maxaligned
      {\rlap{\correspondenceparameter\c!fromname}
-      \midaligned{\lettertext\v!page\subpagenumber\lettertext\v!of\lastsubpagenumber}
+      \midaligned{\leftlettertext\v!pagenumber\subpagenumber\rightlettertext\v!pagenumber\lastsubpagenumber}
       \llap{\correspondenceparameter\c!date}}
    \hairline}
 
@@ -216,17 +217,17 @@
       \llap{\lettertext\v!page\subpagenumber}}}
 
 \defineletterelement[\v!layer][\v!nexthead][\v!setups]
-  {\texsetup{\v!letter:\v!layer:\v!nexthead}}
+  {\directsetup{\v!letter:\v!layer:\v!nexthead}}
 
 % layer: lefthead
 
 \defineletterelement[\v!layer][\v!lefthead][\v!setups]
-  {\texsetup{\v!letter:\v!layer:\v!lefthead}}
+  {\directsetup{\v!letter:\v!layer:\v!lefthead}}
 
 % layer: righthead
 
 \defineletterelement[\v!layer][\v!righthead][\v!setups]
-  {\texsetup{\v!letter:\v!layer:\v!righthead}}
+  {\directsetup{\v!letter:\v!layer:\v!righthead}}
 
 % layer: foot
 
@@ -246,23 +247,26 @@
      \eTR
    \eTABLE}
 
+\defineletterelement[\v!layer][\v!foot][\v!pagenumber]
+  {\midaligned{\leftlettertext\v!pagenumber\subpagenumber\rightlettertext\v!pagenumber\lastsubpagenumber}}
+
 \defineletterelement[\v!layer][\v!foot][\v!setups]
-  {\texsetup{\v!letter:\v!layer:\v!foot}}
+  {\directsetup{\v!letter:\v!layer:\v!foot}}
 
 % layer: nextfoot
 
 \defineletterelement[\v!layer][\v!nextfoot][\v!setups]
-  {\texsetup{\v!letter:\v!layer:\v!nextfoot}}
+  {\directsetup{\v!letter:\v!layer:\v!nextfoot}}
 
 % layer: leftfoot
 
 \defineletterelement[\v!layer][\v!leftfoot][\v!setups]
-  {\texsetup{\v!letter:\v!layer:\v!leftfoot}}
+  {\directsetup{\v!letter:\v!layer:\v!leftfoot}}
 
 % layer: rightfoot
 
 \defineletterelement[\v!layer][\v!rightfoot][\v!setups]
-  {\texsetup{\v!letter:\v!layer:\v!rightfoot}}
+  {\directsetup{\v!letter:\v!layer:\v!rightfoot}}
 
 % layer: address
 
@@ -273,7 +277,7 @@
    \correspondenceparameter\c!toaddress}
 
 \defineletterelement[\v!layer][\v!address][\v!setups]
-  {\texsetup{\v!letter:\v!layer:\v!address}}
+  {\directsetup{\v!letter:\v!layer:\v!address}}
 
 % layer: backaddress
 
@@ -290,7 +294,7 @@
      {\letterelement[\v!layer][\v!backaddress][\s!default]}}
 
 \defineletterelement[\v!layer][\v!backaddress][\v!setups]
-  {\texsetup{\v!letter:\v!layer:\v!backaddress}}
+  {\directsetup{\v!letter:\v!layer:\v!backaddress}}
 
 % layer: reference
 
@@ -407,7 +411,7 @@
    \egroup}
 
 \defineletterelement[\v!layer][\v!reference][\v!setups]
-  {\texsetup{\v!letter:\v!layer:\v!reference}}
+  {\directsetup{\v!letter:\v!layer:\v!reference}}
 
 % layer: location
 
@@ -417,42 +421,42 @@
    \correspondenceparameter\c!date}
 
 \defineletterelement[\v!layer][\v!location][\v!setups]
-  {\texsetup{\v!letter:\v!layer:\v!location}}
+  {\directsetup{\v!letter:\v!layer:\v!location}}
 
 % layer: topmark
 
 \defineletterelement[\v!layer][\v!topmark][\v!setups]
-  {\texsetup{\v!letter:\v!layer:\v!topmark}}
+  {\directsetup{\v!letter:\v!layer:\v!topmark}}
 
 % layer: botmark
 
 \defineletterelement[\v!layer][\v!botmark][\v!setups]
-  {\texsetup{\v!letter:\v!layer:\v!botmark}}
+  {\directsetup{\v!letter:\v!layer:\v!botmark}}
 
 % layer: cutmark
 
 \defineletterelement[\v!layer][\v!cutmark][\v!setups]
-  {\texsetup{\v!letter:\v!layer:\v!cutmark}}
+  {\directsetup{\v!letter:\v!layer:\v!cutmark}}
 
 % layer: endmark
 
 \defineletterelement[\v!layer][\v!endmark][\v!setups]
-  {\texsetup{\v!letter:\v!layer:\v!endmark}}
+  {\directsetup{\v!letter:\v!layer:\v!endmark}}
 
 % layer: usermark
 
 \defineletterelement[\v!layer][\v!usermark][\v!setups]
-  {\texsetup{\v!letter:\v!layer:\v!usermark}}
+  {\directsetup{\v!letter:\v!layer:\v!usermark}}
 
 % layer: lettermain
 
 \defineletterelement[\v!layer][\v!lettermain][\v!setups]
-  {\texsetup{\v!letter:\v!layer:\v!lettermain}}
+  {\directsetup{\v!letter:\v!layer:\v!lettermain}}
 
 % layer: letternext
 
 \defineletterelement[\v!layer][\v!letternext][\v!setups]
-  {\texsetup{\v!letter:\v!layer:\v!letternext}}
+  {\directsetup{\v!letter:\v!layer:\v!letternext}}
 
 % section: head
 
@@ -460,7 +464,7 @@
   {\correspondenceparameter\c!fromaddress}
 
 \defineletterelement[\v!section][\v!head][\v!setups]
-  {\texsetup{\v!letter:\v!section:\v!head}}
+  {\directsetup{\v!letter:\v!section:\v!head}}
 
 % section: date
 
@@ -468,7 +472,7 @@
   {\correspondenceparameter\c!date}
 
 \defineletterelement[\v!section][\v!date][\v!setups]
-  {\texsetup{\v!letter:\v!section:\v!date}}
+  {\directsetup{\v!letter:\v!section:\v!date}}
 
 % section: reference
 
@@ -477,7 +481,7 @@
    \correspondenceparameter\c!reference}
 
 \defineletterelement[\v!section][\v!reference][\v!setups]
-  {\texsetup{\v!letter:\v!section:\v!reference}}
+  {\directsetup{\v!letter:\v!section:\v!reference}}
 
 % section: specialnotation
 
@@ -486,7 +490,7 @@
    \correspondenceparameter\c!dispatch}
 
 \defineletterelement[\v!section][\v!specialnotation][\v!setups]
-  {\texsetup{\v!letter:\v!section:\v!specialnotation}}
+  {\directsetup{\v!letter:\v!section:\v!specialnotation}}
 
 % section: address
 
@@ -500,7 +504,7 @@
   {\letterelement[\v!section][\v!address][\v!blockstyle]}
 
 \defineletterelement[\v!section][\v!address][\v!setups]
-  {\texsetup{\v!letter:\v!section:\v!address}}
+  {\directsetup{\v!letter:\v!section:\v!address}}
 
 % section: title
 
@@ -511,7 +515,7 @@
      {\lettertext\v!attention\correspondenceparameter\c!attention}}
 
 \defineletterelement[\v!section][\v!title][\v!setups]
-  {\texsetup{\v!letter:\v!section:\v!title}}
+  {\directsetup{\v!letter:\v!section:\v!title}}
 
 % section: subject
 
@@ -520,7 +524,7 @@
    \lettertext\v!subject\correspondenceparameter\c!subject}
 
 \defineletterelement[\v!section][\v!subject][\v!setups]
-  {\texsetup{\v!letter:\v!section:\v!subject}}
+  {\directsetup{\v!letter:\v!section:\v!subject}}
 
 % section: opening
 
@@ -535,7 +539,7 @@
    \letterelement[\v!section][\v!opening][\s!default]}
 
 \defineletterelement[\v!section][\v!opening][\v!setups]
-  {\texsetup{\v!letter:\v!section:\v!opening}}
+  {\directsetup{\v!letter:\v!section:\v!opening}}
 
 % section: content
 
@@ -544,7 +548,7 @@
    \getbuffer  [\????correspondencebuffer\v!letter]}
 
 \defineletterelement[\v!section][\v!content][\v!setups]
-  {\texsetup{\v!letter:\v!section:\v!content}}
+  {\directsetup{\v!letter:\v!section:\v!content}}
 
 % section: closing
 
@@ -573,7 +577,7 @@
       \correspondenceparameter\c!signature}}
 
 \defineletterelement[\v!section][\v!closing][\v!setups]
-  {\texsetup{\v!letter:\v!section:\v!closing}}
+  {\directsetup{\v!letter:\v!section:\v!closing}}
 
 % section: appendices
 
@@ -584,7 +588,7 @@
    \stoppacked}
 
 \defineletterelement[\v!section][\v!appendices][\v!setups]
-  {\texsetup{\v!letter:\v!section:\v!appendices}}
+  {\directsetup{\v!letter:\v!section:\v!appendices}}
 
 \startsetups[\v!letter:\v!place]
 \placecorrespondence[\v!letter]
@@ -882,6 +886,24 @@
 \setuplettertext[\s!fr][\v!street=]
 \setuplettertext[\s!it][\v!street=]
 \setuplettertext[\s!es][\v!street=]
+
+% page:
+
+\setuplettertext[\s!en][\v!page=Page~]
+\setuplettertext[\s!nl][\v!page=]
+\setuplettertext[\s!de][\v!page=Seite~]
+\setuplettertext[\s!fr][\v!page=]
+\setuplettertext[\s!it][\v!page=]
+\setuplettertext[\s!es][\v!page=]
+
+% pagenumber:
+
+\setuplettertext[\s!en][\v!pagenumber={Page , of }]
+\setuplettertext[\s!nl][\v!pagenumber=]
+\setuplettertext[\s!de][\v!pagenumber={Seite , von }]
+\setuplettertext[\s!fr][\v!pagenumber=]
+\setuplettertext[\s!it][\v!pagenumber=]
+\setuplettertext[\s!es][\v!pagenumber=]
 
 \stopmodule
 

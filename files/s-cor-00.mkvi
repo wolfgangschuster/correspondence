@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-00,
-%D      version=2012.01.21,
+%D      version=2012.02.16,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Correspondence,
 %D       author=Wolfgang Schuster,
@@ -53,12 +53,14 @@
   \setinterfaceconstant {frommail}        {frommail}
   \setinterfaceconstant {fromurl}         {fromurl}
   \setinterfaceconstant {salutation}      {salutation}
+  \setinterfaceconstant {language}        {language}
 \stopinterface
 
 \startinterface all
   \setinterfacevariable {correspondence}  {correspondence}
   \setinterfacevariable {letter}          {letter}
   \setinterfacevariable {memo}            {memo}
+  \setinterfacevariable {resume}          {resume}
   \setinterfacevariable {nexthead}        {nexthead}
   \setinterfacevariable {lefthead}        {lefthead}
   \setinterfacevariable {righthead}       {righthead}
@@ -76,6 +78,10 @@
   \setinterfacevariable {usermark}        {usermark}
   \setinterfacevariable {lettermain}      {lettermain}
   \setinterfacevariable {letternext}      {letternext}
+  \setinterfacevariable {memomain}        {memomain}
+  \setinterfacevariable {memonext}        {memonext}
+  \setinterfacevariable {resumemain}      {resumemain}
+  \setinterfacevariable {resumenext}      {resumenext}
   \setinterfacevariable {opening}         {opening}
   \setinterfacevariable {closing}         {closing}
   \setinterfacevariable {secondpage}      {secondpage}
@@ -83,8 +89,6 @@
   \setinterfacevariable {enclosure}       {enclosure}
   \setinterfacevariable {french}          {french}
   \setinterfacevariable {specialnotation} {specialnotation}
-  \setinterfacevariable {memomain}        {memomain}
-  \setinterfacevariable {memonext}        {memonext}
   \setinterfacevariable {e}               {e}
   \setinterfacevariable {attention}       {attention}
   \setinterfacevariable {room}            {room}
@@ -122,9 +126,10 @@
 \definemessageconstant {correspondence}
 
 \startinterface all
-  \setinterfacemessage{correspondence}{1}{Undefined layer       '--' for the '--' environment}
-  \setinterfacemessage{correspondence}{2}{Undefined section     '--' for the '--' environment}
-  \setinterfacemessage{correspondence}{3}{Undefined description '--' for the '--' environment}
+  \setinterfacemessage{correspondence}{title}{correspondence}
+  \setinterfacemessage{correspondence}{1}    {Undefined layer       '--' for the '--' environment}
+  \setinterfacemessage{correspondence}{2}    {Undefined section     '--' for the '--' environment}
+  \setinterfacemessage{correspondence}{3}    {Undefined description '--' for the '--' environment}
 \stopinterface
 
 % Namespaces
@@ -142,6 +147,8 @@
 \installnamespace {correspondencestyle}
 \installnamespace {correspondenceelement}
 \installnamespace {correspondencelayout}
+\installnamespace {correspondencehead}
+\installnamespace {correspondenceheadalternative}
 
 % Environment
 
@@ -167,6 +174,19 @@
 \appendtoks
   \setuevalue{\e!start\currentcorrespondence}{\correspondence_beg[\currentcorrespondence]}%
   \setuevalue{\e!stop \currentcorrespondence}{\correspondence_end[\currentcorrespondence]}%
+\to \everydefinecorrespondence
+
+\unexpanded\def\correspondence_beg_content[#environment]%
+  {\begingroup
+   \def\currentcorrespondence{#environment}%
+   \grabbufferdatadirect{\????correspondencebuffer\currentcorrespondence}{\e!start\currentcorrespondence\v!content}{\e!stop\currentcorrespondence\v!content}}
+
+\unexpanded\def\correspondence_end_content[#environment]%
+  {\endgroup}
+
+\appendtoks
+  \setuevalue{\e!start\currentcorrespondence\v!content}{\correspondence_beg_content[\currentcorrespondence]}%
+  \setuevalue{\e!stop \currentcorrespondence\v!content}{\correspondence_end_content[\currentcorrespondence]}%
 \to \everydefinecorrespondence
 
 \unexpanded\def\correspondence_parameters#environment#element#type%
@@ -199,6 +219,7 @@
    \ctxlua{thirddata.correspondence.place("\currentcorrespondence", {
         bodyfont        = "\correspondenceoptionparameter\c!bodyfont",
         whitespace      = "\correspondenceoptionparameter\c!whitespace",
+        language        = "\correspondenceoptionparameter\c!language",
         backgroundcolor = "\correspondenceoptionparameter\c!backgroundcolor",
     } )}%
    \endgroup}
@@ -214,9 +235,7 @@
 
 \let\placecorrespondence\correspondence_place
 
-\appendtoks
-   \global\c_correspondence_page\zerocount
-\to \t_correspondence_before
+\t_correspondence_before\expandafter{\the\t_correspondence_before\global\c_correspondence_page\zerocount}
 
 \appendtoks
   \setuevalue{\e!place\currentcorrespondence}{\correspondence_place[\currentcorrespondence]}%
@@ -269,12 +288,12 @@
   {\correspondence_parameters{#environment}{#element}\v!layer
    \expandcheckedcsname\????correspondencelayerstate{\correspondencelayerparameter\c!state}\v!stop
    \ifnum\c_correspondence_page=\plusone
-     \if!!donea\doubleexpandafter\correspondence_layer_direct\else\doubleexpandafter\gobbletwoarguments\fi
+     \if!!donea\correspondence_layer_direct{#environment}{#element}\fi
    \else\ifodd\c_correspondence_page
-     \if!!doneb\tripleexpandafter\correspondence_layer_direct\else\tripleexpandafter\gobbletwoarguments\fi
+     \if!!doneb\correspondence_layer_direct{#environment}{#element}\fi
    \else
-     \if!!donec\tripleexpandafter\correspondence_layer_direct\else\tripleexpandafter\gobbletwoarguments\fi
-   \fi\fi{#environment}{#element}%
+     \if!!donec\correspondence_layer_direct{#environment}{#element}\fi
+   \fi\fi
    \tightlayer[\currentcorrespondencelayer]}
 
 \unexpanded\def\correspondence_layer_direct#environment#element%
@@ -368,7 +387,6 @@
 
 \installsimplecommandhandler \????correspondencedescription {correspondencedescription} \????correspondencedescription
 
-\let\m_correspondence_description_string\empty
 \let\m_correspondence_description_format\empty
 \let\m_correspondence_description_items \empty
 
@@ -428,22 +446,99 @@
 \unexpanded\def\correspondence_description_place_text
   {\expandcheckedcsname\????correspondencedescriptionformat\m_correspondence_description_format\v!none}
 
-\setvalue{\????correspondencedescriptionformat\v!list}%
+\setvalue{\????correspondencedescriptionformat\v!list}% todo: use a simplified version of the itemize code
   {\def\correspondence_description_format_item#text{\startitem#text\stopitem}%
    \dontleavehmode\vtop\bgroup
      \leftskip\zeropoint % prevent additional offset when “location=left” is used
-     \startitemize[\v!packed,\correspondencedescriptionparameter\c!symbol]%
+     \startitemgroup[\v!itemize][\v!packed,\correspondencedescriptionparameter\c!symbol]%
      \processcommacommand[\m_correspondence_description_items]\correspondence_description_format_item
-     \stopitemize
+     \stopitemgroup
    \egroup}
 
 \setvalue{\????correspondencedescriptionformat\v!none}%
   {\m_correspondence_description_items}
 
 \setupcorrespondencedescription
-  [\c!width=\v!fit,
+  [   \c!width=\v!fit,
    \c!distance=1em,
-   \c!symbol=dash]
+     \c!symbol=dash]
+
+% Heading
+
+\installsimpleframedcommandhandler \????correspondencehead {correspondencehead} \????correspondencehead
+
+\unexpanded\def\correspondence_head_define[#environment][#element]%
+  {\ifcsname#element\endcsname \else %  test if there already exists a command with the same name
+     \def\currentcorrespondencehead{#environment:#element}%
+     \checkcorrespondenceheadparent
+     % heading from the this module are local to the correspondence environment
+     \t_correspondence_before\expandafter{\the\t_correspondence_before\correspondence_head_commands[#environment][#element]}%
+   \fi}
+
+\unexpanded\def\correspondence_head_setup[#environment][#elements][#parameters]%
+  {\def\correspondence_head_command#element%
+     {\edef\currentcorrespondencehead{#environment:#element}%
+      \setupcurrentcorrespondencehead[#parameters]}%
+   \processcommalist[#elements]\correspondence_head_command}
+
+\unexpanded\def\correspondence_head_commands[#environment][#element]%
+  {\setuevalue        {#element}{\correspondence_head_cmd[#environment][#element]}%
+   \setuevalue{\e!start#element}{\correspondence_head_beg[#environment][#element]}%
+   \setuevalue{\e!stop #element}{\correspondence_head_end[#environment][#element]}}
+
+\unexpanded\def\correspondence_head_cmd[#environment][#element]%
+  {\begingroup
+   \def\currentcorrespondencehead{#environment:#element}%
+   \doifnextbgroupelse{\dosinglegroupempty\correspondence_head_cmd_argument}{\dosingleempty\correspondence_head_cmd_parameters}}
+
+\unexpanded\def\correspondence_head_cmd_argument#title%
+  {\setcorrespondenceheadparameter\c!title{#title}%
+   \correspondence_head_cmd_place
+   \endgroup}
+
+\unexpanded\def\correspondence_head_cmd_parameters[#parameters]%
+  {\iffirstargument
+     \setupcurrentcorrespondencehead[#parameters]%
+   \fi
+   \correspondence_head_cmd_place
+   \endgroup}
+
+\unexpanded\def\correspondence_head_beg[#environment][#element]%
+  {\begingroup
+   \def\currentcorrespondencehead{#environment:#element}%
+   \dosingleempty\correspondence_head_beg_parameters}
+
+\unexpanded\def\correspondence_head_beg_parameters[#parameters]%
+  {\iffirstargument
+     \setupcurrentcorrespondencehead[#parameters]%
+   \fi
+   \correspondence_head_cmd_place
+   \endgroup}
+
+\unexpanded\def\correspondence_head_end[#environment][#element]%
+  {}
+
+\unexpanded\def\correspondence_head_cmd_place
+  {\doifsomethingelse{\correspondenceheadparameter\c!title}\donetrue\donefalse
+   \ifdone
+     \expandcheckedcsname\????correspondenceheadalternative{\correspondenceheadparameter\c!alternative}\s!default
+   \fi}
+
+\setvalue{\????correspondenceheadalternative\s!default}%
+  {\doifsomething{\correspondenceheadparameter\c!spacebefore}{\blank[\correspondenceheadparameter\c!spacebefore]}%
+   \vbox\bgroup
+     \doifsomething{\correspondenceheadparameter\c!align}{\setupalign[\correspondenceheadparameter\c!align]}%
+     \usecorrespondenceheadstyleandcolor\c!style\c!color
+     \correspondenceheadparameter\c!title
+   \egroup
+   \doifsomething{\correspondenceheadparameter\c!spaceafter }{\blank[\correspondenceheadparameter\c!spaceafter ]}}
+
+\setupcorrespondencehead
+  [   \c!spacebefore=\v!line,
+       \c!spaceafter={\v!samepage,\v!line},
+      \c!alternative=\s!default,
+            \c!align=\v!middle,
+            \c!style=\v!bold]
 
 % Elements
 

@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-02,
-%D      version=2012.01.15,
+%D      version=2012.02.06,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Memos,
 %D       author=Wolfgang Schuster,
@@ -39,6 +39,7 @@
 \def\definememolayer       {\dodoubleargument\correspondence_layer_define       [\v!memo]}
 \def\definememosection     {\dodoubleargument\correspondence_section_define     [\v!memo]}
 \def\definememodescription {\dodoubleargument\correspondence_description_define [\v!memo]}
+\def\definememohead        {\dodoubleargument\correspondence_head_define        [\v!memo]}
 
 \def\definememoelements    {\dotripleargument\correspondence_elements_define    [\v!memo]}
 \def\setupmemoelements     {\dotripleargument\correspondence_elements_define    [\v!memo]}
@@ -49,6 +50,7 @@
 \def\setupmemolayout       {\dotripleargument\correspondence_layout_setup       [\v!memo]}
 \def\setupmemosection      {\dotripleargument\correspondence_section_setup      [\v!memo]}
 \def\setupmemodescription  {\dotripleargument\correspondence_description_setup  [\v!memo]}
+\def\setupmemohead         {\dotripleargument\correspondence_head_setup         [\v!memo]}
 \def\setupmemooptions      {\dodoubleargument\correspondence_option_setup       [\v!memo]}
 \def\setupmemo             {\dodoubleargument\correspondence_setup              [\v!memo]}
 
@@ -57,12 +59,26 @@
 \def\definememoelement     {\doquadrupleargument\correspondence_element_define  [\v!memo]}
 \def\memoelement           {\doquadrupleargument\correspondence_element_place   [\v!memo]}
 
+\def\namedmemolayerparameter  #element{\namedcorrespondencelayerparameter  {\v!memo:#element}}
+\def\namedmemoframeparameter  #element{\namedcorrespondenceframeparameter  {\v!memo:#element}}
+\def\namedmemosectionparameter#element{\namedcorrespondencesectionparameter{\v!memo:#element}}
+
+% Heading
+
+\definememohead [\v!memo\v!section]
+\definememohead [\v!memo\v!subsection]
+
 % Layers
 
 \definememolayer [\v!head]
 \definememolayer [\v!nexthead]
 \definememolayer [\v!lefthead]
 \definememolayer [\v!righthead]
+
+\definememolayer [\v!foot]
+\definememolayer [\v!nextfoot]
+\definememolayer [\v!leftfoot]
+\definememolayer [\v!rightfoot]
 
 \definememolayer [\v!topmark]
 \definememolayer [\v!botmark]
@@ -102,34 +118,6 @@
 
 % layer: nexthead
 
-\definememoelement[\v!layer][\v!nexthead][\v!fullblock]
-  {\maxaligned
-     {\rlap{\correspondenceparameter\c!toname}%
-      \midaligned{\pagenumber}%
-      \llap{\framed[\c!frame=\v!off,\c!location=\v!top,\c!align=\v!left]
-        {\correspondenceparameter\c!date   \\
-         \correspondenceparameter\c!reference}}}}
-
-\definememoelement[\v!layer][\v!nexthead][\v!hanging]
-  {\maxaligned
-     {\framed[\c!frame=\v!off,\c!location=\v!top,\c!align=v!right]
-       {\correspondenceparameter\c!toname    \\
-        \correspondenceparameter\c!date      \\
-        \correspondenceparameter\c!reference \\
-        \memotext\c!page\pagenumber}}\hss}
-
-\definememoelement[\v!layer][\v!nexthead][\v!semiblock]
-  {\maxaligned
-     {\rlap{\correspondenceparameter\c!toname}%
-      \midaligned{\pagenumber}%
-      \llap{\correspondenceparameter\c!date}}}
-
-\definememoelement[\v!layer][\v!nexthead][\v!simplified]
-  {\memoelement[\v!layer][\v!nexthead][\v!fullblock]}
-
-\definememoelement[\v!layer][\v!nexthead][\v!modified]
-  {\memoelement[\v!layer][\v!nexthead][\v!hanging]}
-
 \definememoelement[\v!layer][\v!nexthead][\v!setups]
   {\texsetup{\v!memo:\v!layer:\v!nexthead}}
 
@@ -142,6 +130,11 @@
 
 \definememoelement[\v!layer][\v!righthead][\v!setups]
   {\texsetup{\v!memo:\v!layer:\v!righthead}}
+
+% layer: foot
+
+\definememoelement[\v!layer][\v!foot][\v!pagenumber]
+  {\centerbox{\hbox{\begstrut\leftmemotext\v!pagenumber\subpagenumber\rightmemotext\v!pagenumber\lastsubpagenumber\endstrut}}}
 
 % layer: topmark
 
@@ -365,14 +358,14 @@
 
 \definelabelclass[memo]
 
-% page:
+% pagenumber:
 
-\setupmemotext[\s!en][\v!page=Page~]
-\setupmemotext[\s!nl][\v!page=]
-\setupmemotext[\s!de][\v!page=Seite~]
-\setupmemotext[\s!fr][\v!page=]
-\setupmemotext[\s!it][\v!page=]
-\setupmemotext[\s!es][\v!page=]
+\setupmemotext[\s!en][\v!pagenumber={Page , of }]
+\setupmemotext[\s!nl][\v!pagenumber=]
+\setupmemotext[\s!de][\v!pagenumber={Seite , von }]
+\setupmemotext[\s!fr][\v!pagenumber=]
+\setupmemotext[\s!it][\v!pagenumber=]
+\setupmemotext[\s!es][\v!pagenumber=]
 
 % date:
 

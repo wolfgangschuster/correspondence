@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-00,
-%D      version=2012.01.21,
+%D      version=2012.02.15,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Correspondence,
 %D       author=Wolfgang Schuster,
@@ -49,6 +49,7 @@
   \setinterfaceconstant {frommail}        {frommail}
   \setinterfaceconstant {fromurl}         {fromurl}
   \setinterfaceconstant {salutation}      {salutation}
+  \setinterfaceconstant {language}        {language}
 \stopinterface
 
 \startinterface all
@@ -118,9 +119,10 @@
 \definemessageconstant {correspondence}
 
 \startinterface all
-  \setinterfacemessage{correspondence}{1}{Undefined layer       '--' for the '--' environment}
-  \setinterfacemessage{correspondence}{2}{Undefined section     '--' for the '--' environment}
-  \setinterfacemessage{correspondence}{3}{Undefined description '--' for the '--' environment}
+  \setinterfacemessage{correspondence}{title}{correspondence}
+  \setinterfacemessage{correspondence}{1}    {Undefined layer       '--' for the '--' environment}
+  \setinterfacemessage{correspondence}{2}    {Undefined section     '--' for the '--' environment}
+  \setinterfacemessage{correspondence}{3}    {Undefined description '--' for the '--' environment}
 \stopinterface
 
 % Namespaces
@@ -140,6 +142,8 @@
 
 % Environment
 
+\newtoks\everydefinecorrespondence
+
 \unexpanded\def\startcorrespondence[#1]%
   {\starttext
    \begingroup
@@ -157,11 +161,22 @@
    \endgroup
    \stoptext}
 
-\newtoks\everydefinecorrespondence
-
 \appendtoks
   \normalprotected\expandafter\edef\csname\e!start\currentcorrespondence\endcsname{\startcorrespondence[\currentcorrespondence]}%
   \normalprotected\expandafter\edef\csname\e!stop \currentcorrespondence\endcsname{\stopcorrespondence [\currentcorrespondence]}%
+\to \everydefinecorrespondence
+
+\unexpanded\def\startcorrespondencecontent[#1]%
+  {\begingroup
+   \def\currentcorrespondence{#1}%
+   \dostartbuffer[\????correspondencebuffer\currentcorrespondence][\e!start\currentcorrespondence\v!content][\e!stop\currentcorrespondence\v!content]}
+
+\unexpanded\def\stopcorrespondencecontent[#1]%
+  {\endgroup}
+
+\appendtoks
+  \normalprotected\expandafter\edef\csname\e!start\currentcorrespondence\v!content\endcsname{\startcorrespondencecontent[\currentcorrespondence]}%
+  \normalprotected\expandafter\edef\csname\e!stop \currentcorrespondence\v!content\endcsname{\stopcorrespondencecontent [\currentcorrespondence]}%
 \to \everydefinecorrespondence
 
 \unexpanded\def\correspondenceparameters#1#2#3%
@@ -216,6 +231,7 @@
    \setupfooter[\c!state=\v!stop]%
    \doifsomething{\correspondenceoptionparameter\c!bodyfont  }{\setupbodyfont  [\correspondenceoptionparameter\c!bodyfont  ]}%
    \doifsomething{\correspondenceoptionparameter\c!whitespace}{\setupwhitespace[\correspondenceoptionparameter\c!whitespace]}%
+   \doifsomething{\correspondenceoptionparameter\c!language  }{\mainlanguage   [\correspondenceoptionparameter\c!language  ]}%
    % backgroundcolor is applied to the paper background
    \doifsomething{\correspondenceoptionparameter\c!backgroundcolor}%
      {\setupbackgrounds[\v!paper][\c!background=\v!color,\c!backgroundcolor=\correspondenceoptionparameter\c!backgroundcolor]}
@@ -320,12 +336,12 @@
   {\correspondenceparameters{#1}{#2}\v!layer
    \executeifdefined{\????correspondencelayerstate\correspondencelayerparameter\c!state}{\getvalue{\????correspondencelayerstate\v!stop}}
    \ifnum\correspondencepage=\plusone
-     \if!!donea\@EAEAEA      \doplacecorrespondencelayer\else\@EAEAEA      \gobbletwoarguments\fi
+     \if!!donea\doplacecorrespondencelayer{#1}{#2}\fi
    \else\ifodd\correspondencepage
-     \if!!doneb\@EAEAEAEAEAEA\doplacecorrespondencelayer\else\@EAEAEAEAEAEA\gobbletwoarguments\fi
+     \if!!doneb\doplacecorrespondencelayer{#1}{#2}\fi
    \else
-     \if!!donec\@EAEAEAEAEAEA\doplacecorrespondencelayer\else\@EAEAEAEAEAEA\gobbletwoarguments\fi
-   \fi\fi{#1}{#2}%
+     \if!!donec\doplacecorrespondencelayer{#1}{#2}\fi
+   \fi\fi
    \tightlayer[\currentcorrespondencelayer]}
 
 \unexpanded\def\doplacecorrespondencelayer#1#2%
@@ -337,7 +353,7 @@
          \dostartattributes{\????correspondencelayer\currentcorrespondencelayer}\c!style\c!color
          \doifsymboldefinedelse{\correspondencelayerparameter\c!symbol}%
            {\symbol[\correspondencelayerparameter\c!symbol]}
-           {\placecorrespondenceelement[#1][\v!layer][#2][\correspondencesectionparameter\c!alternative]}%
+           {\placecorrespondenceelement[#1][\v!layer][#2][\correspondencelayerparameter\c!alternative]}%
          \dostopattributes}}}
 
 \unexpanded\def\checkcorrespondencelayer[#1][#2]%

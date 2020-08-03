@@ -1,8 +1,8 @@
 %D \module
-%D   [     file=memo-imp-memo,
-%D      version=2011.11.07,
+%D   [     file=memo-imp-margin,
+%D      version=2012.02.04,
 %D        title=\CONTEXT\ Memo Style,
-%D     subtitle=Memo style,
+%D     subtitle=Margin style,
 %D       author=Wolfgang Schuster,
 %D         date=\currentdate,
 %D    copyright=Wolfgang Schuster,
@@ -27,16 +27,16 @@
 
 \setupmemolayout
   [\v!firstpage,\v!secondpage]
-  [\c!backspace=1in,
-   \c!width=\v!middle,
-   \c!topspace=1in,
-   \c!header=0in,
-   \c!footer=0in,
-   \c!height=\v!fit]
+  [\c!header=0in]
 
 \setupmemosection
   [\v!head]
   [\c!alternative=\v!margin]
+
+\setupmemolayer
+  [\v!foot]
+  [\c!state=\v!repeat,
+   \c!alternative=\v!pagenumber]
 
 \setupmemooptions
   [\c!whitespace=\v!line]

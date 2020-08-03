@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=letter-imp-default,
-%D      version=2012.01.01,
+%D      version=2012.02.04,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Default letter style,
 %D       author=Wolfgang Schuster,
@@ -43,7 +43,8 @@
 
 \setupletterframe
   [\v!foot,\v!nextfoot,\v!leftfoot,\v!rightfoot]
-  [\c!width=\textwidth]
+  [\c!width=\textwidth,
+   \c!height=\footerheight]
 
 %\setupletterlayer
 %  [\v!head]
@@ -92,6 +93,8 @@
    \v!topmark,
    \v!botmark,
    \v!cutmark,
+   \v!endmark,
+   \v!usermark,
    \v!backaddress,
    \v!address,
    \v!reference,

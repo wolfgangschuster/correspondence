@@ -24,6 +24,7 @@ local c_separator  = constants.separator
 local v_correspondence = variables.correspondence
 local v_letter         = variables.letter
 local v_memo           = variables.memo
+local v_resume         = variables.resume
 local v_stop           = variables.stop
 local v_layer          = variables.layer
 local v_section        = variables.section
@@ -63,8 +64,9 @@ end
 -- create synonyms for the default styles
 
 local patterns = {
-    [v_letter] = { "letter-imp-%s.mkiv", "letter-imp-%s.tex", "letter-%s.mkiv", "letter-%s.tex" },
-    [v_memo]   = { "memo-imp-%s.mkiv", "memo-imp-%s.tex", "memo-%s.mkiv", "memo-%s.tex" },
+    [v_letter]   = { "letter-imp-%s.mkiv", "letter-imp-%s.tex", "letter-%s.mkiv", "letter-%s.tex" },
+    [v_memo]     = {   "memo-imp-%s.mkiv",   "memo-imp-%s.tex",   "memo-%s.mkiv",   "memo-%s.tex" },
+    [v_resume]   = { "resume-imp-%s.mkiv", "resume-imp-%s.tex", "resume-%s.mkiv", "resume-%s.tex" },
 }
 
 local function action(name,foundname)
@@ -92,6 +94,7 @@ end
 function correspondence.place(environment,settings)
     local bodyfont         = settings.bodyfont
     local whitespace       = settings.whitespace
+    local language         = settings.language
     local backgroundcolor  = settings.backgroundcolor
     context.unprotect()
     context(toks.t_correspondence_before)
@@ -108,6 +111,10 @@ function correspondence.place(environment,settings)
     -- can be moved to the section elements because it’s only usefull for the content
     if whitespace ~= "" then
         context.setupwhitespace{whitespace}
+    end
+    -- I prefer to set this with \setup…options
+    if language ~= "" then
+        context.mainlanguage{language}
     end
     -- colored background is behind all other layers
     if backgroundcolor ~= "" then

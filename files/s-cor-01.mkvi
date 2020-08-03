@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-01,
-%D      version=2012.01.20,
+%D      version=2012.02.06,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Letters,
 %D       author=Wolfgang Schuster,
@@ -39,6 +39,7 @@
 \def\defineletterlayer       {\dodoubleargument\correspondence_layer_define       [\v!letter]}
 \def\definelettersection     {\dodoubleargument\correspondence_section_define     [\v!letter]}
 \def\defineletterdescription {\dodoubleargument\correspondence_description_define [\v!letter]}
+\def\defineletterhead        {\dodoubleargument\correspondence_head_define        [\v!letter]}
 
 \def\defineletterelements    {\dotripleargument\correspondence_elements_define    [\v!letter]}
 \def\setupletterelements     {\dotripleargument\correspondence_elements_define    [\v!letter]}
@@ -49,6 +50,7 @@
 \def\setupletterlayout       {\dotripleargument\correspondence_layout_setup       [\v!letter]}
 \def\setuplettersection      {\dotripleargument\correspondence_section_setup      [\v!letter]}
 \def\setupletterdescription  {\dotripleargument\correspondence_description_setup  [\v!letter]}
+\def\setupletterhead         {\dotripleargument\correspondence_head_setup         [\v!letter]}
 \def\setupletteroptions      {\dodoubleargument\correspondence_option_setup       [\v!letter]}
 \def\setupletter             {\dodoubleargument\correspondence_setup              [\v!letter]}
 
@@ -57,8 +59,14 @@
 \def\defineletterelement     {\doquadrupleargument\correspondence_element_define  [\v!letter]}
 \def\letterelement           {\doquadrupleargument\correspondence_element_place   [\v!letter]}
 
-\def\namedletterlayerparameter#element{\namedcorrespondencelayerparameter{\v!letter:#element}}
-\def\namedletterframeparameter#element{\namedcorrespondenceframeparameter{\v!letter:#element}}
+\def\namedletterlayerparameter  #element{\namedcorrespondencelayerparameter  {\v!letter:#element}}
+\def\namedletterframeparameter  #element{\namedcorrespondenceframeparameter  {\v!letter:#element}}
+\def\namedlettersectionparameter#element{\namedcorrespondencesectionparameter{\v!letter:#element}}
+
+% Heading
+
+\defineletterhead [\v!letter\v!section]
+\defineletterhead [\v!letter\v!subsection]
 
 % Layers
 
@@ -183,7 +191,7 @@
 \defineletterelement[\v!layer][\v!nexthead][\v!gbrief]
   {\maxaligned
      {\rlap{\correspondenceparameter\c!fromname}
-      \midaligned{\lettertext\v!page\subpagenumber\lettertext\v!of\lastsubpagenumber}
+      \midaligned{\leftlettertext\v!pagenumber\subpagenumber\rightlettertext\v!pagenumber\lastsubpagenumber}
       \llap{\correspondenceparameter\c!date}}
    \hairline}
 
@@ -251,6 +259,9 @@
        \bTD \correspondenceparameter\c!bankname\\\correspondenceparameter\c!banknumber\\\correspondenceparameter\c!accountnumber \eTD
      \eTR
    \eTABLE}
+
+\defineletterelement[\v!layer][\v!foot][\v!pagenumber]
+  {\midaligned{\leftlettertext\v!pagenumber\subpagenumber\rightlettertext\v!pagenumber\lastsubpagenumber}}
 
 \defineletterelement[\v!layer][\v!foot][\v!setups]
   {\texsetup{\v!letter:\v!layer:\v!foot}}
@@ -786,6 +797,24 @@
 \setuplettertext[\s!fr][\v!street=]
 \setuplettertext[\s!it][\v!street=]
 \setuplettertext[\s!es][\v!street=]
+
+% page:
+
+\setuplettertext[\s!en][\v!page=Page~]
+\setuplettertext[\s!nl][\v!page=]
+\setuplettertext[\s!de][\v!page=Seite~]
+\setuplettertext[\s!fr][\v!page=]
+\setuplettertext[\s!it][\v!page=]
+\setuplettertext[\s!es][\v!page=]
+
+% pagenumber:
+
+\setuplettertext[\s!en][\v!pagenumber={Page , of }]
+\setuplettertext[\s!nl][\v!pagenumber=]
+\setuplettertext[\s!de][\v!pagenumber={Seite , von }]
+\setuplettertext[\s!fr][\v!pagenumber=]
+\setuplettertext[\s!it][\v!pagenumber=]
+\setuplettertext[\s!es][\v!pagenumber=]
 
 \stopmodule
 

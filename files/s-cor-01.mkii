@@ -258,7 +258,7 @@
 \defineletterelement[\v!layer][\v!reference][\s!default]
   {\correspondenceparameter\c!reference}
 
-\def\doformatletterreferenceaande#1%
+\def\doformatletterreferenceAandE#1%
   {\def\currentcorrespondencevalue          {#1}%
    \def\currentcorrespondencestyle{\v!letter:#1}%
    \vbox\bgroup
@@ -280,20 +280,20 @@
        {\setupinterlinespace\correspondenceparameter\currentcorrespondencevalue\par}%
    \egroup}
 
-\def\doformatletterreferencea#1%
+\def\doformatletterreferenceA#1%
   {\doifsomething{#1}       % ignore empty entries
      {\doifnot{#1}{\v!line} % and the “line” keyword
-        {\doformatletterreferenceaande{#1}\hfill}}}
+        {\doformatletterreferenceAandE{#1}\hfill}}}
 
 \defineletterelement[\v!layer][\v!reference][\v!a]
   {\hbox to \hsize\bgroup
      \getcommacommandsize[\correspondencelayerparameter\c!list]%
      \ifnum\commalistsize=\plusone\hfill\fi
-     \processcommacommand[\correspondencelayerparameter\c!list]\doformatletterreferencea
+     \processcommacommand[\correspondencelayerparameter\c!list]\doformatletterreferenceA
      \unskip
    \egroup}
 
-\def\doformatletterreferenceb#1%
+\def\doformatletterreferenceB#1%
   {\doifsomething{#1}% ignore empty entries
      {\doifelse{#1}{\v!line}
         {\blank[\v!line]}
@@ -311,10 +311,10 @@
 
 \defineletterelement[\v!layer][\v!reference][\v!b]
   {\vtop\bgroup
-     \processcommacommand[\correspondencelayerparameter\c!list]\doformatletterreferenceb
+     \processcommacommand[\correspondencelayerparameter\c!list]\doformatletterreferenceB
    \egroup}
 
-\def\doformatletterreferencec#1%
+\def\doformatletterreferenceC#1%
   {\doifsomething{#1}       % ignore empty entries
      {\doifnot{#1}{\v!line} % and the “line” keyword
         {\def\currentcorrespondencevalue          {#1}%
@@ -325,10 +325,10 @@
 
 \defineletterelement[\v!layer][\v!reference][\v!c]
   {\hbox to \hsize\bgroup
-     \processcommacommand[\correspondencelayerparameter\c!list]\doformatletterreferencec
+     \processcommacommand[\correspondencelayerparameter\c!list]\doformatletterreferenceC
    \egroup}
 
-\def\doformatletterreferenced#1%
+\def\doformatletterreferenceD#1%
   {\doifsomething{#1}%
      {\doifelse{#1}{\v!line}
         {\appendtoks\TB[\v!line]\to\scratchtoks}
@@ -351,20 +351,20 @@
 \defineletterelement[\v!layer][\v!reference][\v!d]
   {\vtop\bgroup
      \scratchtoks\emptytoks
-     \processcommacommand[\correspondencelayerparameter\c!list]\doformatletterreferenced
+     \processcommacommand[\correspondencelayerparameter\c!list]\doformatletterreferenceD
      \starttabulate[|l|l|][\c!before=,\c!after=]%
      \the\scratchtoks
      \stoptabulate
    \egroup}
 
-\def\doformatletterreferencee#1%
+\def\doformatletterreferenceE#1%
   {\doifsomething{#1}       % ignore empty entries
      {\doifnot{#1}{\v!line} % and the “line” keyword
-        {\correspondencestylewidth\v!letter{#1}{\doformatletterreferenceaande{#1}}}}}
+        {\correspondencestylewidth\v!letter{#1}{\doformatletterreferenceAandE{#1}}}}}
 
 \defineletterelement[\v!layer][\v!reference][\v!e]
   {\hbox to \hsize\bgroup
-     \processcommacommand[\correspondencelayerparameter\c!list]\doformatletterreferencee
+     \processcommacommand[\correspondencelayerparameter\c!list]\doformatletterreferenceE
    \egroup}
 
 \startsetups[\v!letter:\v!layer:\v!reference]

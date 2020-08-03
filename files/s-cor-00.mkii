@@ -188,8 +188,8 @@
 
 \unexpanded\def\placecorrespondence[#1]%
   {\begingroup
-   \def\currentcorrespondence{#1}%
-   \let\currentcorrespondenceoption\currentcorrespondence
+   \edef\currentcorrespondence{#1}%
+   \let \currentcorrespondenceoption\currentcorrespondence
    \the\everybeforecorrespondence
    \page
    \setupheader[\c!state=\v!stop]%
@@ -457,8 +457,8 @@
 
 % Elements
 
-\unexpanded\def\definecorrespondenceelement[#1][#2][#3][#4]#5%
-  {\setvalue{correspondence_element_#1_#2_#3_#4}{#5}}
+\unexpanded\long\def\definecorrespondenceelement[#1][#2][#3][#4]#5%
+  {\long\setvalue{correspondence_element_#1_#2_#3_#4}{#5}}
 
 \unexpanded\def\placecorrespondenceelement[#1][#2][#3][#4]%
   {\correspondenceparameters{#1}{#3}\empty

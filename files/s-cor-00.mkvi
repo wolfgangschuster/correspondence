@@ -177,8 +177,8 @@
 
 \unexpanded\def\correspondence_place[#environment]%
   {\begingroup
-   \def\currentcorrespondence{#environment}%
-   \let\currentcorrespondenceoption\currentcorrespondence
+   \edef\currentcorrespondence{#environment}%
+   \let \currentcorrespondenceoption\currentcorrespondence
    \ctxlua{thirddata.correspondence.place("\currentcorrespondence", {
         bodyfont        = "\correspondenceoptionparameter\c!bodyfont",
         whitespace      = "\correspondenceoptionparameter\c!whitespace",
@@ -196,11 +196,11 @@
 
 % Layers
 
-\installnamespace                                     {correspondencelayer}
-\installcommandhandler       \????correspondencelayer {correspondencelayer} \????correspondencelayer
+\installnamespace                                           {correspondencelayer}
+\installsimplecommandhandler       \????correspondencelayer {correspondencelayer} \????correspondencelayer
 
-\installnamespace                                     {correspondenceframe}
-\installframedcommandhandler \????correspondenceframe {correspondenceframe} \????correspondenceframe
+\installnamespace                                           {correspondenceframe}
+\installsimpleframedcommandhandler \????correspondenceframe {correspondenceframe} \????correspondenceframe
 
 \unexpanded\def\correspondence_layer_define[#environment][#element]%
   {\def\currentcorrespondencelayer{#environment:#element}%
@@ -282,8 +282,8 @@
 
 % Sections
 
-\installnamespace                                 {correspondencesection}
-\installcommandhandler \????correspondencesection {correspondencesection} \????correspondencesection
+\installnamespace                                       {correspondencesection}
+\installsimplecommandhandler \????correspondencesection {correspondencesection} \????correspondencesection
 
 \unexpanded\def\correspondence_section_define[#environment][#element]%
   {\def\currentcorrespondencesection{#environment:#element}%
@@ -323,8 +323,8 @@
 
 % Options
 
-\installnamespace                                {correspondenceoption}
-\installcommandhandler \????correspondenceoption {correspondenceoption} \????correspondenceoption
+\installnamespace                                      {correspondenceoption}
+\installsimplecommandhandler \????correspondenceoption {correspondenceoption} \????correspondenceoption
 
 \unexpanded\def\correspondence_option_setup[#environment][#parameters]%
   {\edef\currentcorrespondenceoption{#environment}%
@@ -341,8 +341,8 @@
 
 % Descriptions
 
-\installnamespace                                     {correspondencedescription}
-\installcommandhandler \????correspondencedescription {correspondencedescription} \????correspondencedescription
+\installnamespace                                           {correspondencedescription}
+\installsimplecommandhandler \????correspondencedescription {correspondencedescription} \????correspondencedescription
 
 \unexpanded\def\correspondence_description_define[#environment][#element]%
   {\def\currentcorrespondencedescription{#environment:#element}%
@@ -416,8 +416,8 @@
 
 % Style
 
-\installnamespace                               {correspondencestyle}
-\installcommandhandler \????correspondencestyle {correspondencestyle} \????correspondencestyle
+\installnamespace                                     {correspondencestyle}
+\installsimplecommandhandler \????correspondencestyle {correspondencestyle} \????correspondencestyle
 
 \unexpanded\def\correspondence_style_setup[#environment][#elements][#parameters]%
   {\def\correspondence_style_command#element%

@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-letter,
-%D        version=2008.12.23,
+%D        version=2008.12.25,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Framework for Letters,
 %D         author=Wolfgang Schuster,
@@ -487,7 +487,9 @@
 
   \doifletterstylevalue\v!option\c!indenting{\setupindenting[\@@@@lsoptionindenting]}
 
+  \executeifdefined{\v!letter\v!content\s!start\c!optimize\@@@@lscontentoptimize}\donothing
   \dosetlettersection[\v!content]
+  \executeifdefined{\v!letter\v!content\s!stop \c!optimize\@@@@lscontentoptimize}\donothing
 
   \endgroup
 
@@ -618,8 +620,8 @@
      \c!background=\letter!list!backgrounds,
      \c!backgroundcolor=\@@@@lsoptionbackgroundcolor]
 
-  \doifletterstylevalue\v!option\c!bodyfont  {\switchtobodyfont[\@@@@lsoptionbodyfont  ]}
-  \doifletterstylevalue\v!option\c!whitespace{\setupwhitespace [\@@@@lsoptionwhitespace]}
+  \doifletterstylevalue\v!option\c!bodyfont  {\setupbodyfont  [\@@@@lsoptionbodyfont  ]}
+  \doifletterstylevalue\v!option\c!whitespace{\setupwhitespace[\@@@@lsoptionwhitespace]}
 
 \stopsetups
 

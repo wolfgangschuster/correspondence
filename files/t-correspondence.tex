@@ -377,6 +377,8 @@
       \c!rightmargin=\zeropoint,
       \c!alternative=\v!a,
       \c!separator=\crlf,
+      \c!optimize=\v!no,
+      \c!command=,
       \c!style=,
       \c!color=]}
 
@@ -390,7 +392,7 @@
    \doifcorrespondencestylevalue{#2}{#3}\c!align
      {\setupalign[\correspondencestylevalue{#2}{#3}\c!align]}%
    \dostartattributes{#2#3}\c!style\c!color\empty
-     \directsetup{#1:#3}%
+     \correspondencestylevalue{#2}{#3}\c!command{\directsetup{#1:#3}}%
    \dostopattributes
    \doifcorrespondencestylevalue{#2}{#3}\c!after
      {\endgraf\correspondencestylevalue{#2}{#3}\c!after}

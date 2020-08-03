@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=hanging,
-%D        version=2008.12.16,
+%D        version=2008.12.25,
 %D          title=\CONTEXT\ Letter Style,
 %D       subtitle=Hanging indented style,
 %D         author=Wolfgang Schuster,
@@ -25,7 +25,7 @@
 
 \setupletterstyle
   [\v!content]
-  [\c!before=\everypar{\hangindent1.5em\relax}]
+  [\c!leftmargin=1.5em]
 
 \setupletterstyle
   [\v!closing]
@@ -52,6 +52,7 @@
 
 \setupletterstyle
   [\v!option]
-  [\c!whitespace=\v!line]
+  [\c!whitespace=\v!line,
+   \c!indenting={\v!yes,-1.5em}]
 
 \protect \endinput

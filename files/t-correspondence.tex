@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-correspondence,
-%D        version=2008.02.13,
+%D        version=2008.02.17,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Correspondence,
 %D         author=Wolfgang Schuster,
@@ -54,6 +54,7 @@
   \setinterfaceconstant {toaddress}       {toaddress}
   \setinterfaceconstant {enclosure}       {enclosure}
   \setinterfaceconstant {copy}            {copy}
+  \setinterfaceconstant {ps}              {ps}
   \setinterfaceconstant {postscript}      {postscript}
   \setinterfaceconstant {attention}       {attention}
   \setinterfaceconstant {distribution}    {distribution}
@@ -73,6 +74,7 @@
   \setinterfaceconstant {subject}         {subject}
   \setinterfaceconstant {cc}              {cc}
   \setinterfaceconstant {enclosure}       {enclosure}
+  \setinterfaceconstant {encl}            {encl}
   \setinterfaceconstant {phone}           {phone}
   \setinterfaceconstant {fax}             {fax}
   \setinterfaceconstant {email}           {email}
@@ -85,93 +87,94 @@
 \stopinterface
 
 \startinterface all
-  \setinterfacevariable {secondpage}  {secondpage}
-  \setinterfacevariable {foot}        {foot}
-  \setinterfacevariable {topmark}     {topmark}
-  \setinterfacevariable {botmark}     {botmark}
-  \setinterfacevariable {cutmark}     {cutmark}
-  \setinterfacevariable {endmark}     {endmark}
-  \setinterfacevariable {option}      {option}
-  \setinterfacevariable {foldmark}    {foldmark}
-  \setinterfacevariable {usermark}    {usermark}
-  \setinterfacevariable {layer}       {layer}
-  \setinterfacevariable {firsthead}   {firsthead}
-  \setinterfacevariable {nexthead}    {nexthead}
-  \setinterfacevariable {lefthead}    {lefthead}
-  \setinterfacevariable {righthead}   {righthead}
-  \setinterfacevariable {firstfoot}   {firstfoot}
-  \setinterfacevariable {nextfoot}    {nextfoot}
-  \setinterfacevariable {leftfoot}    {leftfoot}
-  \setinterfacevariable {rightfoot}   {rightfoot}
-  \setinterfacevariable {layout}      {layout}
-  \setinterfacevariable {place}       {place}
-  \setinterfacevariable {initialize}  {initialize}
-  \setinterfacevariable {finish}      {finish}
-  \setinterfacevariable {sequence}    {sequence}
-  \setinterfacevariable {style}       {style}
-  \setinterfacevariable {extension}   {extension}
-  \setinterfacevariable {interface}   {interface}
-  \setinterfacevariable {resume}      {resume}
-  \setinterfacevariable {letter}      {letter}
-  \setinterfacevariable {backaddress} {backaddress}
-  \setinterfacevariable {reference}   {reference}
-  \setinterfacevariable {location}    {location}
-  \setinterfacevariable {address}     {address}
-  \setinterfacevariable {opening}     {opening}
-  \setinterfacevariable {closing}     {closing}
-  \setinterfacevariable {letternext}  {letternext}
-  \setinterfacevariable {lettermain}  {lettermain}
-  \setinterfacevariable {special}     {special}
-  \setinterfacevariable {notation}    {notation}
-  \setinterfacevariable {inside}      {inside}
-  \setinterfacevariable {optimize}    {optimize}
-  \setinterfacevariable {file}        {file}
-  \setinterfacevariable {e}           {e}
-  \setinterfacevariable {data}        {data}
-  \setinterfacevariable {sender}      {sender}
-  \setinterfacevariable {dispatch}    {dispatch}
-  \setinterfacevariable {enclosure}   {enclosure}
-  \setinterfacevariable {copy}        {copy}
-  \setinterfacevariable {nobreak}     {nobreak}
-  \setinterfacevariable {endgraf}     {endgraf}
-  \setinterfacevariable {memo}        {memo}
-  \setinterfacevariable {addressee}   {addressee}
-  \setinterfacevariable {french}      {french}
-  \setinterfacevariable {simplified}  {simplified}
-  \setinterfacevariable {fullblock}   {fullblock}
-  \setinterfacevariable {hanging}     {hanging}
-  \setinterfacevariable {modified}    {modified}
-  \setinterfacevariable {semiblock}   {semiblock}
-  \setinterfacevariable {handle}      {handle}
-  \setinterfacevariable {casual}      {casual}
-  \setinterfacevariable {classic}     {classic}
-  \setinterfacevariable {knuth}       {knuth}
-  \setinterfacevariable {firstname}   {firstname}
-  \setinterfacevariable {familyname}  {familyname}
-  \setinterfacevariable {street}      {street}
-  \setinterfacevariable {town}        {town}
-  \setinterfacevariable {mobile}      {mobile}
-  \setinterfacevariable {phone}       {phone}
-  \setinterfacevariable {fax}         {fax}
-  \setinterfacevariable {email}       {email}
-  \setinterfacevariable {info}        {info}
+  \setinterfacevariable {secondpage}      {secondpage}
+  \setinterfacevariable {foot}            {foot}
+  \setinterfacevariable {topmark}         {topmark}
+  \setinterfacevariable {botmark}         {botmark}
+  \setinterfacevariable {cutmark}         {cutmark}
+  \setinterfacevariable {endmark}         {endmark}
+  \setinterfacevariable {option}          {option}
+  \setinterfacevariable {foldmark}        {foldmark}
+  \setinterfacevariable {usermark}        {usermark}
+  \setinterfacevariable {layer}           {layer}
+  \setinterfacevariable {firsthead}       {firsthead}
+  \setinterfacevariable {nexthead}        {nexthead}
+  \setinterfacevariable {lefthead}        {lefthead}
+  \setinterfacevariable {righthead}       {righthead}
+  \setinterfacevariable {firstfoot}       {firstfoot}
+  \setinterfacevariable {nextfoot}        {nextfoot}
+  \setinterfacevariable {leftfoot}        {leftfoot}
+  \setinterfacevariable {rightfoot}       {rightfoot}
+  \setinterfacevariable {layout}          {layout}
+  \setinterfacevariable {place}           {place}
+  \setinterfacevariable {initialize}      {initialize}
+  \setinterfacevariable {finish}          {finish}
+  \setinterfacevariable {sequence}        {sequence}
+  \setinterfacevariable {style}           {style}
+  \setinterfacevariable {extension}       {extension}
+  \setinterfacevariable {interface}       {interface}
+  \setinterfacevariable {resume}          {resume}
+  \setinterfacevariable {letter}          {letter}
+  \setinterfacevariable {backaddress}     {backaddress}
+  \setinterfacevariable {reference}       {reference}
+  \setinterfacevariable {location}        {location}
+  \setinterfacevariable {address}         {address}
+  \setinterfacevariable {opening}         {opening}
+  \setinterfacevariable {closing}         {closing}
+  \setinterfacevariable {letternext}      {letternext}
+  \setinterfacevariable {lettermain}      {lettermain}
+  \setinterfacevariable {special}         {special}
+  \setinterfacevariable {notation}        {notation}
+  \setinterfacevariable {inside}          {inside}
+  \setinterfacevariable {optimize}        {optimize}
+  \setinterfacevariable {file}            {file}
+  \setinterfacevariable {e}               {e}
+  \setinterfacevariable {data}            {data}
+  \setinterfacevariable {sender}          {sender}
+  \setinterfacevariable {dispatch}        {dispatch}
+  \setinterfacevariable {enclosure}       {enclosure}
+  \setinterfacevariable {copy}            {copy}
+  \setinterfacevariable {nobreak}         {nobreak}
+  \setinterfacevariable {endgraf}         {endgraf}
+  \setinterfacevariable {memo}            {memo}
+  \setinterfacevariable {addressee}       {addressee}
+  \setinterfacevariable {french}          {french}
+  \setinterfacevariable {simplified}      {simplified}
+  \setinterfacevariable {fullblock}       {fullblock}
+  \setinterfacevariable {hanging}         {hanging}
+  \setinterfacevariable {modified}        {modified}
+  \setinterfacevariable {semiblock}       {semiblock}
+  \setinterfacevariable {handle}          {handle}
+  \setinterfacevariable {casual}          {casual}
+  \setinterfacevariable {classic}         {classic}
+  \setinterfacevariable {knuth}           {knuth}
+  \setinterfacevariable {firstname}       {firstname}
+  \setinterfacevariable {familyname}      {familyname}
+  \setinterfacevariable {street}          {street}
+  \setinterfacevariable {town}            {town}
+  \setinterfacevariable {mobile}          {mobile}
+  \setinterfacevariable {phone}           {phone}
+  \setinterfacevariable {fax}             {fax}
+  \setinterfacevariable {email}           {email}
+  \setinterfacevariable {info}            {info}
+  \setinterfacevariable {correspondence}  {correspondence}
 \stopinterface
 
 \startinterface all
-  \setinterfaceelement {set}       {set}
-  \setinterfaceelement {value}     {value}
-  \setinterfaceelement {complex}   {complex}
-  \setinterfaceelement {simple}    {simple}
-  \setinterfaceelement {use}       {use}
-  \setinterfaceelement {define}    {define}
-  \setinterfaceelement {flush}     {flush}
+  \setinterfaceelement  {set}             {set}
+  \setinterfaceelement  {value}           {value}
+  \setinterfaceelement  {complex}         {complex}
+  \setinterfaceelement  {simple}          {simple}
+  \setinterfaceelement  {use}             {use}
+  \setinterfaceelement  {define}          {define}
+  \setinterfaceelement  {flush}           {flush}
 \stopinterface
 
 % Placeholders for the messages:
 %
 % 1: letter|resume / interface|style|extension / filename
 % 2: letter|resume / interface|style|extension / filename
-% 3: <number> / <number>
+% 3: ‹number› / ‹number›
 
 \definemessageconstant {correspondence}
 
@@ -301,7 +304,12 @@
   {\getparameters[#2#3][#4]}
 
 \def\dosetupcorrespondencedescription[#1][#2][#3][#4]%
-  {\setupdescriptions[#2#3][#4]}
+  {\setupdescriptions[#1:#3][#4]}
+
+% used in the upcoming version
+%
+% \def\dosetupcorrespondencedescription[#1][#2][#3][#4]%
+%   {\getparameters[#1#3][#4]}
 
 \def\dosetupcorrespondencelayer[#1][#2][#3][#4]%
   {\dodosetupcorrespondencelayer[#1][#2][#3][\v!layer,\v!frame,\v!option][#4]}
@@ -532,7 +540,7 @@
      {\setvalue{#1:#2:#3}{\v!section}%
       \appendtovaluelist{#1!list!sections}{#3}}%
    \getparameters
-     [#2#3]%
+     [#2#3]
      [\c!before=,
       \c!after=,
       \c!align=,
@@ -564,26 +572,88 @@
 
 %D Descriptions
 
+%D I use \CONTEXT's own description environment to format the appendices,
+%D but the mechanism is to complex for such the cases I need in my module
+%D and the code will be replaced in the future by my own code.
+
 \def\definecorrespondencedescription[#1][#2]%
   {\setvalue{\s!do\e!define#1\v!description}{\dodefinecorrespondencedescription[#1][#2]}%
    \setvalue{\s!do\e!set   #1\v!description}{\dosetcorrespondencedescription   [#1][#2]}%
    \setvalue{\s!do\e!flush #1\v!description}{\doflushcorrespondencedescription [#1][#2]}}
 
+% \def\dodefinecorrespondencedescription[#1][#2][#3]%
+%   {\setvalue{#2\v!option#3}{\v!yes}%
+%    \doifundefined{#1:#2:#3}
+%      {\setvalue{#1:#2:#3}{\v!description}%
+%       \appendtovaluelist{#1!list!descriptions}{#3}}%
+%    \definedescription
+%      [#1:#3]
+%      [\c!location=\v!top,
+%       \c!inbetween=\nowhitespace]}
+%
+% \def\dosetcorrespondencedescription[#1][#2][#3]%
+%   {\doiftext{\directsetup{#1:#3}}
+%      {\csname\e!start#1:#3\endcsname{\labeltext{#1:#3}}
+%       \directsetup{#1:#3}%
+%       \csname\e!stop #1:#3\endcsname}}
+%
+% \def\doflushcorrespondencedescription[#1][#2]%
+%   {\def\dodoflushcorrespondencedescription##1%
+%      {\doif{\correspondencestylevalue{#2}\v!option{##1}}\v!yes{\dosetcorrespondencedescription[#1][#2][##1]}}%
+%    \processcommacommand[\csname#1!list!descriptions\endcsname]\dodoflushcorrespondencedescription}
+
 \def\dodefinecorrespondencedescription[#1][#2][#3]%
   {\setvalue{#2\v!option#3}{\v!yes}%
-   \doifundefined{#1:#2:#3}
-     {\setvalue{#1:#2:#3}{\v!description}%
-      \appendtovaluelist{#1!list!descriptions}{#3}}%
-   \definedescription
-     [#1#3]
-     [\c!location=\v!top,
-      \c!inbetween=\nowhitespace]}
+   \doifundefined{#1:#2:#3}{\setvalue{#1:#2:#3}{\v!description}}%
+   \getparameters
+     [#2#3]
+     [\c!location=\v!left,
+      \c!inbetween=\nowhitespace,
+      \c!before=\blank,
+      \c!after=\blank,
+      \c!width=\v!broad,
+      \c!distance=\zeropoint]}
 
 \def\dosetcorrespondencedescription[#1][#2][#3]%
-  {\doiftext{\directsetup{#1:#3}}
-     {\csname\e!start#1#3\endcsname{\labeltext{#1:#3}}
-      \directsetup{#1:#3}%
-      \csname\e!stop #1#3\endcsname}}
+  {\bgroup
+   \doifelsecorrespondencestylevalue{#2}{#3}\c!before
+     {\correspondencestylevalue{#2}{#3}\c!before}
+      \endgraf
+   \setbox\scratchbox\hbox{\labeltext{#1:#3}}%
+   \ifdim\wd\scratchbox>\zeropoint
+     \processaction
+       [\correspondencestylevalue{#2}{#3}\c!width]
+       [    \v!fit=>\scratchdimen\dimexpr\wd\scratchbox+\correspondencestylevalue{#2}{#3}\c!distance\relax,
+          \v!broad=>\scratchdimen\dimexpr\wd\scratchbox+1em\relax,
+        \s!unknown=>\scratchdimen\dimexpr\correspondencestylevalue{#2}{#3}\c!width+\correspondencestylevalue{#2}{#3}\c!distance\relax]%
+   \else
+     \processaction
+       [\correspondencestylevalue{#2}{#3}\c!width]
+       [    \v!fit=>\scratchdimen\zeropoint,
+          \v!broad=>\scratchdimen\zeropoint,
+        \s!unknown=>\scratchdimen\dimexpr\correspondencestylevalue{#2}{#3}\c!width+\correspondencestylevalue{#2}{#3}\c!distance\relax]%
+   \fi
+   \executeifdefined{\v!correspondence\v!description\correspondencestylevalue{#2}{#3}\c!location}\gobblethreearguments{#1}{#2}{#3}%
+   \doifelsecorrespondencestylevalue{#2}{#3}\c!after
+     {\endgraf\correspondencestylevalue{#2}{#3}\c!after}
+      \endgraf
+   \egroup}
+
+\setvalue{\v!correspondence\v!description\v!left}#1#2#3%
+  {\hangindent\scratchdimen
+   \hangafter\zerocount
+   \setbox\scratchbox\hbox\!!to\scratchdimen{\box\scratchbox\hss}%
+   \noindent\llap{\box\scratchbox}\directsetup{#1:#3}}
+
+\setvalue{\v!correspondence\v!description\v!top}#1#2#3%
+  {\box\scratchbox\par
+   \nobreak
+   \doifcorrespondencestylevalue{#2}{#3}\c!inbetween{\correspondencestylevalue{#2}{#3}\c!inbetween}%
+   \nobreak
+   \directsetup{#1:#3}}
+
+\setvalue{\v!correspondence\v!description\v!text}#1#2#3%
+  {\noindent\box\scratchbox\directsetup{#1:#3}}
 
 \def\doflushcorrespondencedescription[#1][#2]%
   {\def\dodoflushcorrespondencedescription##1%

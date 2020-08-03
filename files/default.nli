@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2009.02.14,
+%D        version=2009.02.17,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -8,8 +8,6 @@
 %D      copyright=Wolfgang Schuster,
 %D          email=schuster.wolfgang@googlemail.com,
 %D        license=Public Domain]
-
-%M \loadsetups[t-letter.xml]
 
 \unprotect
 
@@ -221,28 +219,6 @@
 %D the opening and closing with the optional argument, the values are
 %D local in this case and not global like the values you could set with
 %D \tex{setupletter}.
-%D 
-%D \showsetup{startletter}
-
-% \def\startletter
-%   {\bgroup\dodoubleempty\dostartletter}
-%
-% \def\dostartletter[#1][#2]%
-%   {\ifsecondargument
-%      \getparameters[\????ld][#1]%
-%      \doifundefinedelse{\????ld\????ld#2}
-%        {\setvalue{\????ld\c!toaddress}{#2}}
-%        {\setvalue{\????ld\c!toaddress}{\getvalue{\????ld\????ld#2}}}%
-%    \else\iffirstargument
-%      \doifassignmentelse{#1}
-%        {\getparameters[\????ld][#1]}
-%        {\doifundefinedelse{\????ld\????ld#1}
-%           {\setvalue{\????ld\c!toaddress}{#1}}
-%           {\setvalue{\????ld\c!toaddress}{\getvalue{\????ld\????ld#1}}}}%
-%    \fi\fi
-%    \def\stopletter
-%      {\directsetup{\v!letter:\v!place}\egroup}%
-%    \dostartbuffer[lettercontent][startletter][stopletter]}
 
 \long\def\dosetbuffer[#1]#2\endbuffer % added \long
   {\begingroup
@@ -258,7 +234,7 @@
      \getparameters[\????ld][#1]%
      \doifundefinedelse{\????ld\????ld#2}
        {\setvalue{\????ld\c!toaddress}{#2}}
-       {\setvalue{\????ld\c!toaddress}{\getvalue{\????ld\????ld#2}}}%
+      {\setvalue{\????ld\c!toaddress}{\getvalue{\????ld\????ld#2}}}%
    \else\iffirstargument
      \doifassignmentelse{#1}
        {\getparameters[\????ld][#1]}
@@ -267,29 +243,25 @@
           {\setvalue{\????ld\c!toaddress}{\getvalue{\????ld\????ld#1}}}}%
    \fi\fi
    \setbuffer[lettercontent]#3\endbuffer
+   \processlettervalues
    \directsetup{\v!letter:\v!place}\egroup}
 
-% %D Patched version of the \tex{flushbufferline} macro for \MKII,
-% %D the changes are definition as long and removing of \tex{string}
-% %D in the argument of the last write block.
-%
-% \long\def\flushbufferline#1%
-%   {\iftmpblockstarted
-%      \ifsegmentatebuffer
-%        \ifemptybufferline
-%          \immediate\write\tmpblocks{\string\stopbufferparagraph }%
-%          \immediate\write\tmpblocks{\string\startbufferparagraph}%
-%        \else
-%          \immediate\write\tmpblocks{#1}%
-%        \fi
-%      \else
-%        \immediate\write\tmpblocks{#1}%
-%      \fi
-%    \else
-%      \doifsomething{#1}
-%        {\tmpblockstartedtrue
-%         \immediate\write\tmpblocks{#1}}%
-%    \fi}
+\newtoks\letter!local!commands
+
+\def\processlettervalues
+  {\global\let\letter!list!descriptions\empty
+   \global    \letter!local!commands   \emptytoks
+   \def\opening##1{\doglobal\appendtoks\setvalue{\????ld\c!opening   }{##1}\to\letter!local!commands}%
+   \def\closing##1{\doglobal\appendtoks\setvalue{\????ld\c!closing   }{##1}\to\letter!local!commands}%
+   \def\ps     ##1{\doglobal\appendtoks\setvalue{\????ld\c!postscript}{##1}\to\letter!local!commands\doglobal\appendtocommalist\c!postscript\letter!list!descriptions}%
+   \def\cc     ##1{\doglobal\appendtoks\setvalue{\????ld\c!copy      }{##1}\to\letter!local!commands\doglobal\appendtocommalist\c!copy      \letter!list!descriptions}%
+   \def\encl   ##1{\doglobal\appendtoks\setvalue{\????ld\c!enclosure }{##1}\to\letter!local!commands\doglobal\appendtocommalist\c!enclosure \letter!list!descriptions}%
+   \setbox\scratchbox\hbox{\getbuffer[lettercontent]}%
+   \flushtoks\letter!local!commands}
+
+\def\gobblelettervalues
+  {\def\dogobblelettervalues##1{\letcsnamecs\csname##1\endcsname\gobbleoneargument}%
+   \processcommalist[\c!opening,\c!closing,\c!ps,\c!cc,\c!encl]\dogobblelettervalues}
 
 %D \macros
 %D   {startlettercontent}
@@ -463,7 +435,7 @@
 \stopsetups
 
 \startsetups[\v!letter:\v!content]
-\lettervalue\c!content
+\gobblelettervalues\lettervalue\c!content
 \stopsetups
 
 %D \subject{Closing and appendices}
@@ -504,28 +476,19 @@
 \dodefineletterdescription[\v!enclosure]
 
 \startsetups[\v!letter:\v!enclosure]
-\processaction
-  [\lettervalue\c!enclosure]
-  [  \v!empty=>\vrule\!!height\zeropoint\!!depth\zeropoint\!!width\hsize\relax\ifvmode\nowhitespace\fi,
-   \s!unknown=>\lettervalue\c!enclosure]
+\lettervalue\c!enclosure
 \stopsetups
 
 \dodefineletterdescription[\v!copy]
 
 \startsetups[\v!letter:\v!copy]
-\processaction
-  [\lettervalue\c!copy]
-  [  \v!empty=>\vrule\!!height\zeropoint\!!depth\zeropoint\!!width\hsize\relax\ifvmode\nowhitespace\fi,
-   \s!unknown=>\lettervalue\c!copy]
+\lettervalue\c!copy
 \stopsetups
 
 \dodefineletterdescription[\v!postscript]
 
 \startsetups[\v!letter:\v!postscript]
-\processaction
-  [\lettervalue\c!postscript]
-  [  \v!empty=>\vrule\!!height\zeropoint\!!depth\zeropoint\!!width\hsize\relax\ifvmode\nowhitespace\fi,
-   \s!unknown=>\lettervalue\c!postscript]
+\lettervalue\c!postscript
 \stopsetups
 
 \setvalue{\v!letter:\v!backaddress:\v!yes}%
@@ -554,7 +517,7 @@
 %D the elements.
 
 \defineblankmethod [\v!nobreak] {\penalty\plustenthousand}
-\defineblankmethod [\v!endgraf] {\endgraf}
+\defineblankmethod [\v!endgraf] {\endgraf                }
 
 %D \subject{Additional settings}
 %D 

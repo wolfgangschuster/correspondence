@@ -3,6 +3,11 @@
 <cd:interface xmlns:cd="http://www.pragma-ade.com/commands" name="context" language="en" version="2006.08.02">
 
 <cd:define name="lettersection">
+  <cd:constant type="letterhead"/>
+  <cd:constant type="dateline"/>
+  <cd:constant type="referenceline"/>
+  <cd:constant type="specialnotation"/>
+  <cd:constant type="insideaddress"/>
   <cd:constant type="title"/>
   <cd:constant type="subject"/>
   <cd:constant type="opening"/>
@@ -12,18 +17,25 @@
 </cd:define>
 
 <cd:define name="letterlayer">
-  <cd:constant type="letternext"/>
-  <cd:constant type="lettermain"/>
   <cd:constant type="head"/>
   <cd:constant type="foot"/>
+  <cd:constant type="nexthead"/>
+  <cd:constant type="nextfoot"/>
+  <cd:constant type="lefthead"/>
+  <cd:constant type="leftfoot"/>
+  <cd:constant type="righthead"/>
+  <cd:constant type="rightfoot"/>
   <cd:constant type="address"/>
   <cd:constant type="backaddress"/>
   <cd:constant type="reference"/>
+  <cd:constant type="location"/>
   <cd:constant type="topmark"/>
   <cd:constant type="botmark"/>
   <cd:constant type="cutmark"/>
   <cd:constant type="endmark"/>
   <cd:constant type="usermark"/>
+  <cd:constant type="letternext"/>
+  <cd:constant type="lettermain"/>
 </cd:define>
 
 <cd:command name="setupletterstyle:layout" file="t-letter.tex">
@@ -42,11 +54,11 @@
 </cd:command>
 
 <cd:command name="setupletterstyle:option" file="t-letter.tex">
-  <cd:sequence>
+  <cd:sequence >
     <cd:string value="setupletterstyle"/>
   </cd:sequence>
   <cd:arguments>
-    <cd:keywords>
+    <cd:keywords optional="yes">
       <cd:constant type="option"/>
     </cd:keywords>
     <cd:assignments list="yes">
@@ -100,30 +112,7 @@
    </cd:arguments>
 </cd:command>
 
-<cd:command name="setupletterstyle:text" file="t-letter.tex">
-  <cd:sequence>
-    <cd:string value="setupletterstyle"/>
-  </cd:sequence>
-  <cd:arguments>
-    <cd:keywords list="yes">
-      <cd:constant type="header"/>
-      <cd:constant type="footer"/>
-    </cd:keywords>
-    <cd:assignments list="yes">
-      <cd:parameter name="lefttext">
-        <cd:constant type="cd:text"/>
-      </cd:parameter>
-      <cd:parameter name="middletext">
-        <cd:constant type="cd:text"/>
-      </cd:parameter>
-      <cd:parameter name="righttext">
-        <cd:constant type="cd:text"/>
-      </cd:parameter>
-    </cd:assignments>
-   </cd:arguments>
-</cd:command>
-
-<cd:command name="setupletterstyle:section" file="t-letter.tex">
+<cd:command name="setuplettersection" file="t-letter.tex">
   <cd:sequence>
     <cd:string value="setupletterstyle"/>
   </cd:sequence>
@@ -147,11 +136,30 @@
       <cd:parameter name="color">
         <cd:constant type="cd:name"/>
       </cd:parameter>
+      <cd:parameter name="leftmargin">
+        <cd:constant type="cd:dimension"/>
+      </cd:parameter>
+      <cd:parameter name="rightmargin">
+        <cd:constant type="cd:dimension"/>
+      </cd:parameter>
+      <cd:parameter name="alternative">
+        <cd:constant type="cd:name"/>
+      </cd:parameter>
+      <cd:parameter name="separator">
+        <cd:constant type="cd:name"/>
+      </cd:parameter>
+      <cd:parameter name="command">
+        <cd:constant type="cd:oneargument"/>
+      </cd:parameter>
+      <cd:parameter name="optimize">
+        <cd:constant type="yes"/>
+        <cd:constant type="no" default="yes"/>
+      </cd:parameter>
     </cd:assignments>
    </cd:arguments>
 </cd:command>
 
-<cd:command name="setupletterstyle:frame" file="t-letter.tex">
+<cd:command name="setupletterlayer:layer" file="t-letter.tex">
   <cd:sequence>
     <cd:string value="setupletterstyle"/>
   </cd:sequence>
@@ -159,7 +167,24 @@
     <cd:keywords list="yes">
       <cd:resolve name="letterlayer"/>
     </cd:keywords>
-    <cd:keywords>
+    <cd:keywords optional="yes">
+      <cd:constant type="layer"/>
+    </cd:keywords>
+    <cd:assignments list="yes">
+      <cd:inherit name="setuplayer"/>
+    </cd:assignments>
+  </cd:arguments>
+</cd:command>
+
+<cd:command name="setupletterlayer:frame" file="t-letter.tex">
+  <cd:sequence>
+    <cd:string value="setupletterstyle"/>
+  </cd:sequence>
+  <cd:arguments>
+    <cd:keywords list="yes">
+      <cd:resolve name="letterlayer"/>
+    </cd:keywords>
+    <cd:keywords optional="yes">
       <cd:constant type="frame"/>
     </cd:keywords>
     <cd:assignments list="yes">
@@ -168,7 +193,7 @@
    </cd:arguments>
 </cd:command>
 
-<cd:command name="setupletterstyle:layer" file="t-letter.tex">
+<cd:command name="setupletterlayer:option" file="t-letter.tex">
   <cd:sequence>
     <cd:string value="setupletterstyle"/>
   </cd:sequence>
@@ -176,11 +201,49 @@
     <cd:keywords list="yes">
       <cd:resolve name="letterlayer"/>
     </cd:keywords>
-    <cd:keywords>
-      <cd:constant type="layer"/>
+    <cd:keywords optional="yes">
+      <cd:constant type="option"/>
     </cd:keywords>
     <cd:assignments list="yes">
-      <cd:inherit name="setuplayer"/>
+      <cd:parameter name="state">
+        <cd:constant type="start" default="yes"/>
+        <cd:constant type="stop"/>
+        <cd:constant type="first"/>
+        <cd:constant type="next"/>
+        <cd:constant type="left"/>
+        <cd:constant type="right"/>
+        <cd:constant type="leftpage"/>
+        <cd:constant type="rightpage"/>
+        <cd:constant type="page"/>
+        <cd:constant type="subpage" default="yes"/>
+      </cd:parameter>
+      <cd:parameter name="symbol">
+        <cd:constant type="cd:name"/>
+      </cd:parameter>
+      <cd:parameter name="style">
+        <cd:resolve name="style"/>
+      </cd:parameter>
+      <cd:parameter name="color">
+        <cd:constant type="cd:name"/>
+      </cd:parameter>
+      <cd:parameter name="alternative">
+        <cd:constant type="cd:name"/>
+      </cd:parameter>
+      <cd:parameter name="separator">
+        <cd:constant type="cd:name"/>
+      </cd:parameter>
+      <cd:parameter name="leftmargin">
+        <cd:constant type="cd:dimension"/>
+      </cd:parameter>
+      <cd:parameter name="rightmargin">
+        <cd:constant type="cd:dimension"/>
+      </cd:parameter>
+      <cd:parameter name="spacebefore">
+        <cd:constant type="cd:dimension"/>
+      </cd:parameter>
+      <cd:parameter name="spaceafter">
+        <cd:constant type="cd:dimension"/>
+      </cd:parameter>
     </cd:assignments>
   </cd:arguments>
 </cd:command>

@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-correspondence,
-%D        version=2011.02.07,
+%D        version=2011.06.17,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Correspondence,
 %D         author=Wolfgang Schuster,
@@ -208,16 +208,6 @@
   \setinterfacemessage{correspondence}{4}    {--: --}
   \setinterfacemessage{correspondence}{5}    {your context is too old, you need at last version '--'}
 \stopinterface
-
-%D Module setup
-
-\setupmodule[\c!contextversion=2009.09.21]
-
-%D Check ConTeXt version
-
-\doifolderversionelse\contextversion{\currentmoduleparameter\c!contextversion}
-  {\showmessage\m!correspondence{5}{\currentmoduleparameter\c!contextversion}\forcequitjob\v!correspondence}
-   \donothing
 
 %D Setup command for the styles
 
@@ -597,7 +587,7 @@ correspondence.files = {
         name        = "t-correspondence.tex",
         path        = "tex/context/third/letter/base/",
         type        = "base",
-        version     = "2011.02.07",
+        version     = "2011.06.17",
         description = "Core module"
     } ,
     {

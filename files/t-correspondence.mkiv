@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-correspondence,
-%D        version=2010.10.06,
+%D        version=2011.02.07,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Correspondence,
 %D         author=Wolfgang Schuster,
@@ -517,7 +517,7 @@
         \scratchdimen\dimexpr\wd\scratchbox+1em\relax
       \fi}
      {\doifelse{\correspondencestylevalue{#2}{#3}\c!width}\v!fit
-        {\if\wd\scratchbox>\zeropoint
+        {\ifdim\wd\scratchbox>\zeropoint
            \scratchdimen\dimexpr\wd\scratchbox+\correspondencestylevalue{#2}{#3}\c!distance\relax
          \fi}
         {\scratchdimen\dimexpr\correspondencestylevalue{#2}{#3}\c!width+\correspondencestylevalue{#2}{#3}\c!distance\relax}}%
@@ -597,7 +597,7 @@ correspondence.files = {
         name        = "t-correspondence.tex",
         path        = "tex/context/third/letter/base/",
         type        = "base",
-        version     = "2010.10.06",
+        version     = "2011.02.07",
         description = "Core module"
     } ,
     {
@@ -619,7 +619,7 @@ correspondence.files = {
         name        = "default.nli",
         path        = "tex/context/third/letter/interface/",
         type        = "interface",
-        version     = "2010.10.06",
+        version     = "2011.02.07",
         description = "Default letter interface"
 
     } ,
@@ -648,7 +648,7 @@ correspondence.files = {
         name        = "moderncv.nri",
         path        = "tex/context/third/letter/interface/",
         type        = "interface",
-        version     = "2010.08.21",
+        version     = "2010.11.22",
         description = "moderncv resume interface"
     } ,
     {

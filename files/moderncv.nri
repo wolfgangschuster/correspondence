@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=moderncv,
-%D        version=2010.08.21,
+%D        version=2010.11.22,
 %D          title=\CONTEXT\ Resume Interface,
 %D       subtitle=moderncv Interface,
 %D         author=Wolfgang Schuster,
@@ -104,7 +104,7 @@
 \def\docvline[#1]#2#3%
   {\bgroup\dontcomplain
    \starttable[s0|s0rp(\measure{hintscolumnwidth})|s0w(\measure{separatorcolumnwidth})|s0p(\measure{maincolumnwidth})|]
-   \NC\doifelsenothing{#2}{~}{\setupinterlinespace\relax#2}\NC\NC\setupinterlinespace\relax#3\NC\NR
+   \NC\doifelsenothing{#2}{\space}{\setupinterlinespace\relax#2}\NC\NC\setupinterlinespace\relax#3\NC\NR
    \stoptable
    \egroup
    \doifelsenothing{#1}{\blank[.25em]}{\blank[#1]}}

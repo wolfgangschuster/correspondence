@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2010.10.06,
+%D        version=2011.02.07,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -625,10 +625,18 @@
      {\doiflettervalue\c!salutation
         {\lettervalue\c!salutation}}}
 
+\startmode[\s!mkii]
 \defineletterelement[\v!opening][\v!french]
   {\ExpandSecondAfter\doifsomething{\letterstylevalue\v!option\c!indenting}
      {\setupindenting[\@@@@lsoptionindenting]}%
    \letterelement[\v!opening][\v!a]}
+\stopmode
+
+\startmode[\s!mkiv]
+\defineletterelement[\v!opening][\v!french]
+  {\doifsomething{\letterstylevalue\v!option\c!indenting}{\setupindenting[\@@@@lsoptionindenting]}%
+   \letterelement[\v!opening][\v!a]}
+\stopmode
 
 \startsetups[\v!letter:\v!opening]
 \executeifdefined{\v!letter:\v!opening:\@@@@lsopeningalternative}{\getvalue{\v!letter:\v!opening:\v!a}}
@@ -651,6 +659,7 @@
    \doiflettervalue\c!signature{\letterstylevalue\v!closing\c!inbetween}%
    \lettervalue\c!signature}
 
+\startmode[\s!mkii]
 \defineletterelement[\v!closing][\v!french]
   {\ExpandSecondAfter\doifsomething{\letterstylevalue\v!option\c!indenting}
      {\setupindenting[\@@@@lsoptionindenting,\v!first]}%
@@ -658,6 +667,16 @@
    \doiflettervalue\c!signature{\letterstylevalue\v!closing\c!inbetween}%
    \raggedcenter\doadaptleftskip{.5\textwidth}% quick and dirty
    \lettervalue\c!signature\endgraf}
+\stopmode
+
+\startmode[\s!mkiv]
+\defineletterelement[\v!closing][\v!french]
+  {\doifsomething{\letterstylevalue\v!option\c!indenting}{\setupindenting[\@@@@lsoptionindenting,\v!first]}%
+   \lettervalue\c!closing
+   \doiflettervalue\c!signature{\letterstylevalue\v!closing\c!inbetween}%
+   \raggedcenter\doadaptleftskip{.5\textwidth}% quick and dirty
+   \lettervalue\c!signature\endgraf}
+\stopmode
 
 \defineletterelement[\v!closing][\v!simplified]
   {\doiflettervalue\c!signature{\letterstylevalue\v!closing\c!inbetween}%

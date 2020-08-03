@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-correspondence,
-%D        version=2011.06.17,
+%D        version=2011.09.19,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Correspondence,
 %D         author=Wolfgang Schuster,
@@ -251,9 +251,9 @@
   {\def\dododosetupcorrespondencelayer##1%
      {\def\dodododosetupcorrespondencelayer####1%
         {\ifcsname dosetupcorrespondencelayer####1\endcsname
-           \@EAEA\csname dosetupcorrespondencelayer####1\endcsname
+           \expandafter\expandafter\csname dosetupcorrespondencelayer####1\endcsname
          \else
-           \@EA\dosetupcorrespondencelayeroption
+           \expandafter\dosetupcorrespondencelayeroption
          \fi[#1][#2][##1][#5]}%
       \processcommalist[#4]\dodododosetupcorrespondencelayer}%
    \processcommalist[#3]\dododosetupcorrespondencelayer}
@@ -587,7 +587,7 @@ correspondence.files = {
         name        = "t-correspondence.tex",
         path        = "tex/context/third/letter/base/",
         type        = "base",
-        version     = "2011.06.17",
+        version     = "2011.09.19",
         description = "Core module"
     } ,
     {

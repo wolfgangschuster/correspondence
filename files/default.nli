@@ -1,0 +1,474 @@
+%D \module
+%D   [       file=default,
+%D        version=2008.04.23,
+%D          title=\CONTEXT\ Letter Interface,
+%D       subtitle=Default Interface,
+%D         author=Wolfgang Schuster,
+%D           date=\currentdate,
+%D      copyright=Public Domain]
+
+%M \loadsetups[letter.xml]
+
+\unprotect
+
+%D I define a few additional constants and variables, I will move them
+%D to the base some time.
+
+\startconstants            all
+
+                  opening: opening
+                  content: content
+                  closing: closing
+                signature: signature
+                 dispatch: dispatch
+               appendices: appendices
+              fromaddress: fromaddress
+                 frombank: frombank
+                 frommail: frommail
+                  fromfax: fromfax
+                 fromlogo: fromlogo
+                 fromname: fromname
+                fromphone: fromphone
+                  fromurl: fromurl
+                   toname: toname
+                toaddress: toaddress
+\stopconstants
+
+\startvariables            all
+
+                     data: data
+                   sender: sender
+                 dispatch: dispatch
+\stopvariables
+
+%D We have at the moment only the values from the core module, I use the settings
+%D from the dinb file as default settings, you could replace them in your own
+%D document but I won't use another letterstyle for this interface.
+%D 
+%D The labels are stored in a common file, you could use them in your own interface
+%D but you have to live with my names.
+
+\useletterstyle    [dinb]  % layout
+\useletterextension[label] % labels
+
+%D We come now to the new macros defined in this file, they are meant to place the
+%D information about date, phone number and more information. You could select on of
+%D the alternatives with \type{\setupletter[alternative=...]}.
+%D 
+%D I define here only what I need myself but you're free to define your own
+%D alternatives but try to avoid to use the same names as I do. You could also send
+%D me your alternatives and I will include them.
+%D 
+%D This is the first alternative a, it use the values from the style file without any
+%D change, this is the normal layout for a DIN letter.
+
+\long\def\doformatreferencelista#1%
+  {\def\\{\egroup\hbox\bgroup}%
+   \setupinterlinespace\hbox\bgroup#1\egroup\par}
+
+\long\def\formatreferencelista#1%
+  {\bgroup
+   \convertargument#1\to\ascii
+   \vbox
+     {\vbox{\doattributes{\????ld\ascii}\c!titlestyle\c!titlecolor
+        {\doformatreferencelista{\labeltext\ascii}}}
+      \vtop{\doattributes{\????ld\ascii}\c!textstyle\c!textcolor
+        {\doformatreferencelista{\lettervalue\ascii}}}}%
+   \egroup
+   \hfill}
+
+\setvalue{\v!reference\v!line\v!a}%
+  {\hbox\!!to\hsize
+     {\getcommacommandsize[\@@@@ldlist]% \@@@@ldreference?
+      \ifnum\commalistsize<\plustwo\hfill\fi
+      \processcommacommand[\@@@@ldlist]\formatreferencelista\unskip}}
+
+\startsetups[letter:reference:\v!a]
+
+\setupletterstyle
+  [\v!reference]
+  [\c!hoffset=\backspace,
+   \c!voffset=\dimexpr\letterstylevalue\v!address\c!voffset+\letterstylevalue\v!address\c!height+\plusfive\c!mm\relax,
+   \c!width=\textwidth]
+
+\stopsetups
+
+%D This is the alternative b, you could use it if you want to place the information
+%D in a infoblock not just a simple line, it is also better suited if you want to
+%D place more infomration.
+
+\long\def\formatreferencelistb#1%
+  {\bgroup
+   \doifelse{#1}\v!line
+     {\blank[\v!line]}
+     {\hbox
+        {\doattributes{\????ld#1}\c!titlestyle\c!titlecolor
+           {\labeltext{#1}\lettervalue{#1\c!separator}}%
+         \doattributes{\????ld#1}\c!textstyle\c!textcolor
+           {\lettervalue{#1}}}}%
+   \egroup}
+
+\setvalue{\v!reference\v!line\v!b}%
+  {\vtop % why not \vbox?
+     {\processcommacommand[\@@@@ldlist]\formatreferencelistb}}
+
+\startsetups[letter:reference:\v!b]
+
+\setupletterstyle
+  [\v!reference]
+  [\v!layer]
+  [\c!hoffset=125.7mm,
+   \c!voffset=\letterstylevalue\v!address\c!voffset]
+
+\setupletterstyle
+  [\v!reference]
+  [\v!frame]
+  [\c!width=\dimexpr\paperwidth-\letterstylevalue{\v!reference\v!layer}\c!hoffset-\cutspace\relax,
+   \c!height=\v!fit]
+
+\stopsetups
+
+%D The third alternative c could used, if you want to place just a single line
+%D with text and nothing more, like your place and the date. You need only the
+%D following two lines in your document.
+%D 
+%D \starttyping
+%D \setupletter[alternative=c,list=reference]
+%D \setupletter[reference=\rightaligned{Place, \currentdate}]
+%D \stoptyping
+
+\long\def\formatreferencelistc#1%
+  {\bgroup
+   \convertargument#1\to\ascii
+   \doattributes{\????ld\ascii}\c!textstyle\c!textcolor
+     {\lettervalue\ascii}%
+   \egroup}
+
+\setvalue{\v!reference\v!line\v!c}%
+  {\hbox\!!to\hsize
+     {\processcommacommand[\@@@@ldlist]\formatreferencelistc}}
+
+\startsetups[letter:reference:\v!c]
+
+\setupletterstyle
+  [\v!reference]
+  [\c!hoffset=\backspace,
+   \c!voffset=\dimexpr\letterstylevalue\v!address\c!voffset+\letterstylevalue\v!address\c!height+\plusfive\c!mm\relax,
+   \c!width=\textwidth]
+
+\stopsetups
+
+%D Alternative d, text is place in a block like alternative bit the text
+%D is put in a table.
+
+\long\def\doformatreferencelistd#1%
+  {\doifelse{#1}\v!line
+     {\NC\NC\NC\NR} % ugly but working
+     {\NC \doattributes{\????ld#1}\c!titlestyle\c!titlecolor
+            {\labeltext{#1}\lettervalue{#1\c!separator}}%
+      \NC\doattributes{\????ld#1}\c!textstyle\c!textcolor{\lettervalue{#1}}
+      \NC\NR}}
+
+\def\formatreferencelistd#1%
+  {\appendtoks\doformatreferencelistd{#1}\to\scratchtoks}
+
+\setvalue{\v!reference\v!line\v!d}%
+  {\vtop % why not \vbox?
+     {\scratchtoks\emptytoks
+      \processcommacommand[\@@@@ldlist]\formatreferencelistd
+      \setuptabulate[\c!before=,\c!after=]%
+      \starttabulate[|l|l|]
+      \the\scratchtoks
+      \stoptabulate}}
+
+\startsetups[letter:reference:\v!d]
+
+\setupletterstyle
+  [\v!reference]
+  [\v!layer]
+  [\c!hoffset=125.7mm,
+   \c!voffset=\letterstylevalue\v!address\c!voffset]
+
+\setupletterstyle
+  [\v!reference]
+  [\v!frame]
+  [\c!width=\dimexpr\paperwidth-\letterstylevalue{\v!reference\v!layer}\c!hoffset-\cutspace\relax,
+   \c!height=\v!fit]
+
+\stopsetups
+
+%D The alternative \mono{none} could be used to disable the reference.
+%D 
+%D The advantage is to change only the list alternative to nothing, another
+%D method to get this result to use alternative c and remove all values from
+%D the reference but the none key is better.
+
+\resetvalue{\v!reference\v!line\v!none}
+
+\startsetups[letter:reference:\v!none]
+
+\setupletterstyle
+  [\v!firstpage]
+  [\c!topspace=\dimexpr\letterstylevalue\v!address\c!voffset+\letterstylevalue\v!address\c!height+\plustwo\lineheight\relax]
+
+\stopsetups
+
+%D \macros
+%D   {setupletter,setlettervalue}
+%D 
+%D The values for the letter field ist set eitheir either with \tex{setupletter}
+%D or with \tex{setlettervalue}, the first commands allows you to input the data
+%D in a key-val list while the second is only able to accept a single value.
+%D 
+%D The first definition for \tex{setupletter} was defined in \filename{t-letter.tex}
+%D and used till \date[d=20,m=4,y=2008] but I decided to replace it by a simpler
+%D method to avoid a few lines of code in my letter and the letter versions from
+%D \date[d=21,m=4,y=2008] will use the new user interface. The old definition from
+%D \filename{t-letter.tex} is now oveloaded in will eventually disappear.
+%D 
+%D The second command to set \tex{setlettervalue} was developed as a alternative
+%D method to set values for the letter, I implemnted the command at the same time
+%D as I changed the user interface.
+%D 
+%D Untill the old definition for \tex{setupletter} remains in \filename{t-letter.tex}
+%D I have to redefine also \tex{lettervalue}, \tex{doiflettervalue} and
+%D \tex{doifelselettervalue} because the old and new definitions differe in the
+%D number of arguments but the new definition will move to the core file as soon
+%D as I replace \tex{setupletter} in the core.
+
+\def\setupletter
+  {\dodoubleempty\dosetupletter}
+
+\def\dosetupletter[#1][#2]%
+  {\ifsecondargument
+     \dodosetupletter[#1][#2]%
+   \else
+     \dodosetupletter[#1][]%
+   \fi}
+
+\def\dodosetupletter[#1][#2]%
+  {\doifelsenothing{#2}
+     {\getparameters[\????ld][#1]}
+     {\def\dododosetupletter##1%
+        {\getparameters[\????ld##1][#2]}%
+      \processcommalist[#1]\dododosetupletter}}
+
+\def\lettervalue#1%
+  {\csname\????ld#1\endcsname}
+
+\def\doiflettervalue#1%
+  {\doiftextelse{\lettervalue{#1}}
+     \firstofoneargument
+     \gobbleoneargument}
+
+\def\doifelselettervalue#1%
+  {\doiftextelse{\lettervalue{#1}}
+     \firstoftwoarguments
+     \secondoftwoarguments}
+
+\definecomplexorsimple\setlettervalue
+
+\def\complexsetlettervalue[#1]#2%
+  {\setvalue{\????ld#1}{#2}}
+
+\def\simplesetlettervalue#1#2%
+  {\setvalue{\????ld#1}{#2}}
+
+%D \macros
+%D   {startletter}
+%D 
+%D The main macro in this file, it is used to write the letter content.
+%D It is also possible to set the address and a few other values like
+%D the opening and closing with the optional argument, the values are
+%D local in this case and not global like the values you could set with
+%D \tex{setupletter}.
+%D 
+%D \showsetup{startletter}
+
+\def\startletter
+  {\bgroup\dosingleempty\dostartletter}
+
+\def\dostartletter[#1]%
+  {\iffirstargument
+     \setupletter[#1]%
+   \fi
+   \def\stopletter
+     {\setups[letter:place]\egroup
+      \setupsubpagenumber[\c!state=\@@@@lsoptionstate]}%
+   \startbuffer[lettercontent][startletter][stopletter]}
+
+%D \macros
+%D   {startlettercontent}
+%D 
+%D The letter content is saved in the value content, although I could
+%D place it in the corresponding I prefer this solution because you could
+%D now use it in your own macros and redefine the content setups to your
+%D own wishes.
+
+\setupletter
+  [\c!content={\getbuffer[lettercontent]}]
+
+\def\startlettercontent
+  {\startbuffer[lettercontent][startlettercontent][stoplettercontent]}
+
+%D After the definition of all macros I could now put the content
+%D in the corresponding setups, this is only important if you want
+%D to define your own layout for header, address etc.
+
+\startsetups[letter:head]
+\let\\\endgraf
+\lettervalue\c!fromname
+\doiflettervalue\c!fromname\endgraf
+\lettervalue\c!fromaddress
+\stopsetups
+
+%D The address field is separated into two different fields.
+%D The upper field is meant for dispatch information, the official height
+%D in germany is 3 lines but this would lead to different heights dependent
+%D of the font size and the fonts own height. The lower field contains the
+%D name and address of the receiver and has a height of 6 lines in germany.
+%D This value will lead to the same problem as the upper field, because the
+%D whole address field has a fixed height and both field should fit into
+%D this space. I solved this problem by assinging the upper field 1/3 of the
+%D address height and the lower field 2/3 of the address height.
+%D 
+%D If you hace problem to put all information in the limited space you could
+%D try to reduce the font size or reduce the interlinespace in the field.
+
+\presetlocalframed[\????ls\v!address\v!dispatch]
+\presetlocalframed[\????ls\v!address\v!content]
+
+\startsetups[letter:address]
+\let\\\endgraf
+\offinterlineskip\endgraf
+\localframed
+  [\????ls\v!address\v!dispatch]
+  {\setups[letter:address:dispatch]}
+\localframed
+  [\????ls\v!address\v!content]
+  {\setups[letter:address:content]}
+\stopsetups
+
+\startsetups[letter:address:dispatch]
+\lettervalue\c!dispatch
+\stopsetups
+
+\startsetups[letter:address:content]
+\lettervalue\c!toname
+\doiflettervalue\c!toname\endgraf
+\lettervalue\c!toaddress
+\stopsetups
+
+%D The following setups shouldn't be changed ar you will loose information
+%D in the output.
+%D 
+%D The reference line is choosen with the alternative key or if you set
+%D a not defined alternative the definition a is choosen.
+
+\startsetups[letter:reference]
+\executeifdefined{\v!reference\v!line\@@@@ldalternative}{\v!reference\v!line\v!a}
+\stopsetups
+
+\startsetups[letter:title]
+\lettervalue\c!title
+\stopsetups
+
+\startsetups[letter:subject]
+\lettervalue\c!subject
+\stopsetups
+
+\startsetups[letter:opening]
+\lettervalue\c!opening
+\stopsetups
+
+\startsetups[letter:content]
+\lettervalue\c!content
+\stopsetups
+
+%D It is possible to attach a signature to the closing command, before the signature
+%D a skip is inserted but only if the the signature key has a value. The height of the
+%D closing environment itself has a height of 4 lines to provide a free space for your
+%D own handwritten signature and to have a little bit space between the closing text
+%D and the appendices.
+
+\presetlocalframed[\????ls\v!closing\v!frame]
+
+\startsetups[letter:closing]
+\dontleavehmode\localframed
+  [\????ls\v!closing\v!frame]
+  {\lettervalue\c!closing
+   \doiflettervalue\c!signature{\letterstylevalue{\v!closing\v!frame}\c!inbetween}
+   \lettervalue\c!signature}
+\stopsetups
+
+\startsetups[letter:appendices]
+\let\\\endgraf
+\lettervalue\c!appendices
+\stopsetups
+
+\startsetups[letter:backaddress]
+\def\\{\lettervalue{\c!backaddress\c!separator}}
+\lettervalue\c!fromname
+\doiflettervalue\c!fromaddress\\
+\lettervalue\c!fromaddress
+\stopsetups
+
+%D I set alternative a as default value for alternative, the only content
+%D is the date with a label. f you dont want a label choose alternative c
+%D or change the label.
+
+\startsetups[letter:before]
+
+  \page
+
+  \setups[letter:reference:\@@@@ldalternative]
+
+\stopsetups
+
+\setupletter
+  [\c!alternative=\v!a,
+   \c!list=\v!date,
+   \c!backaddress\c!separator=\textcomma\space]
+
+\setupletter
+  [\c!date=\currentdate]
+
+\setupletterstyle
+  [\v!option]
+  [\c!before=\setups{letter:before}]
+
+\setupletterstyle
+  [\v!address]
+  [\v!dispatch,\v!content]
+  [\c!align=\v!right,
+   \c!width=\hsize,
+   \c!offset=\zeropoint,
+   \c!frame=\v!off]
+
+\setupletterstyle
+  [\v!address]
+  [\v!dispatch]
+  [\c!location=\v!bottom,
+   \c!height=\dimexpr(\vsize/9)*3\relax]
+
+\setupletterstyle
+  [\v!address]
+  [\v!content]
+  [\c!location=\v!top,
+   \c!height=\dimexpr(\vsize/9)*6\relax]
+
+\setupletterstyle
+  [\v!closing]
+  [\c!after={\blank[\v!line]}]
+
+\setupletterstyle
+  [\v!closing]
+  [\v!frame]
+  [\c!frame=\v!off,
+   \c!location=\v!top,
+   \c!inbetween={\blank[2*\v!line]},
+   \c!align=\v!middle,
+   \c!offset=\zeropoint,
+   \c!height=\plusfour\lineheight]
+
+\protect \endinput

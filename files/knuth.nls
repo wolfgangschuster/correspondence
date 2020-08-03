@@ -1,0 +1,41 @@
+%D \module
+%D   [       file=knuth,
+%D        version=2008.01.27,
+%D          title=\CONTEXT\ Letter Style,
+%D       subtitle=Letterformat Style,
+%D         author=Wolfgang Schuster,
+%D           date=\currentdate,
+%D      copyright=Wolfgang Schuster]
+
+\unprotect
+
+\setuppapersize
+  [letter][letter]
+
+\setupletterstyle
+  [\v!firstpage,\v!secondpage]
+  [\c!backspace=1in,
+   \c!width=6.5in]
+
+\setupletterstyle
+  [\v!firstpage]
+  [\c!header=\zeropoint,
+   \c!topspace=2.2in,
+   \c!bottomspace=1.5in,
+   \c!height=\v!fit]
+
+\setupletterstyle
+  [\v!opening,\v!content]
+  [\c!after={\blank[\v!line]}]
+
+\setupletterstyle
+  [\v!content]
+  [\c!before=\everypar{\setupwhitespace[\v!line]}]
+
+\setupletterstyle
+  [\v!header]
+  [\c!lefttext=,
+   \c!middletext=\rlap{\currentdate},
+   \c!righttext=Page\space\pagenumber]
+
+\protect \endinput

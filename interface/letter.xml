@@ -1,0 +1,232 @@
+﻿<?xml version="1.0" standalone="yes"?>
+
+<cd:interface xmlns:cd="http://www.pragma-ade.com/commands" name="context" language="en" version="2006.08.02">
+
+<cd:define name="lettersection">
+  <cd:constant type="title"/>
+  <cd:constant type="subject"/>
+  <cd:constant type="opening"/>
+  <cd:constant type="content"/>
+  <cd:constant type="closing"/>
+  <cd:constant type="appendices"/>
+</cd:define>
+
+<cd:define name="letterlayer">
+  <cd:constant type="letternext"/>
+  <cd:constant type="lettermain"/>
+  <cd:constant type="head"/>
+  <cd:constant type="foot"/>
+  <cd:constant type="address"/>
+  <cd:constant type="backaddress"/>
+  <cd:constant type="reference"/>
+  <cd:constant type="topmark"/>
+  <cd:constant type="botmark"/>
+  <cd:constant type="cutmark"/>
+  <cd:constant type="endmark"/>
+  <cd:constant type="usermark"/>
+</cd:define>
+
+<cd:command name="setupletterstyle:layout" file="t-letter.tex">
+  <cd:sequence>
+    <cd:string value="setupletterstyle"/>
+  </cd:sequence>
+  <cd:arguments>
+    <cd:keywords list="yes">
+      <cd:constant type="firstpage"/>
+      <cd:constant type="secondpage"/>
+    </cd:keywords>
+   <cd:assignments list="yes">
+      <cd:inherit name="setuplayout"/>
+    </cd:assignments>
+   </cd:arguments>
+</cd:command>
+
+<cd:command name="setupletterstyle:option" file="t-letter.tex">
+  <cd:sequence>
+    <cd:string value="setupletterstyle"/>
+  </cd:sequence>
+  <cd:arguments>
+    <cd:keywords>
+      <cd:constant type="option"/>
+    </cd:keywords>
+    <cd:assignments list="yes">
+      <cd:parameter name="marking">
+        <cd:constant type="yes" default="yes"/>
+        <cd:constant type="no"/>
+      </cd:parameter>
+      <cd:parameter name="indenting">
+      <cd:inherit name="setupindenting"/>
+      </cd:parameter>
+      <cd:parameter name="whitespace">
+      <cd:inherit name="setupwhitespace"/>
+      </cd:parameter>
+      <cd:parameter name="backgroundcolor">
+        <cd:constant type="cd:name"/>
+      </cd:parameter>
+      <cd:parameter name="backgroundimage">
+      <cd:constant type="cd:file"/>
+      </cd:parameter>
+      <cd:parameter name="header">
+        <cd:constant type="reset"/>
+      </cd:parameter>
+      <cd:parameter name="footer">
+        <cd:constant type="reset"/>
+      </cd:parameter>
+      <cd:parameter name="before">
+        <cd:constant type="cd:command"/>
+      </cd:parameter>
+      <cd:parameter name="after">
+        <cd:constant type="cd:command"/>
+      </cd:parameter>
+      <cd:parameter name="pagenumber">
+        <cd:constant type="cd:number"/>
+      </cd:parameter>
+      <cd:parameter name="bodyfont">
+        <cd:constant type="5pt"/>
+        <cd:constant type="..."/>
+        <cd:constant type="12pt"/>
+        <cd:constant type="small"/>
+        <cd:constant type="big"/>
+      </cd:parameter>
+      <cd:parameter name="alternative">
+        <cd:constant type="singlesided" default="yes"/>
+        <cd:constant type="doublesided"/>
+      </cd:parameter>
+      <cd:parameter name="state">
+        <cd:constant type="start" default="yes"/>
+        <cd:constant type="stop"/>
+      </cd:parameter>
+    </cd:assignments>
+   </cd:arguments>
+</cd:command>
+
+<cd:command name="setupletterstyle:text" file="t-letter.tex">
+  <cd:sequence>
+    <cd:string value="setupletterstyle"/>
+  </cd:sequence>
+  <cd:arguments>
+    <cd:keywords list="yes">
+      <cd:constant type="header"/>
+      <cd:constant type="footer"/>
+    </cd:keywords>
+    <cd:assignments list="yes">
+      <cd:parameter name="lefttext">
+        <cd:constant type="cd:text"/>
+      </cd:parameter>
+      <cd:parameter name="middletext">
+        <cd:constant type="cd:text"/>
+      </cd:parameter>
+      <cd:parameter name="righttext">
+        <cd:constant type="cd:text"/>
+      </cd:parameter>
+    </cd:assignments>
+   </cd:arguments>
+</cd:command>
+
+<cd:command name="setupletterstyle:section" file="t-letter.tex">
+  <cd:sequence>
+    <cd:string value="setupletterstyle"/>
+  </cd:sequence>
+  <cd:arguments>
+    <cd:keywords list="yes">
+      <cd:resolve name="lettersection"/>
+    </cd:keywords>
+    <cd:assignments list="yes">
+      <cd:parameter name="before">
+        <cd:constant type="cd:command"/>
+      </cd:parameter>
+      <cd:parameter name="after">
+        <cd:constant type="cd:command"/>
+      </cd:parameter>
+      <cd:parameter name="align">
+        <cd:resolve name="align"/>
+      </cd:parameter>
+      <cd:parameter name="style">
+        <cd:resolve name="style"/>
+      </cd:parameter>
+      <cd:parameter name="color">
+        <cd:constant type="cd:name"/>
+      </cd:parameter>
+    </cd:assignments>
+   </cd:arguments>
+</cd:command>
+
+<cd:command name="setupletterstyle:frame" file="t-letter.tex">
+  <cd:sequence>
+    <cd:string value="setupletterstyle"/>
+  </cd:sequence>
+  <cd:arguments>
+    <cd:keywords list="yes">
+      <cd:resolve name="letterlayer"/>
+    </cd:keywords>
+    <cd:keywords>
+      <cd:constant type="frame"/>
+    </cd:keywords>
+    <cd:assignments list="yes">
+      <cd:inherit name="setupframed"/>
+    </cd:assignments>
+   </cd:arguments>
+</cd:command>
+
+<cd:command name="setupletterstyle:layer" file="t-letter.tex">
+  <cd:sequence>
+    <cd:string value="setupletterstyle"/>
+  </cd:sequence>
+  <cd:arguments>
+    <cd:keywords list="yes">
+      <cd:resolve name="letterlayer"/>
+    </cd:keywords>
+    <cd:keywords>
+      <cd:constant type="layer"/>
+    </cd:keywords>
+    <cd:assignments list="yes">
+      <cd:inherit name="setuplayer"/>
+    </cd:assignments>
+  </cd:arguments>
+</cd:command>
+
+<cd:command name="useletterinterface" file="t-letter.tex">
+  <cd:sequence>
+    <cd:string value="useletterinterface"/>
+  </cd:sequence>
+  <cd:arguments>
+    <cd:keywords list="yes">
+      <cd:constant type="cd:name"/>
+    </cd:keywords>
+  </cd:arguments>
+</cd:command>
+
+<cd:command name="useletterstyle" file="t-letter.tex">
+  <cd:sequence>
+    <cd:string value="useletterstyle"/>
+  </cd:sequence>
+  <cd:arguments>
+    <cd:keywords list="yes">
+      <cd:constant type="cd:name"/>
+    </cd:keywords>
+  </cd:arguments>
+</cd:command>
+
+<cd:command name="useletterextension" file="t-letter.tex">
+  <cd:sequence>
+    <cd:string value="useletterextension"/>
+  </cd:sequence>
+  <cd:arguments>
+    <cd:keywords list="yes">
+      <cd:constant type="cd:name"/>
+    </cd:keywords>
+  </cd:arguments>
+</cd:command>
+
+<cd:command name="letter" type="environment" file="default.nli">
+  <cd:sequence>
+    <cd:string value="letter"/>
+  </cd:sequence>
+  <cd:arguments>
+    <cd:assignments optional="yes" list="yes">
+      <cd:inherit name="setupletter"/>
+    </cd:assignments>
+  </cd:arguments>
+</cd:command>
+
+</cd:interface>

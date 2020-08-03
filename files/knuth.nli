@@ -1,0 +1,57 @@
+%D \module
+%D   [       file=knuth,
+%D        version=2008.04.17,
+%D          title=\CONTEXT\ Letter Interface,
+%D       subtitle=Lettformat Interface, % Donald Knuth's own letter format
+%D         author=Wolfgang Schuster,
+%D           date=\currentdate,
+%D      copyright=Wolfgang Schuster]
+
+\unprotect
+
+\useletterstyle[knuth]
+
+\def\address
+  {\startbuffer[address][address][body]}
+
+\def\body
+  {\startbuffer[body][body][closing]}
+
+\def\closing
+  {\def\endletter{\setups[letter:place]}%
+   \startbuffer[closing][closing][endletter]}
+
+\def\annotations
+  {\blank[line]\leftskip=0pt}
+
+\def\ps
+  {\let\par\space
+   \blank[medium]\leftskip=0pt}
+
+\startsetups[letter:reference]
+
+\stopsetups
+
+\startsetups[letter:opening]
+
+  \obeylines
+  \getbuffer[address]
+
+\stopsetups
+
+\startsetups[letter:content]
+
+  \getbuffer[body]
+
+\stopsetups
+
+\startsetups[letter:closing]
+
+  \leftskip=4in
+  \obeylines
+  \def\par{\normalpar\vskip1cm\let\par\normalpar}
+  \getbuffer[closing]
+
+\stopsetups
+
+\protect \endinput

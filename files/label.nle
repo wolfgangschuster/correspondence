@@ -1,0 +1,206 @@
+%D \module
+%D   [       file=label,
+%D        version=2008.04.21,
+%D          title=\CONTEXT\ Letter Extension,
+%D       subtitle=Labels,
+%D         author=Wolfgang Schuster,
+%D           date=\currentdate,
+%D      copyright=Wolfgang Schuster]
+
+\unprotect
+
+\startconstants            all
+
+                  yourref: yourref
+                 yourmail: yourmail
+                    myref: myref
+                   mymail: mymail
+                 customer: customer
+                  invoice: invoice
+                  subject: subject
+                       cc: cc
+                  subject: subject
+                enclosure: enclosure
+                    phone: phone
+                      fax: fax
+                    email: email
+                      url: url
+                     bank: bank
+                     name: name
+                     room: room
+%                yourorder: yourorder  -> Ihre Bestellung vom
+%               ourinvoice: ourinvoice -> Unsere Rechnung vom
+\stopconstants
+
+%D Label: name
+
+\setuplabeltext[\s!en][\c!name=Name]
+\setuplabeltext[\s!nl][\c!name=]
+\setuplabeltext[\s!de][\c!name=Name]
+\setuplabeltext[\s!fr][\c!name=]
+\setuplabeltext[\s!it][\c!name=]
+\setuplabeltext[\s!es][\c!name=]
+
+%D Label: room
+
+\setuplabeltext[\s!en][\c!room=Room]
+\setuplabeltext[\s!nl][\c!room=]
+\setuplabeltext[\s!de][\c!room=Zimmer]
+\setuplabeltext[\s!fr][\c!room=]
+\setuplabeltext[\s!it][\c!room=]
+\setuplabeltext[\s!es][\c!room=]
+
+%D Label: yourref
+
+\setuplabeltext[\s!en][\c!yourref=Your ref.]
+\setuplabeltext[\s!nl][\c!yourref=Uw kenmerk]
+\setuplabeltext[\s!de][\c!yourref=Ihr Zeichen]
+\setuplabeltext[\s!fr][\c!yourref=Vos r\eacute f\eacute rences]
+\setuplabeltext[\s!it][\c!yourref=Vs./Rif.]
+\setuplabeltext[\s!es][\c!yourref=Su ref.]
+
+%D Label: yourmail
+
+\setuplabeltext[\s!en][\c!yourmail=Your letter of]
+\setuplabeltext[\s!nl][\c!yourmail=Uw brief van]
+\setuplabeltext[\s!de][\c!yourmail=Ihre Nachricht vom]
+\setuplabeltext[\s!fr][\c!yourmail=Votre lettre du]
+\setuplabeltext[\s!it][\c!yourmail=Vs.~lettera del]
+\setuplabeltext[\s!es][\c!yourmail=Su carta de]
+
+%D Label: myref
+
+\setuplabeltext[\s!en][\c!myref=Our ref.]
+\setuplabeltext[\s!nl][\c!myref=Ons kenmerk]
+\setuplabeltext[\s!de][\c!myref=Unser Zeichen]
+\setuplabeltext[\s!fr][\c!myref=Nos r\eacute f\eacute rences]
+\setuplabeltext[\s!it][\c!myref=Ns./Rif.]
+\setuplabeltext[\s!es][\c!myref=Nuestra ref.]
+
+%D Label: mymail
+
+\setuplabeltext[\s!en][\c!mymail=Our letter of]
+\setuplabeltext[\s!nl][\c!mymail=Ons brief van]
+\setuplabeltext[\s!de][\c!mymail=Unsere Nachricht vom]
+\setuplabeltext[\s!fr][\c!mymail=]
+\setuplabeltext[\s!it][\c!mymail=]
+\setuplabeltext[\s!es][\c!mymail=]
+
+%D Label: customer
+
+\setuplabeltext[\s!en][\c!customer=Customer no.]
+\setuplabeltext[\s!nl][\c!customer=Klant No.]
+\setuplabeltext[\s!de][\c!customer=Kundennummer]
+\setuplabeltext[\s!fr][\c!customer=Num\eacute ro de client]
+\setuplabeltext[\s!it][\c!customer=Nr.~cliente]
+\setuplabeltext[\s!es][\c!customer=No. de cliente]
+
+%D Label: invoice
+
+\setuplabeltext[\s!en][\c!invoice=Invoice no.]
+\setuplabeltext[\s!nl][\c!invoice=Rekening No.]
+\setuplabeltext[\s!de][\c!invoice=Rechnungsnummer]
+\setuplabeltext[\s!fr][\c!invoice=Num\eacute ro de facture]
+\setuplabeltext[\s!it][\c!invoice=Nr.~fattura]
+\setuplabeltext[\s!es][\c!invoice=No. de factura]
+
+%D Label: subject
+
+\setuplabeltext[\s!en][\c!subject=Subject]
+\setuplabeltext[\s!nl][\c!subject=Onderwerp]
+\setuplabeltext[\s!de][\c!subject=Betrifft]
+\setuplabeltext[\s!fr][\c!subject=Concernant]
+\setuplabeltext[\s!it][\c!subject=Oggetto]
+\setuplabeltext[\s!es][\c!subject=Asunto]
+
+%D Label: cc
+
+\setuplabeltext[\s!en][\c!cc=cc]
+\setuplabeltext[\s!nl][\c!cc=Kopie aan]
+\setuplabeltext[\s!de][\c!cc=Kopien an]
+\setuplabeltext[\s!fr][\c!cc=Copie \agrave]
+\setuplabeltext[\s!it][\c!cc=Per conoscenza]
+\setuplabeltext[\s!es][\c!cc=Copias]
+
+%D Label: enclosure
+
+\setuplabeltext[\s!en][\c!enclosure=encl]
+\setuplabeltext[\s!nl][\c!enclosure=Bijlage(n)]
+\setuplabeltext[\s!de][\c!enclosure=Anlagen]
+\setuplabeltext[\s!fr][\c!enclosure=Annexes]
+\setuplabeltext[\s!it][\c!enclosure=Allegato]
+\setuplabeltext[\s!es][\c!enclosure=Adjunto]
+
+%D Label: to
+
+\setuplabeltext[\s!en][\c!to=To]
+\setuplabeltext[\s!nl][\c!to=Aan]
+\setuplabeltext[\s!de][\c!to=An]
+\setuplabeltext[\s!fr][\c!to=A]
+\setuplabeltext[\s!it][\c!to=A]
+\setuplabeltext[\s!es][\c!to=A]
+
+%D Label: from
+
+\setuplabeltext[\s!en][\c!from=From]
+\setuplabeltext[\s!nl][\c!from=Van]
+\setuplabeltext[\s!de][\c!from=Von]
+\setuplabeltext[\s!fr][\c!from=De]
+\setuplabeltext[\s!it][\c!from=Da]
+\setuplabeltext[\s!es][\c!from=De]
+
+%D Label: date
+
+\setuplabeltext[\s!en][\c!date=Date]
+\setuplabeltext[\s!nl][\c!date=Datum]
+\setuplabeltext[\s!de][\c!date=Datum]
+\setuplabeltext[\s!fr][\c!date=Date]
+\setuplabeltext[\s!it][\c!date=Data]
+\setuplabeltext[\s!es][\c!date=Fecha]
+
+%D Label: phone
+
+\setuplabeltext[\s!en][\c!phone=Phone]
+\setuplabeltext[\s!nl][\c!phone=Telefoon]
+\setuplabeltext[\s!de][\c!phone=Telefon]
+\setuplabeltext[\s!fr][\c!phone=T\eacute l\eacute phone]
+\setuplabeltext[\s!it][\c!phone=Telefono]
+\setuplabeltext[\s!es][\c!phone=Tel\eacute fono]
+
+%D Label: fax
+
+\setuplabeltext[\s!en][\c!fax=Fax]
+\setuplabeltext[\s!nl][\c!fax=Fax]
+\setuplabeltext[\s!de][\c!fax=Fax]
+\setuplabeltext[\s!fr][\c!fax=T\eacute l\eacute fax]
+\setuplabeltext[\s!it][\c!fax=Fax]
+\setuplabeltext[\s!es][\c!fax=Fax]
+
+%D Label: email
+
+\setuplabeltext[\s!en][\c!email=Email]
+\setuplabeltext[\s!nl][\c!email=E--mail]
+\setuplabeltext[\s!de][\c!email=E-Mail]
+\setuplabeltext[\s!fr][\c!email=E-mail]
+\setuplabeltext[\s!it][\c!email=Email]
+\setuplabeltext[\s!es][\c!email=Email]
+
+%D Label: url
+
+\setuplabeltext[\s!en][\c!url=Url]
+\setuplabeltext[\s!nl][\c!url=URL]
+\setuplabeltext[\s!de][\c!url=URL]
+\setuplabeltext[\s!fr][\c!url=URL]
+\setuplabeltext[\s!it][\c!url=Sito Web]
+\setuplabeltext[\s!es][\c!url=URL]
+
+%D Label: bank
+
+\setuplabeltext[\s!en][\c!bank=Bank account]
+\setuplabeltext[\s!nl][\c!bank=Bankrekening]
+\setuplabeltext[\s!de][\c!bank=Bankverbindung]
+\setuplabeltext[\s!fr][\c!bank=Compte en banque]
+\setuplabeltext[\s!it][\c!bank=Conto bancario]
+\setuplabeltext[\s!es][\c!bank=Cuenta bancaria]
+
+\protect \endinput

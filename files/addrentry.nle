@@ -1,0 +1,33 @@
+%D \module
+%D   [       file=addrentry,
+%D        version=2008.04.21,
+%D          title=\CONTEXT\ Letter Extension,
+%D       subtitle=KOMA-Script addrentry support,
+%D         author=Wolfgang Schuster,
+%D           date=\currentdate,
+%D      copyright=Wolfgang Schuster]
+
+\unprotect
+
+\def\addrentry#1#2#3#4#5#6#7#8#9%
+  {\doifsomething{#1}
+     {\doifelsenothing{#2}
+        {\setvalue{#9}{#1\\#3}}
+        {\setvalue{#9}{#2\space#1\\#3}}}}
+
+\def\adrentry#1#2#3#4#5#6#7%
+  {\addrentry{#1}{#2}{#3}{#4}{#5}{#6}{#7}{}}
+
+\let\adrchar\gobbleoneargument
+
+\def\address!file!extension{adr}
+
+\def\useaddressfile
+  {\dosingleargument\douseaddressfile}
+
+\def\douseaddressfile[#1]%
+  {\def\dododouseaddressfile##1%
+     {\readfile{##1.\address!file!extension}\donothing\donothing}%
+   \processcommalist[#1]\dododouseaddressfile}
+
+\protect \endinput

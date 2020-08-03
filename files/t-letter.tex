@@ -1,0 +1,852 @@
+%D \module
+%D   [       file=t-letter,
+%D        version=2008.04.21,
+%D          title=\CONTEXT\ User Module,
+%D       subtitle=Framework for Letters,
+%D         author=Wolfgang Schuster,
+%D           date=\currentdate,
+%D      copyright=Public Domain]
+
+%M \loadsetups[cont-en.xml]
+%M \loadsetups[letter.xml]
+
+%D \subject{Constants and Variables}
+
+\writestatus{loading}{Context User Module / Framework for Letters}
+
+\unprotect
+
+%D I use a few extra constants and variables in my module.
+
+\startconstants            all
+
+                  graphic: graphic
+                     head: head
+                     foot: foot
+              backaddress: backaddress
+                  topmark: topmark
+                  botmark: botmark
+                  cutmark: cutmark
+                  endmark: endmark
+                 usermark: usermark
+                 foldmark: foldmark
+                extension: extension
+                interface: interface
+          backgroundimage: backgroundimage
+               whitespace: whitespace
+                 optimize: optimize
+\stopconstants
+
+\startvariables            all
+
+                   letter: letter
+               secondpage: secondpage
+              backaddress: backaddress
+                     foot: foot
+                  topmark: topmark
+                  botmark: botmark
+                  cutmark: cutmark
+                  endmark: endmark
+                reference: reference
+                   option: option
+                  address: address
+                 foldmark: foldmark
+                 usermark: usermark
+                  opening: opening
+                  closing: closing
+                    layer: layer
+               letternext: letternext
+               lettermain: lettermain
+                  special: special
+                 notation: notation
+                   inside: inside
+\stopvariables
+
+%D Before we start the real module let us introduce two namespaces
+%D for the style and content setup commands.
+
+\def\????ld{@@@@ld} % LetterData
+\def\????ls{@@@@ls} % LetterStyle
+\def\????lv{@@@@lv} % LetterValue
+
+\startmodule[letter]
+
+\setupmodule
+  [\c!style=,            % default letter style
+   \c!extension=,        % default letter extension
+   \c!interface=default] % default letter interface
+
+%D \subject{Setup commands}
+%D 
+%D \macros{setupletterstyle}
+%D 
+%D The layout for the first page could be set with the \mono{firstpage}
+%D key and the layout for the second and all following pages with the
+%D \mono{secondpage} key. You could use any key and value from
+%D \tex{setuplayout} to set your own letter layout.
+%D 
+%D \showsetup{setupletterstyle:layout}
+%D 
+%D The header and footer texts for the letter is set with the \mono{header}
+%D and \mono{footer} keys, the text itself I written as argument as one of
+%D the three keys. The command itself has no option to use different texts
+%D for odd and even pages (if you really want this in a letter) but you could
+%D solve this with the macro \tex{doifoddpageelse}, I will give you a short
+%D example below.
+%D 
+%D \showsetup{setupletterstyle:text}
+%D 
+%D This setups could produce somtimes a unwanted result is you use a doublesided
+%D layout, because the values for \mono{lefttext} and \mono{righttext} change on
+%D odd and even pages their position, e.g. \mono{righttext} will always go to the
+%D outer margin and \mono{lefttext} to the inner margin. Let's you want the
+%D pagenumber always on the right side you could use the following code, you could
+%D adapt it to your own needs without problems.
+%D 
+%D \starttyping
+%D \setupletterstyle
+%D   [header]
+%D   [lefttext=\doifoddpageelse\donothing\pagenumber,
+%D    righttext=\doifoddpageelse\pagenumber\donothing]
+%D \stoptyping
+
+\def\setupletterstyle
+  {\dotripleempty\dosetupletterstyle}
+
+\def\dosetupletterstyle[#1][#2][#3]%
+  {\ifthirdargument
+     \dodosetupletterstyle[#1][#2][#3]%
+   \else\ifsecondargument
+     \dodosetupletterstyle[#1][#2][]%
+   \else
+     \dodosetupletterstyle[\v!option][#1][]%
+   \fi\fi}
+
+\def\dodosetupletterstyle[#1][#2][#3]%
+  {\processallactionsinset
+     [#1]
+     [ \v!firstpage=>{\definelayout[\v!letter\v!firstpage][#2]},
+      \v!secondpage=>{\definelayout[\v!letter\v!secondpage][#2]},
+          \v!header=>{\dosetupletterheader[#2][#3]},
+          \v!footer=>{\dosetupletterfooter[#2][#3]},
+          \v!option=>{\getparameters[\????ls\v!option][#2]},
+        \v!foldmark=>{\dododosetupletterstyle[\v!topmark,\v!botmark,\v!cutmark][#2][#3]},
+         \s!unknown=>{\dododosetupletterstyle[#1][#2][#3]}]}
+
+%D Setup of the layers and their frames.
+
+\def\dododosetupletterstyle[#1][#2][#3]%
+  {\def\dodododosetupletterstyle##1%
+     {\doifelsenothing{#3}
+        {\ExpandSecondAfter\doifinsetelse{##1}\letter!list!sections
+           {\dododododosetupletterstyle[##1][\v!option][#2]}
+           {\dododododosetupletterstyle[##1][\v!layer,\v!frame,\v!option][#2]}}
+        {\dododododosetupletterstyle[##1][#2][#3]}}%
+   \processcommacommand[#1]\dodododosetupletterstyle}
+
+\def\dododododosetupletterstyle[#1][#2][#3]%
+  {\def\dodododododosetupletterstyle##1%
+     {\processaction
+        [##1]
+        [    \v!layer=>{\dododododosetupletterstyle[#1][\v!layer\v!a,\v!layer\v!b][#3]},
+         \v!layer\v!a=>{\setuplayer[#1][#3]},
+         \v!layer\v!b=>{\getparameters[\????ls#1\v!layer][#3]},
+             \v!frame=>{\getparameters[\????ls#1\v!frame][#3]},
+            \v!option=>{\getparameters[\????ls#1][#3]},
+           \s!unknown=>{\getparameters[\????ls#1##1][#3]}]}%
+   \processcommalist[#2]\dodododododosetupletterstyle}
+
+%D Setup for the header and footer texts.
+
+\newtoks\letter!toks!header
+\newtoks\letter!toks!footer
+
+\def\dosetupletterheader[#1][#2]%
+  {\letter!toks!header\emptytoks
+   \doifelsenothing{#2}
+     {\letter!toks!header{\setupheader[\v!text][#1]}}
+     {\letter!toks!header{\setupheader[#1][#2]}}}
+
+\def\dosetupletterfooter[#1][#2]%
+  {\letter!toks!footer\emptytoks
+   \doifelsenothing{#1}
+     {\letter!toks!footer{\setupfooter[\v!text][#1]}}
+     {\letter!toks!footer{\setupfooter[#1][#2]}}}
+
+%D \macros
+%D   {setupletter}
+%D
+%D The \tex{setupletter} macro could be used from a interface, I define
+%D only the macro and nothing else. You could also redefine the macro later
+%D because it is not used from the raw interface.
+
+\def\setupletter
+  {\dodoubleempty\dosetupletter}
+
+\def\dosetupletter[#1][#2]%
+  {\ifsecondargument
+     \dodosetupletter[#1][#2]%
+   \else\iffirstargument
+     \dodosetupletter[\v!option][#1]%
+   \fi\fi}
+
+\def\dodosetupletter[#1][#2]%
+  {\def\dododosetupletter##1%
+     {\getparameters[\????ld##1][#2]}%
+   \processcommalist[#1]\dododosetupletter}
+
+%D A few extra macros to test for content of the letter values, don't rely
+%D on them at the moment because they could change or I will remove, rename,
+%D rewrite etc. them.
+
+\def\doiflettervalue#1#2%
+  {\doiftextelse{\lettervalue{#1}{#2}}
+     \firstofoneargument
+     \gobbleoneargument}
+
+\def\doifelselettervalue#1#2%
+  {\doiftextelse{\lettervalue{#1}{#2}}
+     \firstoftwoarguments
+     \secondoftwoarguments}
+
+%D \subject{Interface, Style and Extension files}
+%D 
+%D \macros
+%D   {useletterextension,useletterstyle,useletterinterface}
+%D
+%D This module provides different types of files beside the main module.
+%D 
+%D Two of them could be used by the user while the third is only used in
+%D this file but you're free to use but you should really now what you do.
+%D 
+%D Each of the files has it's own file extension, you have to use if you
+%D want to create such a file, this has the advantage to use the same name
+%D for a collection of macros.
+
+\def\letter!suffix!style    {nls}
+\def\letter!suffix!extension{nle}
+\def\letter!suffix!interface{nli}
+
+%D Let us begin now to talk about the different types of files.
+%D 
+%D \subsubject{letter interface}
+%D 
+%D The letter interface provides the connection between the user and the
+%D inner macros, it is possible to write a letter without a interface but
+%D you will loose many of the nice features. The features itself are defined
+%D within the interface and try to help the user to write a letter in
+%D a simpler than the raw interface.
+%D 
+%D I want to show you the difference between the default interface and the
+%D raw backend with a simple example, just a opening, the content and
+%D a closing text.
+%D 
+%D The example with the default interface looks like:
+%D 
+%D \starttyping
+%D \startletter
+%D   [opening=Hello User,
+%D    closing=Good luck with your own interface]
+%D I will show you how you could write a letter with my letter module
+%D and the difference between the default and the raw interface. The raw
+%D interface is should be only used by a high level interface and not the
+%D user but you're free to do it.
+%D \stopletter
+%D \stoptyping
+%D 
+%D The same example with the raw interface looks like:
+%D 
+%D \starttyping
+%D \startsetups[letter:opening]
+%D Hello User
+%D \stopsetups
+%D 
+%D \startsetups[letter:content]
+%D I will show you how you could write a letter with my letter module
+%D and the difference between the default and the raw interface. The raw
+%D interface is should be only used by a high level interface and not the
+%D user but you're free to do it.
+%D \stopsetups
+%D 
+%D \startsetups[letter:closing]
+%D Good luck with your own interface
+%D \stopsetups
+%D \stoptyping
+%D 
+%D The interface itself is loaded with the \tex{useletterinterface}
+%D command but you could also use the optional argument for \tex{usemodule}
+%D to load it. The first is only used in this file but it makes sense
+%D to use it also in a wrapper file for your own interface.
+%D
+%D \showsetup{useletterinterface}
+
+\def\useletterinterface
+  {\dosingleargument\douseletterinterface}
+
+\def\douseletterinterface[#1]%
+  {\def\dodouseletterinterface##1%
+     {\readfile{##1.\letter!suffix!interface}\donothing\donothing}%
+   \processcommalist[#1]\dodouseletterinterface}
+
+%D \subsubject{letter extension}
+%D 
+%D The second filetype this module supports are letterextensions, you
+%D could use it to save macros and other values you want to use in many
+%D without the need to put it always in the real letter.
+%D 
+%D A few reasons for a letterextension file are:
+%D 
+%D \startitemize[packed,intro]
+%D \item The letter head from your company,
+%D \item your own macro for the reference line,
+%D \item labels you need in different files (see \mono{label.nle}),
+%D \item \unknown
+%D \stopitemize
+%D 
+%D The syntax to load a letterextension file is the same as for a interface
+%D and you could also argument for \tex{usemodule}.
+%D 
+%D \showsetup{useletterextension}
+
+\def\useletterextension
+  {\dosingleargument\douseletterextension}
+
+\def\douseletterextension[#1]%
+  {\def\dodouseletterextension##1%
+     {\readfile{##1.\letter!suffix!extension}\donothing\donothing}%
+   \processcommalist[#1]\dodouseletterextension}
+
+%D \subsubject{letter styles}
+%D 
+%D After I mentioned above how to load a interface and extension
+%D I will now come to the most important extension for the module.
+%D 
+%D Letter styles are used to change the layout of the letter,
+%D set the values for layers and enable and disable common options.
+%D Although it is possible to do all these things in the letter itself
+%D it is better to save often used settings in a extra file you could
+%D load on demand and share between your letters.
+%D 
+%D You could load a style file in the same way as the other to files,
+%D the first is \tex{useletterstyle} and the second the optional argument
+%D for \tex{usemodule}.
+%D 
+%D \showsetup{useletterstyle}
+
+\def\useletterstyle
+  {\dosingleargument\douseletterstyle}
+
+\def\douseletterstyle[#1]%
+  {\def\dodouseletterstyle##1%
+     {\readfile{##1.\letter!suffix!style}\donothing\donothing}%
+   \processcommalist[#1]\dodouseletterstyle}
+
+%D \macros
+%D   {letterstylevalue,lettervalue}
+%D 
+%D The two commands \tex{letterstylevalue} and \tex{lettervalue} could
+%D be used to access the values for the keys used in the letterstyle
+%D settings and the letter values for information.
+
+%D The rest of module contains only internal macros and other settings,
+%D you don't need them as a normal user but you look at the default.
+
+\def\letterstylevalue#1#2%
+  {\csname\????ls#1#2\endcsname}
+
+\def\lettervalue#1#2%
+  {\csname\????ld#1#2\endcsname}
+
+\def\letter!list!marking
+  {\v!topmark,\v!botmark,\v!cutmark,\v!endmark,\v!usermark}
+
+\def\dodefineletterlayer[#1]%
+  {\doifelse{#1}\v!foldmark
+     {\def\dodododefineletterlayer##1{\dododefineletterlayer[##1]}%
+      \processcommacommand[\letter!list!marking]\dodododefineletterlayer}
+     {\dododefineletterlayer[#1]}}
+
+\def\dododefineletterlayer[#1]%
+  {\setvalue{\????ls\v!option#1}{\v!yes}%
+   \presetlocalframed[\????ls#1\v!frame]%
+   \definelayer
+     [#1]
+     [\c!width=\paperwidth,
+      \c!height=\paperheight]%
+   \setupletterstyle
+     [#1][\v!option]
+     [\c!symbol=,
+      \c!offset=\zeropoint,
+      \c!leftmargin=\zeropoint,
+      \c!rightmargin=\zeropoint]%
+   \setupletterstyle
+     [#1][\v!frame]
+     [\c!frame=\v!off,
+      \c!align=\v!right,
+      \c!offset=\zeropoint,
+      \c!strut=\v!yes]%
+   \setupletterstyle
+     [#1][\v!layer]
+     [\c!state=\v!start,
+      \c!offset=\zeropoint,
+      \c!preset=\v!left\v!top]}
+
+\def\dosetletterlayer[#1]%
+  {\doifinsetelse{#1}{\v!topmark,\v!botmark,\v!cutmark,\v!endmark,\v!usermark}
+     {\doifelsenothing{\letterstylevalue{#1}\c!symbol}
+        {\dodosetletterlayer[#1][\setups{letter:#1}]}
+        {\dodosetletterlayer[#1][\letterstylevalue{#1}\c!symbol]}}
+     {\dodosetletterlayer[#1][\setups{letter:#1}]}}
+
+\def\dodosetletterlayer[#1][#2]%
+  {\setlayer[#1]
+     {\localframed[\????ls#1\v!frame]
+        {\doadaptleftskip {\letterstylevalue{#1}\c!leftmargin}%
+         \doadaptrightskip{\letterstylevalue{#1}\c!rightmargin}%
+         \doattributes{\????ls#1}\c!style\c!color{#2}}}}
+
+\let\letter!list!sections\empty
+
+\def\dodefinelettersection[#1]%
+  {\appendtocommalist{#1}\letter!list!sections
+   \setupletterstyle
+     [#1]
+     [\v!option]
+     [\c!before=,
+      \c!after=,
+      \c!align=,
+      \c!leftmargin=\zeropoint,
+      \c!rightmargin=\zeropoint,
+      \c!style=,
+      \c!color=]}
+
+\def\dosetlettersection[#1]%
+  {\begingroup
+   \edef\@@lettersection{#1}%
+   \doifelsenothing{\letterstylevalue\@@lettersection\c!before}
+      \endgraf
+     {\letterstylevalue\@@lettersection\c!before}%
+   \doadaptleftskip {\letterstylevalue\@@lettersection\c!leftmargin}%
+   \doadaptrightskip{\letterstylevalue\@@lettersection\c!rightmargin}%
+   \doifsomething{\letterstylevalue\@@lettersection\c!align}
+     {\setupalign[\letterstylevalue\@@lettersection\c!align]}%
+   \dostartattributes{\????ls#1}\c!style\c!color\empty
+     \setups[letter:#1]%
+   \dostopattributes
+   \doifelsenothing{\letterstylevalue\@@lettersection\c!after}
+      \endgraf
+     {\letterstylevalue\@@lettersection\c!after}%
+   \endgroup}
+
+%D \subject{Placement of the content}
+%D 
+%D Enable the layouts for the first and second page.
+
+\startsetups[letter:layout]
+
+  \setuplayout[\v!letter\v!firstpage]
+
+  \appendtoks\setuplayout[\v!letter\v!secondpage]\to\everyaftershipout
+
+\stopsetups
+
+%D Header for the first page, you could use it to place the logo from your
+%D company or your own address and name.
+
+\dodefineletterlayer[\v!head]
+
+\startsetups[letter:place:head]
+
+  \dosetletterlayer[\v!head]
+
+\stopsetups
+
+%D Address
+
+\dodefineletterlayer[\v!address]
+
+\startsetups[letter:place:address]
+
+  \dosetletterlayer[\v!address]
+
+\stopsetups
+
+%D Could be used to place a backaddress above the normal address.
+
+\dodefineletterlayer[\v!backaddress]
+
+\startsetups[letter:place:backaddress]
+
+  \dosetletterlayer[\v!backaddress]
+
+\stopsetups
+
+%D Reference line
+
+\dodefineletterlayer[\v!reference]
+
+\startsetups[letter:place:reference]
+
+  \dosetletterlayer[\v!reference]
+
+\stopsetups
+
+%D Footer block, you could use it to place information about your company
+%D but take care set \mono{repeat=yes} if you want to place it on every page,
+%D you should disable the footer for the second and following pages inb this
+%D case.
+
+\dodefineletterlayer[\v!foot]
+
+\startsetups[letter:place:foot]
+
+  \dosetletterlayer[\v!foot]
+
+\stopsetups
+
+%D Two additional layers from Hans Hagen's own letter module, it provide
+%D for users who used \mono{m-letter.tex} and want to switch to my module.
+%D 
+%D I need they also for my pragma letter interface.
+
+\dodefineletterlayer[\v!lettermain]
+
+\startsetups[letter:place:lettermain]
+
+  \dosetletterlayer[\v!lettermain]
+
+\stopsetups
+
+\dodefineletterlayer[\v!letternext]
+
+\startsetups[letter:place:letternext]
+
+  \dosetletterlayer[\v!letternext]
+
+\stopsetups
+
+%D Letterhead, american only
+
+\dodefinelettersection[\v!letter\v!head]
+
+\startsetups[letter:place:\v!letter\v!head]
+
+  \dosetlettersection[\v!letter\v!head]
+
+\stopsetups
+
+%D Date Line, american only
+
+\dodefinelettersection[\v!date\v!line]
+
+\startsetups[letter:place:\v!date\v!line]
+
+  \dosetlettersection[\v!date\v!line]
+
+\stopsetups
+
+%D Reference Line, american only
+
+\dodefinelettersection[\v!reference\v!line]
+
+\startsetups[letter:place:\v!reference\v!line]
+
+  \dosetlettersection[\v!reference\v!line]
+
+\stopsetups
+
+%D Special Notation, american only
+
+\dodefinelettersection[\v!special\v!notation]
+
+\startsetups[letter:place:\v!special\v!notation]
+
+  \dosetlettersection[\v!special\v!notation]
+
+\stopsetups
+
+%D Inside Address, american only
+
+\dodefinelettersection[\v!inside\v!address]
+
+\startsetups[letter:place:\v!inside\v!address]
+
+  \dosetlettersection[\v!inside\v!address]
+
+\stopsetups
+
+%D Title
+
+\dodefinelettersection[\v!title]
+
+\startsetups[letter:place:\v!title]
+
+  \dosetlettersection[\v!title]
+
+\stopsetups
+
+%D Subject
+
+\dodefinelettersection[\v!subject]
+
+\startsetups[letter:place:\v!subject]
+
+  \dosetlettersection[\v!subject]
+
+\stopsetups
+
+%D Opening
+
+\dodefinelettersection[\v!opening]
+
+\startsetups[letter:place:\v!opening]
+
+  \dosetlettersection[\v!opening]
+
+\stopsetups
+
+%D Letter content
+
+\dodefinelettersection[\v!content]
+
+\startsetups[letter:place:\v!content]
+
+  \begingroup
+
+  \doifsomething\@@@@lsoptionindenting{\setupindenting[\@@@@lsoptionindenting]}
+
+  \dosetlettersection[\v!content]
+
+  \endgroup
+
+\stopsetups
+
+%D Closing
+
+\dodefinelettersection[\v!closing]
+
+\startsetups[letter:place:\v!closing]
+
+  \dosetlettersection[\v!closing]
+
+\stopsetups
+
+%D Apendices
+
+\dodefinelettersection[\v!appendices]
+
+\startsetups[letter:place:\v!appendices]
+
+  \dosetlettersection[\v!appendices]
+
+\stopsetups
+
+%D Fold- and cutmarks, you enable and disable all of them independant
+%D from any other or disable all marks with just one command.
+
+\dodefineletterlayer[\v!foldmark]
+
+\startsetups[letter:place:foldmark]
+
+  % Upper foldmark
+
+  \startlocalsetups[letter:place:topmark]
+
+    \dosetletterlayer[\v!topmark]
+
+  \stoplocalsetups
+
+  % Lower foldmark
+
+  \startlocalsetups[letter:place:botmark]
+
+    \dosetletterlayer[\v!botmark]
+
+  \stoplocalsetups
+
+  % Cutmark
+
+  \startlocalsetups[letter:place:cutmark]
+	
+    \dosetletterlayer[\v!cutmark]
+
+  \stoplocalsetups
+
+  % Endmark, a relict from the typewriter area
+
+  \startlocalsetups[letter:place:endmark]
+
+    \dosetletterlayer[\v!endmark]
+
+  \stoplocalsetups
+
+  % Free mark, you could use it to place your own symbols
+
+  \startlocalsetups[letter:place:usermark]
+
+    \dosetletterlayer[\v!usermark]
+
+  \stoplocalsetups
+
+  \doif\@@@@lsoptiontopmark \v!yes{\setups[letter:place:topmark]}
+  \doif\@@@@lsoptionbotmark \v!yes{\setups[letter:place:botmark]}
+  \doif\@@@@lsoptioncutmark \v!yes{\setups[letter:place:cutmark]}
+  \doif\@@@@lsoptionendmark \v!yes{\setups[letter:place:endmark]}
+  \doif\@@@@lsoptionusermark\v!yes{\setups[letter:place:usermark]}
+
+\stopsetups
+
+%D Background graphic:
+
+\defineoverlay
+  [\v!graphic] % choose a better name!
+  [\doifsomething\@@@@lsoptionbackgroundimage
+     {\overlayfigure{\@@@@lsoptionbackgroundimage}}]
+
+\def\letter!list!backgrounds
+  {\v!color,\v!letternext,\v!lettermain,\v!head,\v!foot,%
+   \v!backaddress,\v!graphic,\v!address,\v!reference,%
+   \v!topmark,\v!botmark,\v!cutmark,\v!endmark,\v!usermark}
+
+%D Settings at the begin of every letter.
+
+\startsetups[letter:initialize]
+
+  \@@@@lsoptionbefore
+
+  \setupsubpagenumber
+    [\c!number=\@@@@lsoptionpagenumber,
+     \c!way=\v!by\v!text,
+     \c!state=\@@@@lsoptionstate]
+
+  \resetsubpagenumber
+
+  \begingroup
+
+  \page
+
+  \setuppagenumbering
+    [\c!alternative=\@@@@lsoptionalternative,
+     \c!location=] % use the header and footer option instead
+
+  \the\letter!toks!header
+  \the\letter!toks!footer
+
+  \setupbackgrounds
+    [\v!page]
+    [\c!background=\letter!list!backgrounds,
+     \c!backgroundcolor=\@@@@lsoptionbackgroundcolor]
+
+  \doifsomething\@@@@lsoptionbodyfont{\switchtobodyfont[\@@@@lsoptionbodyfont]}
+
+  \doifsomething\@@@@lsoptionwhitespace{\setupwhitespace[\@@@@lsoptionwhitespace]}
+
+\stopsetups
+
+%D Settings at the end of every letter.
+
+\startsetups[letter:finish]
+
+  \page
+
+  \setuplayout[\v!reset]
+
+  \endgroup
+
+  \resetsubpagenumber
+
+  \@@@@lsoptionafter
+
+\stopsetups
+
+%D Place the letter.
+
+\startsetups[letter:place]
+
+  \setups[letter:initialize] % Settings at the begin
+  \setups[letter:layout]     % Page layout
+  \setups[letter:reset]      % Reset layers
+  \setups[letter:layer]      % Place layers
+  \setups[letter:sequence]   % Place content
+  \setups[letter:finish]     % Settings at the end
+
+\stopsetups
+
+%D Reset the layer content.
+
+\def\letter!list!layers
+  {\v!topmark,\v!botmark,\v!cutmark,\v!endmark,\v!usermark,\v!letternext,\v!lettermain}
+
+\def\doresetletterlayer#1%
+  {\resetlayer[#1]}
+
+\startsetups[letter:reset]
+
+  \processcommacommand[\letter!list!layers]\doresetletterlayer
+  
+  \setuplayer[\v!letternext][\c!state=\v!continue]
+
+\stopsetups
+
+\startsetups[letter:layer]
+
+  \doif\@@@@lsoptionmarking    \v!yes{\setups[letter:place:foldmark]}
+  \doif\@@@@lsoptionhead       \v!yes{\setups[letter:place:head]}
+  \doif\@@@@lsoptionbackaddress\v!yes{\setups[letter:place:backaddress]}
+  \doif\@@@@lsoptionaddress    \v!yes{\setups[letter:place:address]}
+  \doif\@@@@lsoptionreference  \v!yes{\setups[letter:place:reference]}
+  \doif\@@@@lsoptionfoot       \v!yes{\setups[letter:place:foot]}
+  \doif\@@@@lsoptionlettermain \v!yes{\setups[letter:place:lettermain]}
+  \doif\@@@@lsoptionletternext \v!yes{\setups[letter:place:letternext]}
+
+\stopsetups
+
+%D Place the letter content.
+
+\let\letter!order!sections\letter!list!sections
+
+\def\doflushlettersection#1%
+  {\setups[letter:place:#1]}
+
+\startsetups[letter:sequence]
+
+  \executeifdefined{\v!letter\s!start\c!optimize\@@@@lsoptionoptimize}\donothing
+  \processcommacommand[\letter!order!sections]\doflushlettersection
+  \executeifdefined{\v!letter\s!stop \c!optimize\@@@@lsoptionoptimize}\donothing
+
+\stopsetups
+
+%D \subject{Default values}
+%D 
+%D Default settings for the option values of the letter.
+
+\setupletterstyle
+  [\v!option]
+  [\c!marking=\v!yes,
+   \c!endmark=\v!no,
+   \c!usermark=\v!no,
+   \c!backaddress=\v!no,
+   \c!indenting=,
+   \c!whitespace=,
+   \c!backgroundcolor=\v!white,
+   \c!backgroundimage=,
+   \c!before=,
+   \c!after=,
+   \c!header=\v!reset,
+   \c!footer=\v!reset,
+   \c!pagenumber=1,
+   \c!bodyfont=,
+   \c!optimize=\v!no,
+   \c!alternative=\v!singlesided,
+   \c!state=\v!stop]
+
+% interface always before styles and extension because users should
+% start with a clean interface without predefined and unwanted values.
+
+\useletterinterface[\currentmoduleparameter\c!interface]
+\useletterstyle    [\currentmoduleparameter\c!style]
+\useletterextension[\currentmoduleparameter\c!extension]
+
+\stopmodule
+
+\protect \endinput

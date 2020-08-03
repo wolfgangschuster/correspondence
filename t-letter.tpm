@@ -1,0 +1,39 @@
+<!DOCTYPE rdf:RDF SYSTEM "tpm.dtd">
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:TPM="http://texlive.dante.de/">
+  <rdf:Description about="http://dl.contextgarden.net/modules/t-letter.zip">
+    <TPM:Name>t-letter</TPM:Name>
+    <TPM:Type>Package</TPM:Type>
+    <TPM:Date>2006/09/12 00:00:00</TPM:Date>
+    <TPM:Version>2006.09.12</TPM:Version>
+    <TPM:Creator>Wolfgang Schuster</TPM:Creator>
+    <TPM:Title>Letter module</TPM:Title>
+    <TPM:Description>
+      Letter module for ConTeXt.
+    </TPM:Description>
+    <TPM:Author>Wolfgang Schuster</TPM:Author>
+    <TPM:RunFiles size="70981">
+      tex/context/third/letter/base/t-letter.tex
+      tex/context/third/letter/interface/default.nli
+      tex/context/third/letter/interface/pragma.nli
+      tex/context/third/letter/interface/knuth.nli
+      tex/context/third/letter/extension/label.nle
+      tex/context/third/letter/extension/corres.nle
+      tex/context/third/letter/extension/pragma.nle
+      tex/context/third/letter/extension/optimize.nle
+      tex/context/third/letter/extension/addrentry.nle
+      tex/context/third/letter/style/dina.nls
+      tex/context/third/letter/style/dinb.nls
+      tex/context/third/letter/style/pragma.nls
+      tex/context/third/letter/style/knuth.nls
+      tex/context/interface/third/letter.xml
+      tpm/t-letter.tpm
+   </TPM:RunFiles>
+    <TPM:DocFiles size="125316">
+      doc/context/third/letter/letter-doc.pdf
+    </TPM:DocFiles>
+    <TPM:Requires>
+      <TPM:Package name="context"/>
+    </TPM:Requires>
+  </rdf:Description>
+</rdf:RDF>
+

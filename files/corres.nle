@@ -1,0 +1,45 @@
+%D \module
+%D   [       file=corres,
+%D        version=2008.01.31,
+%D          title=\CONTEXT\ Letter Extension,
+%D       subtitle=XML Handling,
+%D         author=Wolfgang Schuster,
+%D           date=\currentdate,
+%D      copyright=Wolfgang Schuster]
+
+\unprotect
+
+\startconstants            all
+
+                   prefix: prefix
+                   suffix: suffix
+                 initials: initials
+               formalname: formalname
+             informalname: informalname
+\stopconstants
+
+\usemodule[corres]
+
+\setupletter
+  [\v!data]
+  [\c!prefix=\XMLflush{prefix},
+   \c!suffix=\XMLflush{suffix},
+   \c!initials=\XMLflush{initials},
+   \c!formalname=\XMLflush{formalname},
+   \c!informalname=\XMLflush{informalname}]
+
+\setupletter
+  [\v!address]
+  [\c!address=\XMLflush{address}]
+
+\startsetups[letter:opening]
+\lettervalue\v!data\c!prefix
+\doiflettervalue\v!data\c!formalname\space
+\lettervalue\v!data\c!formalname
+\stopsetups
+
+\startsetups[contact:handle]
+\setups[letter:place]
+\stopsetups
+
+\protect \endinput

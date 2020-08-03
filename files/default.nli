@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2009.05.10,
+%D        version=2009.07.05,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -43,12 +43,20 @@
    \egroup
    \hfill}
 
+% \defineletterelement[\v!reference][\v!a]
+%   {\setbox\scratchbox\hbox\!!to\hsize
+%      {\getcommacommandsize[\@@@@lsreferencelist]% \@@@@ldreference?
+%       \ifnum\commalistsize<\plustwo\hfill\fi
+%       \processcommacommand[\@@@@lsreferencelist]\formatreferencelista\unskip}%
+%    \global\letter!height!reference\htdp\scratchbox
+%    \box\scratchbox}
+
 \defineletterelement[\v!reference][\v!a]
   {\setbox\scratchbox\hbox\!!to\hsize
-     {\getcommacommandsize[\@@@@lsreferencelist]% \@@@@ldreference?
+     {\getcommacommandsize[\getvalue{\????ls\currentcorrespondenceelement\c!list}]%
       \ifnum\commalistsize<\plustwo\hfill\fi
-      \processcommacommand[\@@@@lsreferencelist]\formatreferencelista\unskip}%
-   \global\letter!height!reference\htdp\scratchbox
+      \processcommacommand[\getvalue{\????ls\currentcorrespondenceelement\c!list}]\formatreferencelista\unskip}%
+   \ifx\currentcorrespondenceelement\v!reference\global\letter!height!reference\htdp\scratchbox\fi
    \box\scratchbox}
 
 \startsetups[\v!letter:\v!reference:\v!a]
@@ -80,9 +88,12 @@
            {\lettervalue{#1}}}}%
    \egroup}
 
+% \defineletterelement[\v!reference][\v!b]
+%   {\vtop % why not \vbox?
+%      {\processcommacommand[\@@@@lsreferencelist]\formatreferencelistb}}
+
 \defineletterelement[\v!reference][\v!b]
-  {\vtop % why not \vbox?
-     {\processcommacommand[\@@@@lsreferencelist]\formatreferencelistb}}
+  {\vtop{\processcommacommand[\getvalue{\????ls\currentcorrespondenceelement\c!list}]\formatreferencelistb}}
 
 \startsetups[\v!letter:\v!reference:\v!b]
 
@@ -116,9 +127,13 @@
      {\lettervalue\ascii}%
    \egroup}
 
+% \defineletterelement[\v!reference][\v!c]
+%   {\hbox\!!to\hsize
+%      {\processcommacommand[\@@@@lsreferencelist]\formatreferencelistc}}
+
 \defineletterelement[\v!reference][\v!c]
   {\hbox\!!to\hsize
-     {\processcommacommand[\@@@@lsreferencelist]\formatreferencelistc}}
+     {\processcommacommand[\getvalue{\????ls\currentcorrespondenceelement\c!list}]\formatreferencelistc}}
 
 \startsetups[\v!letter:\v!reference:\v!c]
 
@@ -140,10 +155,19 @@
 \def\formatreferencelistd#1%
   {\appendtoks\doformatreferencelistd{#1}\to\scratchtoks}
 
+% \defineletterelement[\v!reference][\v!d]
+%   {\vtop % why not \vbox?
+%      {\scratchtoks\emptytoks
+%       \processcommacommand[\@@@@lsreferencelist]\formatreferencelistd
+%       \setuptabulate[\c!before=,\c!after=]%
+%       \starttabulate[|l|l|]
+%       \the\scratchtoks
+%       \stoptabulate}}
+
 \defineletterelement[\v!reference][\v!d]
-  {\vtop % why not \vbox?
+  {\vtop
      {\scratchtoks\emptytoks
-      \processcommacommand[\@@@@lsreferencelist]\formatreferencelistd
+      \processcommacommand[\getvalue{\????ls\currentcorrespondenceelement\c!list}]\formatreferencelistd
       \setuptabulate[\c!before=,\c!after=]%
       \starttabulate[|l|l|]
       \the\scratchtoks
@@ -185,9 +209,13 @@
            {\doformatreferenceliste{\lettervalue\ascii}}}}}%
    \egroup}
 
+% \defineletterelement[\v!reference][\v!e]
+%   {\hbox\!!to\hsize
+%      {\processcommacommand[\@@@@lsreferencelist]\formatreferenceliste\hss}}
+
 \defineletterelement[\v!reference][\v!e]
   {\hbox\!!to\hsize
-     {\processcommacommand[\@@@@lsreferencelist]\formatreferenceliste\hss}}
+     {\processcommacommand[\getvalue{\????ls\currentcorrespondenceelement\c!list}]\formatreferenceliste\hss}}
 
 \startsetups[\v!letter:\v!reference:\v!e]
 
@@ -280,25 +308,29 @@
    \doiflettervalue\c!fromname\\
    \lettervalue\c!fromaddress}
 
-\setvalue{@@head@@\c!rule\v!no    }{0}
-\setvalue{@@head@@\c!rule\v!none  }{0}
-\setvalue{@@head@@\c!rule\v!off   }{0}
-\setvalue{@@head@@\c!rule\v!top   }{1}
-\setvalue{@@head@@\c!rule\v!before}{1}
-\setvalue{@@head@@\c!rule\v!bottom}{2}
-\setvalue{@@head@@\c!rule\v!after }{2}
-\setvalue{@@head@@\c!rule\v!yes   }{2}
-\setvalue{@@head@@\c!rule\v!on    }{2}
+\setvalue{@@head@@\c!rule\v!no    }{\!!doneafalse\!!donebfalse}
+\setvalue{@@head@@\c!rule\v!none  }{\!!doneafalse\!!donebfalse}
+\setvalue{@@head@@\c!rule\v!off   }{\!!doneafalse\!!donebfalse}
+\setvalue{@@head@@\c!rule\v!top   }{\!!doneatrue              }
+\setvalue{@@head@@\c!rule\v!before}{\!!doneatrue              }
+\setvalue{@@head@@\c!rule\v!bottom}{\!!donebtrue              }
+\setvalue{@@head@@\c!rule\v!after }{\!!donebtrue              }
+\setvalue{@@head@@\c!rule\v!yes   }{\!!donebtrue              }
+\setvalue{@@head@@\c!rule\v!on    }{\!!donebtrue              }
 
-\def\simpleexecuteifdefined#1#2{\ifcsname#1\endcsname\csname#1\endcsname\else#2\fi}% -> t-correspondence?
-  
+\def\doletterelementheadrule
+  {\!!doneafalse
+   \!!donebfalse
+   \def\dodoletterelementheadrule##1{\csname @@head@@\c!rule##1\endcsname}%
+   \processcommacommand[\letterstylevalue\v!head\c!fromrule]\dodoletterelementheadrule}
+
 \defineletterelement[\v!head][\v!left]
   {\normalhbox
-     {\def\!!fromrule{\simpleexecuteifdefined{@@head@@\c!rule\letterstylevalue\v!head\c!fromrule}{0}}%
-      \framed[frame=off,location=bottom,align=right,width=\hsize]
-        {\dostartattributes{\????ld\c!fromname}\c!style\c!color
+     {\framed[frame=off,location=bottom,align=right,width=\hsize]
+        {\doletterelementheadrule
+         \dostartattributes{\????ld\c!fromname}\c!style\c!color
          \lettervalue\c!fromname
-         \ifnum\!!fromrule=\plusone
+         \if!!donea
            \doifelselettervalue\c!fromlogo
              {\setbox\scratchbox\hbox{\lettervalue\c!fromlogo}%
               \scratchdimen\dimexpr\letterstylevalue\v!head\c!rulewidth-\wd\scratchbox\relax}
@@ -316,7 +348,7 @@
          \doiflettervalue\c!fromfax  {\\\lettervalue\c!fromfax  }%
          \doiflettervalue\c!frommail {\\\lettervalue\c!frommail }%
          \doiflettervalue\c!fromurl  {\\\lettervalue\c!fromurl  }%
-         \ifnum\!!fromrule=\plustwo
+         \if!!doneb
            \ifzeropt\letterstylevalue\v!head\c!rulewidth
              \scratchdimen\hsize
            \else
@@ -332,11 +364,11 @@
 
 \defineletterelement[\v!head][\v!middle]
   {\normalhbox
-     {\def\!!fromrule{\simpleexecuteifdefined{@@head@@\c!rule\letterstylevalue\v!head\c!fromrule}{0}}%
-      \framed[frame=off,location=bottom,align=middle,width=\hsize]
-        {\dostartattributes{\????ld\c!fromname}\c!style\c!color
+     {\framed[frame=off,location=bottom,align=middle,width=\hsize]
+        {\doletterelementheadrule
+         \dostartattributes{\????ld\c!fromname}\c!style\c!color
          \lettervalue\c!fromname
-         \ifnum\!!fromrule=\plusone
+         \if!!donea
            \ifzeropt\letterstylevalue\v!head\c!rulewidth
              \scratchdimen\hsize
            \else
@@ -355,7 +387,7 @@
          \doiflettervalue\c!fromfax  {\\\lettervalue\c!fromfax  }%
          \doiflettervalue\c!frommail {\\\lettervalue\c!frommail }%
          \doiflettervalue\c!fromurl  {\\\lettervalue\c!fromurl  }%
-         \ifnum\!!fromrule=\plustwo
+         \if!!doneb
            \ifzeropt\letterstylevalue\v!head\c!rulewidth
              \scratchdimen\hsize
            \else
@@ -370,12 +402,12 @@
 
 \defineletterelement[\v!head][\v!right]
   {\normalhbox
-     {\def\!!fromrule{\simpleexecuteifdefined{@@head@@\c!rule\letterstylevalue\v!head\c!fromrule}{0}}%
-      \doiflettervalue\c!fromlogo{\rlap{\lettervalue\c!fromlogo}}%
+     {\doiflettervalue\c!fromlogo{\rlap{\lettervalue\c!fromlogo}}%
       \framed[frame=off,location=bottom,align=left,width=\hsize]
-        {\dostartattributes{\????ld\c!fromname}\c!style\c!color
+        {\doletterelementheadrule
+         \dostartattributes{\????ld\c!fromname}\c!style\c!color
          \lettervalue\c!fromname
-         \ifnum\!!fromrule=\plusone
+         \if!!donea
            \ifzeropt\letterstylevalue\v!head\c!rulewidth
              \scratchdimen\hsize
            \else
@@ -397,7 +429,7 @@
          \doiflettervalue\c!fromfax  {\\\lettervalue\c!fromfax  }%
          \doiflettervalue\c!frommail {\\\lettervalue\c!frommail }%
          \doiflettervalue\c!fromurl  {\\\lettervalue\c!fromurl  }%
-         \ifnum\!!fromrule=\plustwo
+         \if!!doneb
            \ifzeropt\letterstylevalue\v!head\c!rulewidth
              \scratchdimen\hsize
            \else
@@ -651,8 +683,11 @@
 
 \startsetups[\v!letter:\v!optimize]
 
-  \setbox\scratchbox\hbox % trial typesetting to get the heigth of the reference line
-    {\dontcomplain\executeifdefined{\v!letter:\v!reference:\@@@@lsreferencealternative}\donothing}
+  \startnointerference % trial typesetting to get the heigth of the reference line
+    \dontcomplain
+    \let\currentcorrespondenceelement\v!reference
+    \executeifdefined{\v!letter:\v!reference:\@@@@lsreferencealternative}\donothing
+  \stopnointerference
 
   \setups[\v!letter:\v!reference:\@@@@lsreferencealternative]
 

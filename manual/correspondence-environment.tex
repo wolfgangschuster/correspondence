@@ -39,7 +39,7 @@
 \appendtoks\def\\{ }\to\simplifiedcommands
 
 \setupinteraction
-  [state=start,
+  [state=stop,
    title={Correspondence with ConTeXt},
    author={Wolfgang Schuster},
    color=black,
@@ -141,21 +141,31 @@
 
 %% Überschriften
 
+%\definestructureresetset[default][0,1,4][0]
+
+%\setupheads
+%  [reset=default,
+%   sectionsegments=1:100]
+
 \setuphead
   [part]
   [placehead=yes,
+   header=empty,
    alternative=middle,
-   resetnumber=no,
    style=\tfd]
 
 \setuphead
   [chapter]
   [header=empty,
-   style=\tfc]
+   style=\tfc,
+   %sectionsegments=2:100,
+   ]
 
 \setuphead
   [section,subject]
-  [style=\tfb]
+  [style=\tfb,
+   %sectionsegments=2:100,
+   ]
 
 \setuphead
   [subsection,subsubject]
@@ -166,22 +176,13 @@
 \setupcombinedlist
   [content]
   [interaction=all,
-   color=black,
-   partnumber=no]
-
-%% Index
-
-\setupregister
-  [index]
-  [partnumber=no]
+   color=black]
 
 %% Seitennummerierung
 
 \setuppagenumbering
   [alternative=doublesided,
-   location=footer,
-   way=bytext,
-   partnumber=no]
+   location=footer]
 
 %% Kopf- und Fußzeilen
 
@@ -190,6 +191,9 @@
 %% Verbatim
 
 \doifmode{wolf}{\setuptyping[bodyfont=10pt]}
+
+\setuptyping
+  [before={\blank\testpage[2]}]
 
 %% Misc
 

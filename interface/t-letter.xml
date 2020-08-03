@@ -293,7 +293,61 @@
         <cd:constant type="cd:name"/>
       </cd:parameter>
     </cd:assignments>
-   </cd:arguments>
+  </cd:arguments>
+</cd:command>
+
+<cd:command name="setupletter:value" file="t-letter.tex">
+  <cd:sequence>
+    <cd:string value="setupletter"/>
+  </cd:sequence>
+  <cd:arguments>
+    <cd:assignments n="1" list="yes">
+      <cd:parameter name="cd:name">
+        <cd:constant type="cd:text"/>
+      </cd:parameter>
+    </cd:assignments>
+  </cd:arguments>
+</cd:command>
+
+<cd:command name="setupletter:setup" file="t-letter.tex">
+  <cd:sequence>
+    <cd:string value="setupletter"/>
+  </cd:sequence>
+  <cd:arguments>
+    <cd:keywords n="1" list="yes">
+      <cd:constant type="cd:name"/>
+    </cd:keywords>
+    <cd:assignments n="2" list="yes">
+      <cd:parameter name="titlestyle">
+        <cd:resolve name="style"/>
+      </cd:parameter>
+      <cd:parameter name="titlecolor">
+        <cd:constant type="cd:name"/>
+      </cd:parameter>
+      <cd:parameter name="textstyle">
+        <cd:resolve name="style"/>
+      </cd:parameter>
+      <cd:parameter name="textcolor">
+        <cd:constant type="cd:name"/>
+      </cd:parameter>
+      <cd:parameter name="separator">
+        <cd:constant type="cd:text"/>
+      </cd:parameter>
+    </cd:assignments>
+  </cd:arguments>
+</cd:command>
+
+<cd:command name="setlettervalue" file="t-letter.tex">
+  <cd:sequence>
+    <cd:string value="setlettervalue"/>
+  </cd:sequence>
+  <cd:arguments>
+    <cd:content n="1" type="cd:name"/>
+    <cd:keywords n="2" optional="yes">
+      <cd:constant type="cd:text"/>
+    </cd:keywords>
+    <cd:content n="3"/>
+  </cd:arguments>
 </cd:command>
 
 <cd:command name="useletterinterface" file="t-letter.tex">

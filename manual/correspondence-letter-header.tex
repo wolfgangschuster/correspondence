@@ -16,15 +16,67 @@
 
 \section{Header}
 
+The head of a letter is the part where you can make the most customization,
+when you don't want to do this the module provides a few predefined alternatives
+which can be decorated with rules.
+
+The layout of the head is the selected with the \type{\setupletterstyle} command
+and the \type{alternative} key, the second key \type{fromrule} is used for the three
+alternatives {\em a, b} and {\em c.}
+
 \starttyping
 \setupletterstyle
   [head]
-  [alternative=left|middle|right,
-   fromrule=top|bottom|no]
+  [alternative=...,
+   fromrule=...]
 \stoptyping
 
+You can select between the following alternatives:
+
+\startitemize[columns,three,packed]
+\item a
+\item left
+\item middle
+\item right
+\stopitemize
+
+The \type{fromrule} key accepts the following parameters which can be combined to get
+a rule at the top and bottom of the header.
+
+\startitemize[columns,three,packed]
+\item no
+\item none
+\item off
+\item top
+\item before
+\item bottom
+\item after
+\item yes
+\item on
+\stopitemize
+
+The default alternative {\em a} prints the firstname and surname of the author in
+the first line and the address in the following lines, the text is left aligned
+but this can be changed with the \type{align} key.
+
+\start
+
+\setlettervalue{fromname}   {Max Mustermann}
+\setlettervalue{fromaddress}{Musterweg 12\\12345 Musterstadt}
+
+\startelement
+\letterelement[head][a]
+\stopelement
+
+\stop
+
+The other three alternatives {\em left, middle} and {\em right} place the text according
+to their names in the left, center or right of the head with a few information than the
+default layout provides. You can enable a option rule after the name of the addressee and
+at the bottom of the address block.
+
 \placefigure
-  [fixed]
+  [force]
   {none}
   {\setupcombinations[before=]
    \startcombination[3*3]
@@ -110,5 +162,12 @@
       \NC fromrule    \NC = \NC bottom \NC\AR
       \stoptable}
    \stopcombination}
+
+\section{Footer}
+
+\startframedtext[width=\textwidth,framecolor=red,align=middle,corner=00]
+No default style/alternatives for the foot are provided from the module,
+the current section will therefore show ways to create own ones.
+\stopframedtext
 
 \stopcomponent

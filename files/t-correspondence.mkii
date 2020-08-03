@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-correspondence,
-%D        version=2009.07.03,
+%D        version=2009.07.04,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Correspondence,
 %D         author=Wolfgang Schuster,
@@ -177,40 +177,11 @@
 
 %D Tests
 
-\long\def\doifcorrespondencevalue#1#2%
-  {\edef\!!stringa{\csname#1#2\endcsname}%
-   \ifx\!!stringa\empty
-     \@EA\gobbleoneargument
-   \else
-     \@EA\firstofoneargument
-   \fi}
-
-\long\def\doifelsecorrespondencevalue#1#2%
-  {\edef\!!stringa{\csname#1#2\endcsname}%
-   \ifx\!!stringa\empty
-     \@EA\secondoftwoarguments
-   \else
-     \@EA\firstoftwoarguments
-   \fi}
-
-\long\def\doifcorrespondencestylevalue#1#2#3%
-  {\edef\!!stringa{\csname#1#2#3\endcsname}%
-   \ifx\!!stringa\empty
-     \@EA\gobbleoneargument
-   \else
-     \@EA\firstofoneargument
-   \fi}
-
-\long\def\doifelsecorrespondencestylevalue#1#2#3%
-  {\edef\!!stringa{\csname#1#2#3\endcsname}%
-   \ifx\!!stringa\empty
-     \@EA\secondoftwoarguments
-   \else
-     \@EA\firstoftwoarguments
-   \fi}
-
-\def\correspondencestylevalue#1#2#3%
-  {\csname#1#2#3\endcsname}
+\long\def\doifcorrespondencevalue           #1#2{\doifsomething    {\csname  #1#2\endcsname}}
+\long\def\doifelsecorrespondencevalue       #1#2{\doifsomethingelse{\csname  #1#2\endcsname}}
+\long\def\doifcorrespondencestylevalue    #1#2#3{\doifsomething    {\csname#1#2#3\endcsname}}
+\long\def\doifelsecorrespondencestylevalue#1#2#3{\doifsomethingelse{\csname#1#2#3\endcsname}}
+\long\def\correspondencestylevalue        #1#2#3{\csname#1#2#3\endcsname}
 
 %D External files
 
@@ -234,9 +205,9 @@
   {\def\dodododefinecorrespondencelayer##1{\dododefinecorrespondencelayer[#1][#2][##1]}%
    \processaction
      [#3]
-     [\v!foldmark=>{\processcommacommand[\csname#1!list!marking\endcsname]\dodododefinecorrespondencelayer},
-        \v!header=>{\processcommacommand[\csname#1!list!header\endcsname ]\dodododefinecorrespondencelayer},
-        \v!footer=>{\processcommacommand[\csname#1!list!footer\endcsname ]\dodododefinecorrespondencelayer},
+     [\v!foldmark=>{\processcommacommand[\getvalue{#1!list!marking}]\dodododefinecorrespondencelayer},
+        \v!header=>{\processcommacommand[\getvalue{#1!list!header}]\dodododefinecorrespondencelayer},
+        \v!footer=>{\processcommacommand[\getvalue{#1!list!footer}]\dodododefinecorrespondencelayer},
        \s!unknown=>{\dododefinecorrespondencelayer[#1][#2][#3]}]}
 
 \def\dododefinecorrespondencelayer[#1][#2][#3]%
@@ -325,7 +296,7 @@
    \!!donebfalse % even numbered pages
    \!!donecfalse % odd numbered pages
    \!!donedfalse % real pagenumber
-   \processcommacommand[\csname#2#3\c!state\endcsname]\dodosetheaderfooterlayer
+   \processcommacommand[\getvalue{#2#3\c!state}]\dodosetheaderfooterlayer
    \doifnotvalue{#2#3\v!layer\c!state}\v!stop{\setuplayer[#1:#3][\c!state=\v!start]}%
    \ifnum\if!!doned\pagenumber\else\correspagenumber\fi=\plusone
      \if!!donea\dosetcorrespondencelayer[#1][#2][#3]\fi
@@ -364,10 +335,11 @@
 
 \def\dosetcorrespondencesection[#1][#2][#3]%
   {\begingroup
+   \edef\currentcorrespondenceelement{#3}%
    \doifelsecorrespondencestylevalue{#2}{#3}\c!before
      {\correspondencestylevalue{#2}{#3}\c!before}
       \endgraf
-   \doadaptleftskip {\correspondencestylevalue{#2}{#3}\c!leftmargin}%
+   \doadaptleftskip {\correspondencestylevalue{#2}{#3}\c!leftmargin }%
    \doadaptrightskip{\correspondencestylevalue{#2}{#3}\c!rightmargin}%
    \doifcorrespondencestylevalue{#2}{#3}\c!align
      {\setupalign[\correspondencestylevalue{#2}{#3}\c!align]}%
@@ -446,14 +418,22 @@
 \def\doflushcorrespondencedescription[#1][#2]%
   {\def\dodoflushcorrespondencedescription##1%
      {\doif{\correspondencestylevalue{#2}\v!option{##1}}\v!yes{\dosetcorrespondencedescription[#1][#2][##1]}}%
-   \processcommacommand[\csname#1!list!descriptions\endcsname]\dodoflushcorrespondencedescription}
+   \processcommacommand[\getvalue{#1!list!descriptions}]\dodoflushcorrespondencedescription}
 
 %D Commands to define named elements for header, footer etc. and use them,
 %D clone them or delete their content.
 
-\def\definecorrespondenceelement  [#1]#2[#3]#4[#5]#6{\setvalue{#1:#3:#5}{#6}}
-\def\resetcorrespondenceelement     [#1]#2[#3]#4[#5]{\resetvalue{#1:#3:#5}}
-\def\copycorrespondenceelement[#1]#2[#3]#4[#5]#6[#7]{\copycsname#1:#3:#5\endcsname\csname#1:#3:#7\endcsname}
-\def\correspondenceelement          [#1]#2[#3]#4[#5]{\csname#1:#3:#5\endcsname}
+\def\definecorrespondenceelement{\dotripleargument\dodefinecorrespondenceelement }
+\def\resetcorrespondenceelement {\dotripleargument\doresetcorrespondenceelement  }
+\def\copycorrespondenceelement  {\doquadrupleargument\docopycorrespondenceelement}
+\def\correspondenceelement      {\dotripleargument\docorrespondenceelement       }
+
+\def\dodefinecorrespondenceelement[#1][#2][#3]#4{\setvalue{#1:#2:#3}{#4}}
+\def\doresetcorrespondenceelement   [#1][#2][#3]{\resetvalue{#1:#2:#3}}
+\def\docopycorrespondenceelement[#1][#2][#3][#4]{\copycsname#1:#2:#3\endcsname\csname#1:#2:#4\endcsname}
+
+\def\docorrespondenceelement[#1][#2][#3]%
+  {\edef\currentcorrespondenceelement{#2}%
+   \csname#1:#2:#3\endcsname}
 
 \protect \endinput

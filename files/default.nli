@@ -534,6 +534,7 @@
 \stopsetups
 
 \startsetups[letter:subject]
+\def\\{\letterstylevalue\v!subject\c!separator}%
 \labeltext{\v!letter:\c!subject}\lettervalue\c!subject
 \stopsetups
 

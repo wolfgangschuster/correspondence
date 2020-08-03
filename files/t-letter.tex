@@ -10,7 +10,7 @@
 %D        license=Public Domain]
 
 %M \loadsetups[cont-en.xml]
-%M \loadsetups[letter.xml]
+%M \loadsetups[t-letter.xml]
 
 %D \subject{Constants and Variables}
 
@@ -261,15 +261,63 @@
 %D      \secondoftwoarguments}
 %D \stoptyping
 
-\def\doiflettervalue#1%
-  {\doiftextelse{\lettervalue{#1}}
-     \firstofoneargument
-     \gobbleoneargument}
+%\def\doiflettervalue#1%
+%  {\doiftextelse{\lettervalue{#1}}
+%     \firstofoneargument
+%     \gobbleoneargument}
 
-\def\doifelselettervalue#1%
-  {\doiftextelse{\lettervalue{#1}}
-     \firstoftwoarguments
-     \secondoftwoarguments}
+%\def\doifelselettervalue#1%
+%  {\doiftextelse{\lettervalue{#1}}
+%     \firstoftwoarguments
+%     \secondoftwoarguments}
+
+\long\def\doiflettervalue#1%
+  {\ifcsname\????ld#1\endcsname
+     \edef\!!stringa{\csname\????ld#1\endcsname}%
+     \ifx\!!stringa\empty
+       \@EAEAEA\gobbleoneargument
+     \else
+       \@EAEAEA\firstofoneargument
+     \fi
+   \else
+     \@EA\gobbleoneargument
+   \fi}
+
+\long\def\doifelselettervalue#1%
+  {\ifcsname\????ld#1\endcsname
+     \edef\!!stringa{\csname\????ld#1\endcsname}%
+     \ifx\!!stringa\empty
+       \@EAEAEA\secondoftwoarguments
+     \else
+       \@EAEAEA\firstoftwoarguments
+     \fi
+   \else
+     \@EA\secondoftwoarguments
+   \fi}
+
+\def\doifletterstylevalue#1#2%
+  {\ifcsname\????ls#1#2\endcsname
+     \edef\!!stringa{\csname\????ls#1#2\endcsname}%
+     \ifx\!!stringa\empty
+       \@EAEAEA\gobbleoneargument
+     \else
+       \@EAEAEA\firstofoneargument
+     \fi
+   \else
+     \@EA\firstofoneargument
+   \fi}
+
+\def\doifelseletterstylevalue#1#2%
+  {\ifcsname\????ls#1#2\endcsname
+     \edef\!!stringa{\csname\????ls#1#2\endcsname}%
+     \ifx\!!stringa\empty
+       \@EAEAEA\secondoftwoarguments
+     \else
+       \@EAEAEA\firstoftwoarguments
+     \fi
+   \else
+     \@EA\secondoftwoarguments
+   \fi}
 
 %D \subject{Interface, Style and Extension files}
 %D 
@@ -471,7 +519,7 @@
 
 \def\dosetletterlayer[#1]%
   {\doifinsetelse{#1}{\v!topmark,\v!botmark,\v!cutmark,\v!endmark,\v!usermark}
-     {\doifelsenothing{\letterstylevalue{#1}\c!symbol}
+     {\doifelseletterstylevalue{#1}\c!symbol
         {\dodosetletterlayer[#1][\setups{letter:#1}]}
         {\dodosetletterlayer[#1][\letterstylevalue{#1}\c!symbol]}}
      {\dodosetletterlayer[#1][\setups{letter:#1}]}}
@@ -498,25 +546,26 @@
       \c!leftmargin=\zeropoint,
       \c!rightmargin=\zeropoint,
       \c!alternative=\v!a,
+      \c!separator=\crlf,
       \c!style=,
       \c!color=]}
 
 \def\dosetlettersection[#1]%
   {\begingroup
    \edef\@@lettersection{#1}%
-   \doifelsenothing{\letterstylevalue\@@lettersection\c!before}
+   \doifelseletterstylevalue\@@lettersection\c!before
+     {\letterstylevalue\@@lettersection\c!before}
       \endgraf
-     {\letterstylevalue\@@lettersection\c!before}%
    \doadaptleftskip {\letterstylevalue\@@lettersection\c!leftmargin}%
    \doadaptrightskip{\letterstylevalue\@@lettersection\c!rightmargin}%
-   \doifsomething{\letterstylevalue\@@lettersection\c!align}
+   \doifletterstylevalue\@@lettersection\c!align
      {\setupalign[\letterstylevalue\@@lettersection\c!align]}%
    \dostartattributes{\????ls#1}\c!style\c!color\empty
      \setups[letter:#1]%
    \dostopattributes
-   \doifelsenothing{\letterstylevalue\@@lettersection\c!after}
+   \doifletterstylevalue\@@lettersection\c!after
+     {\endgraf\letterstylevalue\@@lettersection\c!after}
       \endgraf
-     {\endgraf\letterstylevalue\@@lettersection\c!after}%
    \endgroup}
 
 \let\letter!list!descriptions\empty
@@ -744,7 +793,7 @@
 
   \begingroup
 
-  \doifsomething\@@@@lsoptionindenting{\setupindenting[\@@@@lsoptionindenting]}
+  \doifletterstylevalue\v!option\c!indenting{\setupindenting[\@@@@lsoptionindenting]}
 
   \dosetlettersection[\v!content]
 
@@ -880,9 +929,9 @@
     [\c!background=\letter!list!backgrounds,
      \c!backgroundcolor=\@@@@lsoptionbackgroundcolor]
 
-  \doifsomething\@@@@lsoptionbodyfont{\switchtobodyfont[\@@@@lsoptionbodyfont]}
+  \doifletterstylevalue\v!option\c!bodyfont  {\switchtobodyfont[\@@@@lsoptionbodyfont]}
 
-  \doifsomething\@@@@lsoptionwhitespace{\setupwhitespace[\@@@@lsoptionwhitespace]}
+  \doifletterstylevalue\v!option\c!whitespace{\setupwhitespace[\@@@@lsoptionwhitespace]}
 
 \stopsetups
 

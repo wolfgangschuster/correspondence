@@ -1,0 +1,402 @@
+%D \module
+%D   [       file=t-resume,
+%D        version=2008.11.27,
+%D          title=\CONTEXT\ User Module,
+%D       subtitle=Framework for Letters,
+%D         author=Wolfgang Schuster,
+%D           date=\currentdate,
+%D      copyright=Wolfgang Schuster,
+%D          email=schuster.wolfgang@googlemail.com,
+%D        license=Public Domain]
+
+\writestatus{loading}{Context User Module / Framework for Letters}
+
+\unprotect
+
+\usemodule[correspondence]
+
+%D I use a few extra constants and variables in my module.
+
+\startinterface all
+  \setinterfacevariable {resume}     {resume}
+\stopinterface
+
+\def\????rd{@@@@rd} % ResumeData
+\def\????rs{@@@@rs} % ResumeStyle
+
+\startmodule[resume]
+
+\setupmodule
+  [\c!style=,
+   \c!extension=,
+   \c!interface=default]
+
+%D \macros
+%D   {setupresumestyle}
+
+\definecorrespondencesetup[\v!resume\v!style][\v!resume][\????rs]
+
+%D Setup for the header and footer texts.
+
+\newtoks\resume!toks!header
+\newtoks\resume!toks!footer
+
+\def\dosetupresumeheader[#1][#2]%
+  {\resume!toks!header\emptytoks
+   \doifelsenothing{#2}
+     {\resume!toks!header{\setupheader[\v!text][#1]}}
+     {\resume!toks!header{\setupheader[#1][#2]}}}
+
+\def\dosetupresumefooter[#1][#2]%
+  {\resume!toks!footer\emptytoks
+   \doifelsenothing{#1}
+     {\resume!toks!footer{\setupfooter[\v!text][#1]}}
+     {\resume!toks!footer{\setupfooter[#1][#2]}}}
+
+%D \macros
+%D   {setupresume}
+
+\definecorrespondencevalue[\v!resume][\????ld]
+
+%D A few extra macros to test for content of the letter values, don't rely
+%D on them at the moment because they could change or I will remove, rename,
+%D rewrite etc. them.
+%D 
+%D With the change of the \tex{setupletter} command it was also necessary
+%D to change the definition for lettervalue tests.
+
+\def\doifresumevalue         {\doifcorrespondencevalue         \????rd}
+\def\doifelseresumevalue     {\doifelsecorrespondencevalue     \????rd}
+\def\doifresumestylevalue    {\doifcorrespondencestylevalue    \????rs}
+\def\doifelseresumestylevalue{\doifelsecorrespondencestylevalue\????rs}
+
+%D \subject{Interface, Style and Extension files}
+%D 
+%D \macros
+%D   {useletterextension,useletterstyle,useletterinterface}
+%D
+%D This module provides different types of files beside the main module.
+%D 
+%D Two of them could be used by the user while the third is only used in
+%D this file but you're free to use but you should really now what you do.
+%D 
+%D Each of the files has it's own file extension, you have to use if you
+%D want to create such a file, this has the advantage to use the same name
+%D for a collection of macros.
+
+\def\resume!suffix!style    {nrs}
+\def\resume!suffix!extension{nre}
+\def\resume!suffix!interface{nri}
+
+\definecorrespondencefile[\v!resume\v!interface][\resume!suffix!interface]
+\definecorrespondencefile[\v!resume\v!extension][\resume!suffix!extension]
+\definecorrespondencefile[\v!resume\v!style    ][\resume!suffix!style    ]
+
+%D \macros
+%D   {letterstylevalue,lettervalue}
+
+\def\resumestylevalue#1#2%
+  {\csname\????rs#1#2\endcsname}
+
+\def\resumevalue#1%
+  {\csname\????rd#1\endcsname}
+
+\def\resume!list!marking
+  {\v!topmark,\v!botmark,\v!cutmark,\v!usermark}
+
+\let\resume!list!layers      \empty
+\let\resume!list!sections    \empty
+\let\resume!list!descriptions\empty
+
+\definecorrespondencelayer      [\v!resume][\????rs]
+\definecorrespondencesection    [\v!resume][\????rs]
+\definecorrespondencedescription[\v!resume][\????rs]
+
+%D \subject{Placement of the content}
+%D 
+%D Enable the layouts for the first and second page.
+
+\startsetups[\v!resume:\v!layout]
+
+  \setuplayout[\v!resume\v!firstpage]
+
+  \appendtoks\setuplayout[\v!resume\v!secondpage]\to\everyaftershipout
+
+\stopsetups
+
+%D Header for the first page, you could use it to place the logo from your
+%D company or your own address and name.
+
+\dodefineresumelayer[\v!head]
+
+\startsetups[\v!resume:\v!place:\v!head]
+
+  \dosetresumelayer[\v!head]
+
+\stopsetups
+
+%D Footer block, you could use it to place information about your company
+%D but take care set \mono{repeat=yes} if you want to place it on every page,
+%D you should disable the footer for the second and following pages inb this
+%D case.
+
+\dodefineresumelayer[\v!foot]
+
+\startsetups[\v!resume:\v!place:\v!foot]
+
+  \dosetresumelayer[\v!foot]
+
+\stopsetups
+
+%D Layer to set head and foot blocks at the second and all following pages.
+
+\dodefineresumelayer[\v!nexthead]
+
+\startsetups[\v!resume:\v!place:\v!nexthead]
+
+  \dosetresumelayer[\v!nexthead]
+
+\stopsetups
+
+\dodefineresumelayer[\v!nextfoot]
+
+\startsetups[\v!resume:\v!place:\v!nextfoot]
+
+  \dosetresumelayer[\v!nextfoot]
+
+\stopsetups
+
+%D Title
+
+\dodefineresumesection[\v!title]
+
+\startsetups[\v!resume:\v!place:\v!title]
+
+  \dosetresumesection[\v!title]
+
+\stopsetups
+
+%D Letter content
+
+\dodefineresumesection[\v!content]
+
+\startsetups[\v!resume:\v!place:\v!content]
+
+  \begingroup
+
+  \doifresumestylevalue\v!option\c!indenting{\setupindenting[\@@@@rsoptionindenting]}
+
+  \dosetresumesection[\v!content]
+
+  \endgroup
+
+\stopsetups
+
+%D Apendices
+
+\dodefineresumesection[\v!appendices]
+
+\startsetups[\v!resume:\v!place:\v!appendices]
+
+  \dosetresumesection[\v!appendices]
+
+\stopsetups
+
+%D Fold- and cutmarks, you enable and disable all of them independant
+%D from any other or disable all marks with just one command.
+
+\dodefineresumelayer[\v!foldmark]
+
+\startsetups[\v!resume:\v!place:\v!foldmark]
+
+  % Upper foldmark
+
+  \startlocalsetups[\v!resume:\v!place:\v!topmark]
+
+    \dosetresumelayer[\v!topmark]
+
+  \stoplocalsetups
+
+  % Lower foldmark
+
+  \startlocalsetups[\v!resume:\v!place:\v!botmark]
+
+    \dosetresumelayer[\v!botmark]
+
+  \stoplocalsetups
+
+  % Cutmark
+
+  \startlocalsetups[\v!resume:\v!place:\v!cutmark]
+	
+    \dosetresumelayer[\v!cutmark]
+
+  \stoplocalsetups
+
+  % Free mark, you could use it to place your own symbols
+
+  \startlocalsetups[\v!resume:\v!place:\v!usermark]
+
+    \dosetresumelayer[\v!usermark]
+
+  \stoplocalsetups
+
+  \doif\@@@@rsoptiontopmark \v!yes{\setups[\v!resume:\v!place:\v!topmark]}
+  \doif\@@@@rsoptionbotmark \v!yes{\setups[\v!resume:\v!place:\v!botmark]}
+  \doif\@@@@rsoptioncutmark \v!yes{\setups[\v!resume:\v!place:\v!cutmark]}
+  \doif\@@@@rsoptionusermark\v!yes{\setups[\v!resume:\v!place:\v!usermark]}
+
+\stopsetups
+
+%D Background graphic:
+
+\defineoverlay
+  [\v!resume:\c!backgroundimage]
+  [\doifsomething\@@@@rsoptionbackgroundimage
+     {\overlayfigure{\@@@@rsoptionbackgroundimage}}]
+
+\defineoverlay
+  [\v!resume:\c!background]
+  [\@@@@rsoptionbackground]
+
+\def\resume!list!backgrounds
+  {\v!resume:\c!backgroundimage,\v!resume:\c!background,%
+   \v!resume:\v!head,\v!resume:\v!foot,\v!resume:\v!nexthead,%
+   \v!resume:\v!nextfoot,\v!resume:\v!topmark,\v!resume:\v!botmark,%
+   \v!resume:\v!cutmark,\v!resume:\v!usermark}
+
+%D Settings at the begin of every letter.
+
+\startsetups[\v!resume:\v!initialize]
+
+  \@@@@rsoptionbefore
+
+  \setupsubpagenumber
+    [\c!number=\@@@@rsoptionpagenumber,
+     \c!way=\v!by\v!text,
+     \c!state=\@@@@rsoptionstate]
+
+  \resetsubpagenumber
+
+  \begingroup
+
+  \page
+
+  \setuppagenumbering
+    [\c!alternative=\@@@@rsoptionalternative,
+     \c!location=] % use the header and footer option instead
+
+  \the\resume!toks!header
+  \the\resume!toks!footer
+
+  \setupbackgrounds
+    [\v!paper]
+    [\c!background=\v!color,
+     \c!backgroundcolor=\@@@@rsoptionbackgroundcolor]
+
+  \setupbackgrounds
+    [\v!page]
+    [\c!background=\resume!list!backgrounds,
+     \c!backgroundcolor=\@@@@rsoptionbackgroundcolor]
+
+  \doifresumestylevalue\v!option\c!bodyfont  {\switchtobodyfont[\@@@@rsoptionbodyfont]}
+
+  \doifresumestylevalue\v!option\c!whitespace{\setupwhitespace[\@@@@rsoptionwhitespace]}
+
+\stopsetups
+
+%D Settings at the end of every letter.
+
+\startsetups[\v!resume:\v!finish]
+
+  \page
+
+  \setuplayout[\v!reset]
+
+  \endgroup
+
+  \resetsubpagenumber
+
+  \@@@@rsoptionafter
+
+\stopsetups
+
+%D Place the letter.
+
+\startsetups[\v!resume:\v!place]
+
+  \setups[\v!resume:\v!initialize] % Settings at the begin
+  \setups[\v!resume:\v!layout]     % Page layout
+  \setups[\v!resume:\v!reset]      % Reset layers
+  \setups[\v!resume:\v!layer]      % Place layers
+  \setups[\v!resume:\v!sequence]   % Place content
+  \setups[\v!resume:\v!finish]     % Settings at the end
+
+\stopsetups
+
+%D Reset the layer content.
+
+\def\resume!list!resetlayers
+  {\v!topmark,\v!botmark,\v!cutmark,\v!usermark}
+
+\def\dodoresetresumelayer#1%
+  {\resetlayer[\v!resume:#1]}
+
+\startsetups[\v!resume:\v!reset]
+
+  \processcommacommand[\resume!list!resetlayers]\dodoresetresumelayer
+
+\stopsetups
+
+\startsetups[\v!resume:\v!layer]
+
+  \doif\@@@@rsoptionmarking \v!yes{\setups[\v!resume:\v!place:\v!foldmark]}
+  \doif\@@@@rsoptionhead    \v!yes{\setups[\v!resume:\v!place:\v!head    ]}
+  \doif\@@@@rsoptionfoot    \v!yes{\setups[\v!resume:\v!place:\v!foot    ]}
+  \doif\@@@@rsoptionnexthead\v!yes{\setups[\v!resume:\v!place:\v!nexthead]}
+  \doif\@@@@rsoptionnextfoot\v!yes{\setups[\v!resume:\v!place:\v!nextfoot]}
+
+\stopsetups
+
+%D Place the letter content.
+
+\let\resume!order!sections\resume!list!sections
+
+\def\doflushresumesection#1%
+  {\doif{\resumestylevalue\v!option{#1}}\v!yes{\setups[\v!resume:\v!place:#1]}}
+
+\startsetups[\v!resume:\v!sequence]
+
+  \processcommacommand[\resume!list!sections]\doflushresumesection
+
+\stopsetups
+
+%D \subject{Default values}
+
+\setupresumestyle
+  [\v!option]
+  [\c!marking=\v!yes,
+   \c!usermark=\v!no,
+   \c!indenting=,
+   \c!whitespace=,
+   \c!background=,
+   \c!backgroundcolor=\v!white,
+   \c!backgroundimage=,
+   \c!before=,
+   \c!after=,
+   \c!header=\v!reset,
+   \c!footer=\v!reset,
+   \c!pagenumber=1,
+   \c!bodyfont=,
+   \c!alternative=\v!singlesided,
+   \c!state=\v!stop]
+
+%D Default style
+
+\useresumeinterface[\currentmoduleparameter\c!interface]
+\useresumestyle    [\currentmoduleparameter\c!style    ]
+\useresumeextension[\currentmoduleparameter\c!extension]
+
+\stopmodule
+
+\protect \endinput

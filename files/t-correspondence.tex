@@ -1,0 +1,353 @@
+%D \module
+%D   [       file=t-correspondence,
+%D        version=2008.11.30,
+%D          title=\CONTEXT\ User Module,
+%D       subtitle=Correspondence,
+%D         author=Wolfgang Schuster,
+%D           date=\currentdate,
+%D      copyright=Wolfgang Schuster,
+%D          email=schuster.wolfgang@googlemail.com,
+%D        license=Public Domain]
+
+\writestatus{loading}{Context User Module / Correspondence}
+
+\unprotect
+
+%D I use a few extra constants and variables in my module.
+
+\startinterface all
+  \setinterfaceconstant {head}            {head}
+  \setinterfaceconstant {foot}            {foot}
+  \setinterfaceconstant {topmark}         {topmark}
+  \setinterfaceconstant {botmark}         {botmark}
+  \setinterfaceconstant {cutmark}         {cutmark}
+  \setinterfaceconstant {endmark}         {endmark}
+  \setinterfaceconstant {usermark}        {usermark}
+  \setinterfaceconstant {foldmark}        {foldmark}
+  \setinterfaceconstant {extension}       {extension}
+  \setinterfaceconstant {interface}       {interface}
+  \setinterfaceconstant {backgroundimage} {backgroundimage}
+  \setinterfaceconstant {whitespace}      {whitespace}
+  \setinterfaceconstant {nexthead}        {nexthead}
+  \setinterfaceconstant {nextfoot}        {nextfoot}
+\stopinterface
+
+\startinterface all
+  \setinterfacevariable {secondpage}  {secondpage}
+  \setinterfacevariable {foot}        {foot}
+  \setinterfacevariable {topmark}     {topmark}
+  \setinterfacevariable {botmark}     {botmark}
+  \setinterfacevariable {cutmark}     {cutmark}
+  \setinterfacevariable {endmark}     {endmark}
+  \setinterfacevariable {option}      {option}
+  \setinterfacevariable {foldmark}    {foldmark}
+  \setinterfacevariable {usermark}    {usermark}
+  \setinterfacevariable {layer}       {layer}
+  \setinterfacevariable {nexthead}    {nexthead}
+  \setinterfacevariable {nextfoot}    {nextfoot}
+  \setinterfacevariable {layout}      {layout}
+  \setinterfacevariable {place}       {place}
+  \setinterfacevariable {initialize}  {initialize}
+  \setinterfacevariable {finish}      {finish}
+  \setinterfacevariable {sequence}    {sequence}
+  \setinterfacevariable {style}       {style}
+  \setinterfacevariable {extension}   {extension}
+  \setinterfacevariable {interface}   {interface}
+\stopinterface
+
+\startinterface all
+  \setinterfaceelement {set}       {set}
+  \setinterfaceelement {value}     {value}
+  \setinterfaceelement {complex}   {complex}
+  \setinterfaceelement {simple}    {simple}
+  \setinterfaceelement {use}       {use}
+  \setinterfaceelement {define}    {define}
+  \setinterfaceelement {flush}     {flush}
+\stopinterface
+
+%D Value list
+
+\ifx\appendtovaluelist\undefined
+
+\def\appendtovaluelist#1%
+  {\ifcsname#1\endcsname
+     \@EA\ifx\csname#1\endcsname\empty
+       \@EA\noappendtovaluelist\csname#1\@EAEAEA\endcsname
+     \else
+       \@EA\doappendtovaluelist\csname#1\@EAEAEA\endcsname
+     \fi
+   \else
+     \@EA\noappendtovaluelist\csname#1\@EA\endcsname
+   \fi}
+
+\def\doappendtovaluelist#1#2{\@EA\def\@EA#1\@EA{#1,#2}}
+\def\noappendtovaluelist#1#2{\def#1{#2}}
+
+\fi
+
+%D Setup command for the styles
+
+\def\definecorrespondencesetup[#1][#2][#3]%
+  {\setvalue{\e!setup#1\e!endsetup}{\doquintupleempty\dosetupcorrespondencestyle[#2][#3]}}
+
+\def\dosetupcorrespondencestyle[#1][#2][#3][#4][#5]%
+  {\iffifthargument
+     \dodosetupcorrespondencelayer[#1][#2][#3][#4][#5]%
+   \else\iffourthargument
+     \dodosetupcorrespondencestyle[#1][#2][#3][#4]%
+   \else
+     \dosetupcorrespondenceoption[][#2][\v!option][#3]%
+   \fi\fi}
+
+\def\dodosetupcorrespondencestyle[#1][#2][#3][#4]%
+  {\def\dododosetupcorrespondencestyle##1%
+     {\csname dosetupcorrespondence\ifcsname#1:#2:##1\endcsname
+        \csname#1:#2:##1\endcsname
+      \else
+        \v!option
+      \fi\endcsname[#1][#2][##1][#4]}%
+   \processcommalist[#3]\dododosetupcorrespondencestyle}
+
+\def\dosetupcorrespondenceoption[#1][#2][#3][#4]%
+  {\getparameters[#2#3][#4]}
+
+\def\dosetupcorrespondencelayout[#1][#2][#3][#4]%
+  {\definelayout[#1#3][#4]}
+
+\def\dosetupcorrespondencelayer[#1][#2][#3][#4]%
+  {\dodosetupcorrespondencelayer[#1][#2][#3][\v!layer,\v!frame,\v!option][#4]}
+
+\def\dosetupcorrespondencesection[#1][#2][#3][#4]%
+  {\getparameters[#2#3][#4]}
+
+\def\dosetupcorrespondencedescription[#1][#2][#3][#4]%
+  {\setupdescriptions[#2#3][#4]}
+
+\def\dodosetupcorrespondencelayer[#1][#2][#3][#4][#5]%
+  {\def\dododosetupcorrespondencelayer##1%
+     {\ifcsname dosetupcorrespondencelayer##1\endcsname
+        \@EA\@EA\csname dosetupcorrespondencelayer##1\endcsname
+      \else
+        \@EA\@EA\csname dosetupcorrespondencelayer\v!option\endcsname
+      \fi[#1][#2][#3][#5]}%
+   \processcommalist[#4]\dododosetupcorrespondencelayer}
+
+\def\dosetupcorrespondencelayerlayer[#1][#2][#3][#4]%
+  {\setuplayer[#1:#3][#4]%
+   \getparameters[#2#3\v!layer][#4]}
+
+\def\dosetupcorrespondencelayerframe[#1][#2][#3][#4]%
+  {\getparameters[#2#3\v!frame][#4]}
+
+\def\dosetupcorrespondencelayeroption[#1][#2][#3][#4]%
+  {\getparameters[#2#3][#4]}
+
+%D Setup command for the values
+
+\def\definecorrespondencevalue
+  {\dodoubleargument\dodefinecorrespondencevalue}
+
+\def\dodefinecorrespondencevalue[#1][#2]%
+  {\setvalue{\e!setup#1\e!endsetup}{\dotripleempty\docorrespondencesetup[#2]}%
+   \@EA\definecomplexorsimple\csname\e!set#1\e!value\endcsname
+   \setvalue{\e!complex\e!set#1\e!value}[##1]##2{\setvalue{#2##1}{##2}}%
+   \setvalue{\e!simple \e!set#1\e!value}##1##2{\setvalue{#2##1}{##2}}}
+
+\def\docorrespondencesetup[#1][#2][#3]%
+  {\doifelsenothing{#3}
+     {\getparameters[#1][#2]}
+     {\def\dodocorrespondencesetup##1%
+        {\getparameters[#1##1][#3]}%
+      \processcommalist[#2]\dodocorrespondencesetup}}
+
+%D Tests
+
+\long\def\doifcorrespondencevalue#1#2%
+  {\ifcsname#1#2\endcsname
+     \edef\!!stringa{\csname#1#2\endcsname}%
+     \ifx\!!stringa\empty
+       \@EAEAEA\gobbleoneargument
+     \else
+       \@EAEAEA\firstofoneargument
+     \fi
+   \else
+     \@EA\gobbleoneargument
+   \fi}
+
+\long\def\doifelsecorrespondencevalue#1#2%
+  {\ifcsname#1#2\endcsname
+     \edef\!!stringa{\csname#1#2\endcsname}%
+     \ifx\!!stringa\empty
+       \@EAEAEA\secondoftwoarguments
+     \else
+       \@EAEAEA\firstoftwoarguments
+     \fi
+   \else
+     \@EA\secondoftwoarguments
+   \fi}
+
+\long\def\doifcorrespondencestylevalue#1#2#3%
+  {\ifcsname#1#2#3\endcsname
+     \edef\!!stringa{\csname#1#2#3\endcsname}%
+     \ifx\!!stringa\empty
+       \@EAEAEA\gobbleoneargument
+     \else
+       \@EAEAEA\firstofoneargument
+     \fi
+   \else
+     \@EA\firstofoneargument
+   \fi}
+
+\long\def\doifelsecorrespondencestylevalue#1#2#3%
+  {\ifcsname#1#2#3\endcsname
+     \edef\!!stringa{\csname#1#2#3\endcsname}%
+     \ifx\!!stringa\empty
+       \@EAEAEA\secondoftwoarguments
+     \else
+       \@EAEAEA\firstoftwoarguments
+     \fi
+   \else
+     \@EA\secondoftwoarguments
+   \fi}
+
+\def\correspondencestylevalue#1#2#3%
+  {\csname#1#2#3\endcsname}
+
+%D External files
+
+\def\definecorrespondencefile[#1][#2]%
+  {\setvalue{\e!use#1}[##1]{\usecorrespondencefile[#2][##1]}}
+
+\def\usecorrespondencefile[#1][#2]%
+  {\def\dousecorrespondencefile##1%
+     {\readfile{##1.#1}\donothing\donothing}%
+   \processcommacommand[#2]\dousecorrespondencefile}
+
+%D Layers
+
+\def\letter!list!marking
+  {\v!topmark,\v!botmark,\v!cutmark,\v!endmark,\v!usermark}
+
+\def\definecorrespondencelayer[#1][#2]%
+  {\setvalue{\s!do\e!define#1\v!layer}{\dodefinecorrespondencelayer[#1][#2]}%
+   \setvalue{\s!do\e!set   #1\v!layer}{\dosetcorrespondencelayer   [#1][#2]}}
+
+\def\dodefinecorrespondencelayer[#1][#2][#3]%
+  {\ExpandSecondAfter\doifelse{#3}\v!foldmark
+     {\def\dodododefinecorrespondencelayer##1{\dododefinecorrespondencelayer[#1][#2][##1]}%
+      \processcommacommand[\csname#1!list!marking\endcsname]\dodododefinecorrespondencelayer}
+     {\dododefinecorrespondencelayer[#1][#2][#3]}}
+
+\def\dododefinecorrespondencelayer[#1][#2][#3]%
+  {\setvalue{#2\v!option#3}{\v!yes}%
+   \doifundefined{#1:#2:#3}
+     {\setvalue{#1:#2:#3}{\v!layer}%
+      \appendtovaluelist{#1!list!layers}{#3}}%
+   \presetlocalframed[#2#3\v!frame]%
+   \definelayer
+     [#1:#3]
+     [\c!width=\paperwidth,
+      \c!height=\paperheight]%
+   \dodosetupcorrespondencelayer
+     [#1][#2][#3][\v!option]%
+     [\c!symbol=,
+      \c!alternative=\v!a,
+      \c!separator=\crlf,
+      \c!offset=\zeropoint,
+      \c!leftmargin=\zeropoint,
+      \c!rightmargin=\zeropoint]%
+   \dodosetupcorrespondencelayer
+     [#1][#2][#3][\v!frame]%
+     [\c!frame=\v!off,
+      \c!align=\v!right,
+      \c!offset=\zeropoint,
+      \c!strut=\v!yes]%
+   \dodosetupcorrespondencelayer
+     [#1][#2][#3][\v!layer]%
+     [\c!state=\v!start,
+      \c!offset=\zeropoint,
+      \c!preset=\v!left\v!top]}
+
+\def\dosetcorrespondencelayer[#1][#2][#3]%
+  {\ExpandSecondAfter\doifinsetelse{#1}{\csname#1!list!marking\endcsname}
+     {\doifelsecorrespondencestylevalue{#2}{#3}\c!symbol
+        {\dodosetcorrespondencelayer[#1][#2][#3][\directsetup{#1:#3}]}
+        {\dodosetcorrespondencelayer[#1][#2][#3][\correspondencestylevalue{#2}{#3}\c!symbol]}}
+     {\dodosetcorrespondencelayer[#1][#2][#3][\directsetup{#1:#3}]}}
+
+\def\dodosetcorrespondencelayer[#1][#2][#3][#4]%
+  {\setlayer[#1:#3]
+     {\localframed[#2#3\v!frame]
+        {\doadaptleftskip {\correspondencestylevalue{#2}{#3}\c!leftmargin}%
+         \doadaptrightskip{\correspondencestylevalue{#2}{#3}\c!rightmargin}%
+         \doattributes{#2#3}\c!style\c!color{#4}}}}
+
+%D Sections
+
+\def\definecorrespondencesection[#1][#2]%
+  {\setvalue{\s!do\e!define#1\v!section}{\dodefinecorrespondencesection[#1][#2]}%
+   \setvalue{\s!do\e!set   #1\v!section}{\dosetcorrespondencesection   [#1][#2]}}
+
+\def\dodefinecorrespondencesection[#1][#2][#3]%
+  {\setvalue{#2\v!option#3}{\v!yes}%
+   \doifundefined{#1:#2:#3}
+     {\setvalue{#1:#2:#3}{\v!section}%
+      \appendtovaluelist{#1!list!sections}{#3}}%
+   \getparameters
+     [#2#3]%
+     [\c!before=,
+      \c!after=,
+      \c!align=,
+      \c!leftmargin=\zeropoint,
+      \c!rightmargin=\zeropoint,
+      \c!alternative=\v!a,
+      \c!separator=\crlf,
+      \c!style=,
+      \c!color=]}
+
+\def\dosetcorrespondencesection[#1][#2][#3]%
+  {\begingroup
+   \doifelsecorrespondencestylevalue{#2}{#3}\c!before
+     {\correspondencestylevalue{#2}{#3}\c!before}
+      \endgraf
+   \doadaptleftskip {\correspondencestylevalue{#2}{#3}\c!leftmargin}%
+   \doadaptrightskip{\correspondencestylevalue{#2}{#3}\c!rightmargin}%
+   \doifcorrespondencestylevalue{#2}{#3}\c!align
+     {\setupalign[\correspondencestylevalue{#2}{#3}\c!align]}%
+   \dostartattributes{#2#3}\c!style\c!color\empty
+     \directsetup{#1:#3}%
+   \dostopattributes
+   \doifcorrespondencestylevalue{#2}{#3}\c!after
+     {\endgraf\correspondencestylevalue{#2}{#3}\c!after}
+      \endgraf
+   \endgroup}
+
+%D Descriptions
+
+\def\definecorrespondencedescription[#1][#2]%
+  {\setvalue{\s!do\e!define#1\v!description}{\dodefinecorrespondencedescription[#1][#2]}%
+   \setvalue{\s!do\e!set   #1\v!description}{\dosetcorrespondencedescription   [#1][#2]}%
+   \setvalue{\s!do\e!flush #1\v!description}{\doflushcorrespondencedescription [#1][#2]}}
+
+\def\dodefinecorrespondencedescription[#1][#2][#3]%
+  {\setvalue{#2\v!option#3}{\v!yes}%
+   \doifundefined{#1:#2:#3}
+     {\setvalue{#1:#2:#3}{\v!description}%
+      \appendtovaluelist{#1!list!descriptions}{#3}}%
+   \definedescription
+     [#1#3]
+     [\c!location=\v!top,
+      \c!inbetween=\nowhitespace]}
+
+\def\dosetcorrespondencedescription[#1][#2][#3]%
+  {\doiftext{\directsetup{#1:#3}}
+     {\csname\e!start#1#3\endcsname{\labeltext{#1:#3}}
+      \directsetup{#1:#3}%
+      \csname\e!stop #1#3\endcsname}}
+
+\def\doflushcorrespondencedescription[#1][#2]%
+  {\def\dodoflushcorrespondencedescription##1%
+     {\doif{\correspondencestylevalue{#2}\v!option{##1}}\v!yes{\dosetcorrespondencedescription[#1][#2][##1]}}%
+   \processcommacommand[\csname#1!list!descriptions\endcsname]\dodoflushcorrespondencedescription}
+
+\protect \endinput

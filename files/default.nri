@@ -1,0 +1,29 @@
+%D \module
+%D   [       file=default,
+%D        version=2008.10.29,
+%D          title=\CONTEXT\ Resume Interface,
+%D       subtitle=Default Interface,
+%D         author=Wolfgang Schuster,
+%D           date=\currentdate,
+%D      copyright=Wolfgang Schuster,
+%D          email=schuster.wolfgang@googlemail.com,
+%D        license=Public Domain]
+
+\unprotect
+
+\def\startresume
+  {\bgroup\dosingleempty\dostartresume}
+
+\def\dostartresume[#1]%
+  {\iffirstargument
+     \getparameters[\????rd][#1]%
+   \fi
+   \def\stopresume{\directsetup{\v!resume:\v!place}}%
+   \dostartbuffer[resumecontent][startresume][stopresume]}
+
+
+\def\startresumecontent
+  {\dostartbuffer[resumecontent][startresumecontent][stopresumecontent]}
+
+
+\protect \endinput

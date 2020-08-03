@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=addrentry,
-%D        version=2008.09.24,
+%D        version=2008.11.29,
 %D          title=\CONTEXT\ Letter Extension,
 %D       subtitle=KOMA-Script addrentry support,
 %D         author=Wolfgang Schuster,
@@ -24,12 +24,6 @@
 
 \def\address!file!extension{adr}
 
-\def\useaddressfile
-  {\dosingleargument\douseaddressfile}
-
-\def\douseaddressfile[#1]%
-  {\def\dododouseaddressfile##1%
-     {\readfile{##1.\address!file!extension}\donothing\donothing}%
-   \processcommalist[#1]\dododouseaddressfile}
+\definecorrespondencefile[\v!address\v!file][\address!file!extension]
 
 \protect \endinput

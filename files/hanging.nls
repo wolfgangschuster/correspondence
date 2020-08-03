@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=hanging,
-%D        version=2008.05.28,
+%D        version=2008.11.29,
 %D          title=\CONTEXT\ Letter Style,
 %D       subtitle=Hanging indented style,
 %D         author=Wolfgang Schuster,
@@ -44,9 +44,9 @@
   [\v!secondpage]
   [\c!header=1in]
 
-\setuplabeltext[en][page=Page~]
+\setuplabeltext[\s!en][\c!page=Page~]
 
-\startsetups[letter:header:hanging]
+\startsetups[\v!letter:\v!header:\v!hanging]
 
   \framed
     [\c!frame=\v!off,
@@ -54,13 +54,13 @@
     {\lettervalue\c!toname    \\
      \lettervalue\c!date      \\
      \lettervalue\c!reference \\
-     \labeltext{page}\pagenumber}
+     \labeltext\c!page\pagenumber}
 
 \stopsetups
 
 \setupletterstyle
   [\v!header]
-  [\c!lefttext=\setups{letter:header:hanging}]
+  [\c!lefttext=\setups{\v!letter:\v!header:\v!hanging}]
 
 \setupletterstyle
   [\v!option]

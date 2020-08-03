@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=corres,
-%D        version=2008.10.27,
+%D        version=2008.11.29,
 %D          title=\CONTEXT\ Letter Extension,
 %D       subtitle=XML Handling,
 %D         author=Wolfgang Schuster,
@@ -11,6 +11,8 @@
 
 \unprotect
 
+\usemodule[corres]
+
 \startinterface all
   \setinterfaceconstant {prefix}       {prefix}
   \setinterfaceconstant {suffix}       {suffix}
@@ -19,7 +21,9 @@
   \setinterfaceconstant {informalname} {informalname}
 \stopinterface
 
-\usemodule[corres]
+\startinterface all
+  \setinterfacevariable {handle} {handle}
+\stopinterface
 
 \setupletter
   [\c!prefix=\XMLflush{prefix},
@@ -31,14 +35,14 @@
 \setupletter
   [\c!toaddress=\XMLflush{address}]
 
-\startsetups[letter:opening]
+\startsetups[\v!letter:\v!opening]
 \lettervalue\c!prefix
 \doiflettervalue\c!formalname\space
 \lettervalue\c!formalname
 \stopsetups
 
-\startsetups[contact:handle]
-\setups[letter:place]
+\startsetups[\v!contact:\v!handle]
+\setups[\v!letter:\v!place]
 \stopsetups
 
 \protect \endinput

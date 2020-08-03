@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2008.10.27,
+%D        version=2008.11.29,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -9,7 +9,7 @@
 %D          email=schuster.wolfgang@googlemail.com,
 %D        license=Public Domain]
 
-%M \loadsetups[letter.xml]
+%M \loadsetups[t-letter.xml]
 
 %D \subject{Constants and Variables}
 
@@ -96,13 +96,13 @@
 
 \setvalue{\v!letter:\v!reference:\v!a}%
   {\setbox\scratchbox\hbox\!!to\hsize
-     {\getcommacommandsize[\@@@@ldlist]% \@@@@ldreference?
+     {\getcommacommandsize[\@@@@lsreferencelist]% \@@@@ldreference?
       \ifnum\commalistsize<\plustwo\hfill\fi
-      \processcommacommand[\@@@@ldlist]\formatreferencelista\unskip}%
+      \processcommacommand[\@@@@lsreferencelist]\formatreferencelista\unskip}%
    \global\letter!height!reference\dimexpr\ht\scratchbox+\dp\scratchbox\relax
    \box\scratchbox}
 
-\startsetups[letter:reference:\v!a]
+\startsetups[\v!letter:\v!reference:\v!a]
 
 \setupletterstyle
   [\v!reference]
@@ -133,9 +133,9 @@
 
 \setvalue{\v!letter:\v!reference:\v!b}%
   {\vtop % why not \vbox?
-     {\processcommacommand[\@@@@ldlist]\formatreferencelistb}}
+     {\processcommacommand[\@@@@lsreferencelist]\formatreferencelistb}}
 
-\startsetups[letter:reference:\v!b]
+\startsetups[\v!letter:\v!reference:\v!b]
 
 \setupletterstyle
   [\v!reference]
@@ -169,11 +169,11 @@
 
 \setvalue{\v!letter:\v!reference:\v!c}%
   {\hbox\!!to\hsize
-     {\processcommacommand[\@@@@ldlist]\formatreferencelistc}}
+     {\processcommacommand[\@@@@lsreferencelist]\formatreferencelistc}}
 
-\startsetups[letter:reference:\v!c]
+\startsetups[\v!letter:\v!reference:\v!c]
 
-\setups[letter:reference:\v!a]
+\setups[\v!letter:\v!reference:\v!a]
 
 \stopsetups
 
@@ -194,13 +194,13 @@
 \setvalue{\v!letter:\v!reference:\v!d}%
   {\vtop % why not \vbox?
      {\scratchtoks\emptytoks
-      \processcommacommand[\@@@@ldlist]\formatreferencelistd
+      \processcommacommand[\@@@@lsreferencelist]\formatreferencelistd
       \setuptabulate[\c!before=,\c!after=]%
       \starttabulate[|l|l|]
       \the\scratchtoks
       \stoptabulate}}
 
-\startsetups[letter:reference:\v!d]
+\startsetups[\v!letter:\v!reference:\v!d]
 
 \setupletterstyle
   [\v!reference]
@@ -238,11 +238,11 @@
 
 \setvalue{\v!letter:\v!reference:\v!e}%
   {\hbox\!!to\hsize
-     {\processcommacommand[\@@@@ldlist]\formatreferenceliste\hss}}
+     {\processcommacommand[\@@@@lsreferencelist]\formatreferenceliste\hss}}
 
-\startsetups[letter:reference:\v!e]
+\startsetups[\v!letter:\v!reference:\v!e]
 
-\setups[letter:reference:\v!a]
+\setups[\v!letter:\v!reference:\v!a]
 
 \stopsetups
 
@@ -254,76 +254,11 @@
 
 \resetvalue{\v!letter:\v!reference:\v!none}
 
-\startsetups[letter:reference:\v!none]
+\startsetups[\v!letter:\v!reference:\v!none]
 
   % Use the topspace value from the style
 
 \stopsetups
-
-%D \subject{Setup commands}
-%D 
-%D \macros
-%D   {setupletter,setlettervalue}
-%D 
-%D The values for the letter field is set eitheir either with \tex{setupletter}
-%D or with \tex{setlettervalue}, the first commands allows you to input the data
-%D in a key-val list while the second is only able to accept a single value.
-%D 
-%D The first definition for \tex{setupletter} was defined in \filename{t-letter.tex}
-%D and used till \date[d=20,m=4,y=2008] but I decided to replace it by a simpler
-%D method to avoid a few lines of code in my letter and the letter versions from
-%D \date[d=21,m=4,y=2008] will use the new user interface. The old definition from
-%D \filename{t-letter.tex} is now oveloaded in will eventually disappear.
-%D 
-%D The second command to set \tex{setlettervalue} was developed as a alternative
-%D method to set values for the letter, I implemnted the command at the same time
-%D as I changed the user interface.
-%D 
-%D Untill the old definition for \tex{setupletter} remains in \filename{t-letter.tex}
-%D I have to redefine also \tex{lettervalue}, \tex{doiflettervalue} and
-%D \tex{doifelselettervalue} because the old and new definitions differe in the
-%D number of arguments but the new definition will move to the core file as soon
-%D as I replace \tex{setupletter} in the core.
-
-%D \starttyping
-%D \def\setupletter
-%D   {\dodoubleempty\dosetupletter}
-%D 
-%D \def\dosetupletter[#1][#2]%
-%D   {\ifsecondargument
-%D      \dodosetupletter[#1][#2]%
-%D    \else
-%D      \dodosetupletter[#1][]%
-%D    \fi}
-%D 
-%D \def\dodosetupletter[#1][#2]%
-%D   {\doifelsenothing{#2}
-%D      {\getparameters[\????ld][#1]}
-%D      {\def\dododosetupletter##1%
-%D         {\getparameters[\????ld##1][#2]}%
-%D       \processcommalist[#1]\dododosetupletter}}
-%D 
-%D \def\lettervalue#1%
-%D   {\csname\????ld#1\endcsname}
-%D 
-%D \def\doiflettervalue#1%
-%D   {\doiftextelse{\lettervalue{#1}}
-%D      \firstofoneargument
-%D      \gobbleoneargument}
-%D 
-%D \def\doifelselettervalue#1%
-%D   {\doiftextelse{\lettervalue{#1}}
-%D      \firstoftwoarguments
-%D      \secondoftwoarguments}
-%D 
-%D \definecomplexorsimple\setlettervalue
-%D 
-%D \def\complexsetlettervalue[#1]#2%
-%D   {\setvalue{\????ld#1}{#2}}
-%D 
-%D \def\simplesetlettervalue#1#2%
-%D   {\setvalue{\????ld#1}{#2}}
-%D \stoptyping
 
 %D \subject{Letter environment}
 %D 
@@ -343,19 +278,19 @@
 
 \def\dostartletter[#1][#2]%
   {\ifsecondargument
-     \setupletter[#1]%
+     \getparameters[\????ld][#1]%
      \doifundefinedelse{\????ld\????ld#2}
        {\setvalue{\????ld\c!toaddress}{#2}}
        {\setvalue{\????ld\c!toaddress}{\getvalue{\????ld\????ld#2}}}%
    \else\iffirstargument
      \doifassignmentelse{#1}
-       {\setupletter[#1]}
+       {\getparameters[\????ld][#1]}
        {\doifundefinedelse{\????ld\????ld#1}
           {\setvalue{\????ld\c!toaddress}{#1}}
           {\setvalue{\????ld\c!toaddress}{\getvalue{\????ld\????ld#1}}}}%
    \fi\fi
    \def\stopletter
-     {\setups[letter:place]\egroup
+     {\directsetup{\v!letter:\v!place}\egroup
       \setupsubpagenumber[\c!state=\@@@@lsoptionstate]}%
    \dostartbuffer[lettercontent][startletter][stopletter]}
 
@@ -404,20 +339,20 @@
    \doiflettervalue\c!fromname\\
    \lettervalue\c!fromaddress}
 
-\startsetups[letter:head]
+\startsetups[\v!letter:\v!head]
 \def\\{\letterstylevalue\v!head\c!separator}%
 \executeifdefined{\v!letter:\v!head:\@@@@lsheadalternative}{\getvalue{\v!letter:\v!head:\v!a}}%
 \stopsetups
 
-\startsetups[letter:foot]
+\startsetups[\v!letter:\v!foot]
 \executeifdefined{\v!letter:\v!foot:\@@@@lsfootalternative}\donothing
 \stopsetups
 
-\startsetups[letter:nexthead]
+\startsetups[\v!letter:\v!nexthead]
 \executeifdefined{\v!letter:\v!nexthead:\@@@@lsnextheadalternative}\donothing
 \stopsetups
 
-\startsetups[letter:nextfoot]
+\startsetups[\v!letter:\v!nextfoot]
 \executeifdefined{\v!letter:\v!nextfoot:\@@@@lsnextfootalternative}\donothing
 \stopsetups
 
@@ -439,11 +374,11 @@
 
 \copycsname\v!letter:\v!header:\v!modified\endcsname\csname\v!letter:\v!header:\v!hanging\endcsname
 
-\startsetups[letter:header]
+\startsetups[\v!letter:\v!header]
 \executeifdefined{\v!letter:\v!header:\@@@@lsheaderalternative}\donothing
 \stopsetups
 
-\startsetups[letter:footer]
+\startsetups[\v!letter:\v!footer]
 \executeifdefined{\v!letter:\v!footer:\@@@@lsfooteralternative}\donothing
 \stopsetups
 
@@ -465,40 +400,40 @@
 \presetlocalframed[\????ls\v!dispatch]
 \presetlocalframed[\????ls\v!addressee]
 
-\startsetups[letter:place:dispatch]
+\startsetups[\v!letter:\v!place:\v!dispatch]
 
   \localframed
     [\????ls\v!dispatch]
     {\doadaptleftskip {\letterstylevalue\v!dispatch\c!leftmargin}%
      \doadaptrightskip{\letterstylevalue\v!dispatch\c!rightmargin}%
-     \doattributes{\????ls\v!dispatch}\c!style\c!color{\setups[letter:address:dispatch]}}
+     \doattributes{\????ls\v!dispatch}\c!style\c!color{\directsetup{\v!letter:\v!address:\v!dispatch}}}
 
 \stopsetups
 
-\startsetups[letter:place:addressee]
+\startsetups[\v!letter:\v!place:\v!addressee]
 
   \localframed
     [\????ls\v!addressee]
     {\doadaptleftskip {\letterstylevalue\v!addressee\c!leftmargin}%
      \doadaptrightskip{\letterstylevalue\v!addressee\c!rightmargin}%
-     \doattributes{\????ls\v!addressee}\c!style\c!color{\setups[letter:address:content]}}
+     \doattributes{\????ls\v!addressee}\c!style\c!color{\directsetup{\v!letter:\v!address:\v!content}}}
 
 \stopsetups
 
 \setvalue{\v!letter:\v!address:\v!a}%
-  {\doif\@@@@lsoptiondispatch \v!yes{\setups[letter:place:dispatch]}%
-   \doif\@@@@lsoptionaddressee\v!yes{\setups[letter:place:addressee]}}
+  {\doif\@@@@lsoptiondispatch \v!yes{\directsetup{\v!letter:\v!place:\v!dispatch }}%
+   \doif\@@@@lsoptionaddressee\v!yes{\directsetup{\v!letter:\v!place:\v!addressee}}}
 
-\startsetups[letter:address]
+\startsetups[\v!letter:\v!address]
 \offinterlineskip\vskip-\lineheight
 \executeifdefined{\v!letter:\v!address:\@@@@lsaddressalternative}{\getvalue{\v!letter:\v!address:\v!a}}%
 \stopsetups
 
-\startsetups[letter:address:dispatch]
+\startsetups[\v!letter:\v!address:\v!dispatch]
 \lettervalue\c!dispatch
 \stopsetups
 
-\startsetups[letter:address:content]
+\startsetups[\v!letter:\v!address:\v!content]
 \def\\{\letterstylevalue\v!address\c!separator}%
 \lettervalue\c!toname
 \doiflettervalue\c!toname\\
@@ -511,7 +446,7 @@
 %D The reference line is choosen with the alternative key or if you set
 %D a not defined alternative the definition a is choosen.
 
-\startsetups[letter:reference]
+\startsetups[\v!letter:\v!reference]
 \executeifdefined{\v!letter:\v!reference:\@@@@lsreferencealternative}{\getvalue{\v!letter:\v!reference:\v!a}}
 \stopsetups
 
@@ -522,18 +457,18 @@
    \doiflettervalue\c!place{\lettervalue{\c!place\c!separator}}%
    \lettervalue\c!date}
 
-\startsetups[letter:location]
+\startsetups[\v!letter:\v!location]
 \executeifdefined{\v!letter:\v!location:\@@@@lslocationalternative}{\getvalue{\v!letter:\v!location:\v!a}}
 \stopsetups
 
-\startsetups[letter:title]
+\startsetups[\v!letter:\v!title]
 \doifelselettervalue\c!title
   {\lettervalue\c!title}
   {\doiflettervalue\c!attention
      {\labeltext{\v!letter:\c!attention}\lettervalue\c!attention}}
 \stopsetups
 
-\startsetups[letter:subject]
+\startsetups[\v!letter:\v!subject]
 \def\\{\letterstylevalue\v!subject\c!separator}%
 \labeltext{\v!letter:\c!subject}\lettervalue\c!subject
 \stopsetups
@@ -549,11 +484,11 @@
      {\setupindenting[\@@@@lsoptionindenting]}%
    \getvalue{\v!letter:\v!opening:\v!a}}
 
-\startsetups[letter:opening]
+\startsetups[\v!letter:\v!opening]
 \executeifdefined{\v!letter:\v!opening:\@@@@lsopeningalternative}{\getvalue{\v!letter:\v!opening:\v!a}}
 \stopsetups
 
-\startsetups[letter:content]
+\startsetups[\v!letter:\v!content]
 \lettervalue\c!content
 \stopsetups
 
@@ -582,19 +517,19 @@
   {\doiflettervalue\c!signature{\letterstylevalue\v!closing\c!inbetween}%
    \lettervalue\c!signature}
 
-\startsetups[letter:closing]
+\startsetups[\v!letter:\v!closing]
 \def\\{\letterstylevalue\v!closing\c!separator}%
 \executeifdefined{\v!letter:\v!closing:\@@@@lsclosingalternative}{\getvalue{\v!letter:\v!closing:\v!a}}%
 \stopsetups
 
-\startsetups[letter:appendices]
+\startsetups[\v!letter:\v!appendices]
 \let\\\crlf
 \doflushletterdescription
 \stopsetups
 
 \dodefineletterdescription[\v!enclosure]
 
-\startsetups[letter:enclosure]
+\startsetups[\v!letter:\v!enclosure]
 \processaction
   [\lettervalue\c!enclosure]
   [  \v!empty=>\vrule\!!height\zeropoint\!!depth\zeropoint\!!width\hsize\relax\ifvmode\nowhitespace\fi,
@@ -603,7 +538,7 @@
 
 \dodefineletterdescription[\v!copy]
 
-\startsetups[letter:copy]
+\startsetups[\v!letter:\v!copy]
 \processaction
   [\lettervalue\c!copy]
   [  \v!empty=>\vrule\!!height\zeropoint\!!depth\zeropoint\!!width\hsize\relax\ifvmode\nowhitespace\fi,
@@ -612,7 +547,7 @@
 
 \dodefineletterdescription[\v!postscript]
 
-\startsetups[letter:postscript]
+\startsetups[\v!letter:\v!postscript]
 \processaction
   [\lettervalue\c!postscript]
   [  \v!empty=>\vrule\!!height\zeropoint\!!depth\zeropoint\!!width\hsize\relax\ifvmode\nowhitespace\fi,
@@ -633,7 +568,7 @@
       \doiflettervalue\c!fromaddress\\
       \lettervalue\c!fromaddress}}
 
-\startsetups[letter:backaddress]
+\startsetups[\v!letter:\v!backaddress]
 \def\\{\letterstylevalue\c!backaddress\c!separator}%
 \executeifdefined{\v!letter:\v!backaddress:\@@@@lsbackaddressalternative}{\getvalue{\v!letter:\v!backaddress:\v!no}}%
 \stopsetups
@@ -653,12 +588,12 @@
 %D is the date with a label. f you dont want a label choose alternative c
 %D or change the label.
 
-\startsetups[letter:optimize]
+\startsetups[\v!letter:\v!optimize]
 
   \setbox\scratchbox\hbox % trial typesetting to get the heigth of the reference line
     {\executeifdefined{\v!letter:\v!reference:\@@@@lsreferencealternative}{\getvalue{\v!letter:\v!reference:\v!a}}}
 
-  %\setups[letter:reference:\@@@@lsreferencealternative]
+  %\setups[\v!letter:\v!reference:\@@@@lsreferencealternative]
 
 \stopsetups
 

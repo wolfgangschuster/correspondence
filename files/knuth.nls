@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=knuth,
-%D        version=2008.01.27,
+%D        version=2008.11.29,
 %D          title=\CONTEXT\ Letter Style,
 %D       subtitle=Letterformat Style,
 %D         author=Wolfgang Schuster,
@@ -31,13 +31,13 @@
   [\c!after={\blank[\v!line]}]
 
 \setupletterstyle
-  [\v!content]
-  [\c!before=\everypar{\setupwhitespace[\v!line]}]
+  [\v!option]
+  [\c!whitespace=\v!line]
 
 \setupletterstyle
   [\v!header]
   [\c!lefttext=,
    \c!middletext=\rlap{\currentdate},
-   \c!righttext=Page\space\pagenumber]
+   \c!righttext=Page~\pagenumber]
 
 \protect \endinput

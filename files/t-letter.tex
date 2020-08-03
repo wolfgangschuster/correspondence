@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-letter,
-%D        version=2008.10.27,
+%D        version=2008.11.29,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Framework for Letters,
 %D         author=Wolfgang Schuster,
@@ -18,53 +18,29 @@
 
 \unprotect
 
+\usemodule[correspondence]
+
 %D I use a few extra constants and variables in my module.
 
 \startinterface all
-  \setinterfaceconstant {graphic}         {graphic}
-  \setinterfaceconstant {head}            {head}
-  \setinterfaceconstant {foot}            {foot}
   \setinterfaceconstant {backaddress}     {backaddress}
-  \setinterfaceconstant {topmark}         {topmark}
-  \setinterfaceconstant {botmark}         {botmark}
-  \setinterfaceconstant {cutmark}         {cutmark}
-  \setinterfaceconstant {endmark}         {endmark}
-  \setinterfaceconstant {usermark}        {usermark}
-  \setinterfaceconstant {foldmark}        {foldmark}
-  \setinterfaceconstant {extension}       {extension}
-  \setinterfaceconstant {interface}       {interface}
-  \setinterfaceconstant {backgroundimage} {backgroundimage}
-  \setinterfaceconstant {whitespace}      {whitespace}
   \setinterfaceconstant {optimize}        {optimize}
-  \setinterfaceconstant {nexthead}        {nexthead}
-  \setinterfaceconstant {nextfoot}        {nextfoot}
 \stopinterface
 
 \startinterface all
   \setinterfacevariable {letter}      {letter}
-  \setinterfacevariable {secondpage}  {secondpage}
   \setinterfacevariable {backaddress} {backaddress}
-  \setinterfacevariable {foot}        {foot}
-  \setinterfacevariable {topmark}     {topmark}
-  \setinterfacevariable {botmark}     {botmark}
-  \setinterfacevariable {cutmark}     {cutmark}
-  \setinterfacevariable {endmark}     {endmark}
   \setinterfacevariable {reference}   {reference}
   \setinterfacevariable {location}    {location}
-  \setinterfacevariable {option}      {option}
   \setinterfacevariable {address}     {address}
-  \setinterfacevariable {foldmark}    {foldmark}
-  \setinterfacevariable {usermark}    {usermark}
   \setinterfacevariable {opening}     {opening}
   \setinterfacevariable {closing}     {closing}
-  \setinterfacevariable {layer}       {layer}
   \setinterfacevariable {letternext}  {letternext}
   \setinterfacevariable {lettermain}  {lettermain}
   \setinterfacevariable {special}     {special}
   \setinterfacevariable {notation}    {notation}
   \setinterfacevariable {inside}      {inside}
-  \setinterfacevariable {nexthead}    {nexthead}
-  \setinterfacevariable {nextfoot}    {nextfoot}
+  \setinterfacevariable {optimize}    {optimize}
 \stopinterface
 
 %D Before we start the real module let us introduce two namespaces
@@ -115,60 +91,10 @@
 %D    righttext=\doifoddpageelse\pagenumber\donothing]
 %D \stoptyping
 
-\def\setupletterstyle
-  {\dotripleempty\dosetupletterstyle}
+\setvalue{\v!letter:\????ls:\v!firstpage }{\v!layout}
+\setvalue{\v!letter:\????ls:\v!secondpage}{\v!layout}
 
-\def\dosetupletterstyle[#1][#2][#3]%
-  {\ifthirdargument
-     \dodosetupletterstyle[#1][#2][#3]%
-   \else\ifsecondargument
-     \dodosetupletterstyle[#1][#2][]%
-   \else
-     \dodosetupletterstyle[\v!option][#1][]%
-   \fi\fi}
-
-\def\dodosetupletterstyle[#1][#2][#3]%
-  {\processallactionsinset
-     [#1]
-     [ \v!firstpage=>{\definelayout[\v!letter\v!firstpage][#2]},
-      \v!secondpage=>{\definelayout[\v!letter\v!secondpage][#2]},
-          \v!header=>{\dosetupletterheader[#2][#3]},
-          \v!footer=>{\dosetupletterfooter[#2][#3]},
-          \v!option=>{\dosetupletteroption[\v!option][#2]},
-        \v!foldmark=>{\dododosetupletterstyle[\v!topmark,\v!botmark,\v!cutmark][#2][#3]},
-         \s!unknown=>{\dododosetupletterstyle[#1][#2][#3]}]}
-
-%D Set the values for normal options.
-
-\def\dosetupletteroption[#1][#2]%
-  {\getparameters[\????ls#1][#2]}
-
-%D Setup of the layers and their frames.
-
-\def\dododosetupletterstyle[#1][#2][#3]%
-  {\def\dodododosetupletterstyle##1%
-     {\doifelsenothing{#3}
-        {\ExpandSecondAfter\doifinsetelse{##1}\letter!list!sections
-           {\dododododosetupletterstyle[##1][\v!option][#2]}
-           {\ExpandSecondAfter\doifinsetelse{##1}\letter!list!descriptions
-              {\setupdescriptions[\v!letter##1][#2]}
-              {\ExpandSecondAfter\doifinsetelse{##1}\letter!list!layers
-                 {\dododododosetupletterstyle[##1][\v!layer,\v!frame,\v!option][#2]}
-                 {\dosetupletteroption[##1][#2]}}}}
-        {\dododododosetupletterstyle[##1][#2][#3]}}%
-   \processcommacommand[#1]\dodododosetupletterstyle}
-
-\def\dododododosetupletterstyle[#1][#2][#3]%
-  {\def\dodododododosetupletterstyle##1%
-     {\processaction
-        [##1]
-        [    \v!layer=>{\dododododosetupletterstyle[#1][\v!layer\v!a,\v!layer\v!b][#3]},
-         \v!layer\v!a=>{\setuplayer[\v!letter:#1][#3]},
-         \v!layer\v!b=>{\getparameters[\????ls#1\v!layer][#3]},
-             \v!frame=>{\getparameters[\????ls#1\v!frame][#3]},
-            \v!option=>{\getparameters[\????ls#1][#3]},
-           \s!unknown=>{\getparameters[\????ls#1##1][#3]}]}%
-   \processcommalist[#2]\dodododododosetupletterstyle}
+\definecorrespondencesetup[\v!letter\v!style][\v!letter][\????ls]
 
 %D Setup for the header and footer texts.
 
@@ -189,58 +115,8 @@
 
 %D \macros
 %D   {setupletter}
-%D
-%D The \tex{setupletter} macro could be used from a interface, I define
-%D only the macro and nothing else. You could also redefine the macro later
-%D because it is not used from the raw interface.
-%D 
-%D The first version of the \tex{setupletter} macro used two arguments
-%D for each value:
-%D 
-%D \starttyping
-%D \def\setupletter
-%D   {\dodoubleempty\dosetupletter}
-%D 
-%D \def\dosetupletter[#1][#2]%
-%D   {\ifsecondargument
-%D      \dodosetupletter[#1][#2]%
-%D    \else\iffirstargument
-%D      \dodosetupletter[\v!option][#1]%
-%D    \fi\fi}
-%D 
-%D \def\dodosetupletter[#1][#2]%
-%D   {\def\dododosetupletter##1%
-%D      {\getparameters[\????ld##1][#2]}%
-%D    \processcommalist[#1]\dododosetupletter}
-%D \stoptyping
-%D 
-%D The next version use only one argument for normal values and use
-%D the second argument only for settings on the reference line.
 
-\def\setupletter
-  {\dodoubleempty\dosetupletter}
-
-\def\dosetupletter[#1][#2]%
-  {\ifsecondargument
-     \dodosetupletter[#1][#2]%
-   \else
-     \dodosetupletter[#1][]%
-   \fi}
-
-\def\dodosetupletter[#1][#2]%
-  {\doifelsenothing{#2}
-     {\getparameters[\????ld][#1]}
-     {\def\dododosetupletter##1%
-        {\getparameters[\????ld##1][#2]}%
-      \processcommalist[#1]\dododosetupletter}}
-
-\definecomplexorsimple\setlettervalue
-
-\def\complexsetlettervalue[#1]#2%
-  {\setvalue{\????ld#1}{#2}}
-
-\def\simplesetlettervalue#1#2%
-  {\setvalue{\????ld#1}{#2}}
+\definecorrespondencevalue[\v!letter][\????ld]
 
 %D A few extra macros to test for content of the letter values, don't rely
 %D on them at the moment because they could change or I will remove, rename,
@@ -248,76 +124,11 @@
 %D 
 %D With the change of the \tex{setupletter} command it was also necessary
 %D to change the definition for lettervalue tests.
-%D 
-%D \starttyping
-%D \def\doiflettervalue#1#2%
-%D   {\doiftextelse{\lettervalue{#1}{#2}}
-%D      \firstofoneargument
-%D      \gobbleoneargument}
-%D 
-%D \def\doifelselettervalue#1#2%
-%D   {\doiftextelse{\lettervalue{#1}{#2}}
-%D      \firstoftwoarguments
-%D      \secondoftwoarguments}
-%D \stoptyping
 
-%\def\doiflettervalue#1%
-%  {\doiftextelse{\lettervalue{#1}}
-%     \firstofoneargument
-%     \gobbleoneargument}
-
-%\def\doifelselettervalue#1%
-%  {\doiftextelse{\lettervalue{#1}}
-%     \firstoftwoarguments
-%     \secondoftwoarguments}
-
-\long\def\doiflettervalue#1%
-  {\ifcsname\????ld#1\endcsname
-     \edef\!!stringa{\csname\????ld#1\endcsname}%
-     \ifx\!!stringa\empty
-       \@EAEAEA\gobbleoneargument
-     \else
-       \@EAEAEA\firstofoneargument
-     \fi
-   \else
-     \@EA\gobbleoneargument
-   \fi}
-
-\long\def\doifelselettervalue#1%
-  {\ifcsname\????ld#1\endcsname
-     \edef\!!stringa{\csname\????ld#1\endcsname}%
-     \ifx\!!stringa\empty
-       \@EAEAEA\secondoftwoarguments
-     \else
-       \@EAEAEA\firstoftwoarguments
-     \fi
-   \else
-     \@EA\secondoftwoarguments
-   \fi}
-
-\def\doifletterstylevalue#1#2%
-  {\ifcsname\????ls#1#2\endcsname
-     \edef\!!stringa{\csname\????ls#1#2\endcsname}%
-     \ifx\!!stringa\empty
-       \@EAEAEA\gobbleoneargument
-     \else
-       \@EAEAEA\firstofoneargument
-     \fi
-   \else
-     \@EA\firstofoneargument
-   \fi}
-
-\def\doifelseletterstylevalue#1#2%
-  {\ifcsname\????ls#1#2\endcsname
-     \edef\!!stringa{\csname\????ls#1#2\endcsname}%
-     \ifx\!!stringa\empty
-       \@EAEAEA\secondoftwoarguments
-     \else
-       \@EAEAEA\firstoftwoarguments
-     \fi
-   \else
-     \@EA\secondoftwoarguments
-   \fi}
+\def\doiflettervalue         {\doifcorrespondencevalue         \????ld}
+\def\doifelselettervalue     {\doifelsecorrespondencevalue     \????ld}
+\def\doifletterstylevalue    {\doifcorrespondencestylevalue    \????ls}
+\def\doifelseletterstylevalue{\doifelsecorrespondencestylevalue\????ls}
 
 %D \subject{Interface, Style and Extension files}
 %D 
@@ -390,13 +201,7 @@
 %D
 %D \showsetup{useletterinterface}
 
-\def\useletterinterface
-  {\dosingleargument\douseletterinterface}
-
-\def\douseletterinterface[#1]%
-  {\def\dodouseletterinterface##1%
-     {\readfile{##1.\letter!suffix!interface}\donothing\donothing}%
-   \processcommacommand[#1]\dodouseletterinterface}
+\definecorrespondencefile[\v!letter\v!interface][\letter!suffix!interface]
 
 %D \subsubject{letter extension}
 %D 
@@ -418,13 +223,7 @@
 %D 
 %D \showsetup{useletterextension}
 
-\def\useletterextension
-  {\dosingleargument\douseletterextension}
-
-\def\douseletterextension[#1]%
-  {\def\dodouseletterextension##1%
-     {\readfile{##1.\letter!suffix!extension}\donothing\donothing}%
-   \processcommacommand[#1]\dodouseletterextension}
+\definecorrespondencefile[\v!letter\v!extension][\letter!suffix!extension]
 
 %D \subsubject{letter styles}
 %D 
@@ -443,13 +242,7 @@
 %D 
 %D \showsetup{useletterstyle}
 
-\def\useletterstyle
-  {\dosingleargument\douseletterstyle}
-
-\def\douseletterstyle[#1]%
-  {\def\dodouseletterstyle##1%
-     {\readfile{##1.\letter!suffix!style}\donothing\donothing}%
-   \processcommacommand[#1]\dodouseletterstyle}
+\definecorrespondencefile[\v!letter\v!style][\letter!suffix!style]
 
 %D \macros
 %D   {letterstylevalue,lettervalue}
@@ -477,124 +270,22 @@
 \def\lettervalue#1%
   {\csname\????ld#1\endcsname}
 
-\let\letter!list!layers\empty
+\let\letter!list!layers      \empty
+\let\letter!list!sections    \empty
+\let\letter!list!descriptions\empty
 
 \def\letter!list!marking
   {\v!topmark,\v!botmark,\v!cutmark,\v!endmark,\v!usermark}
 
-\def\dodefineletterlayer[#1]%
-  {\ExpandSecondAfter\doifelse{#1}\v!foldmark
-     {\def\dodododefineletterlayer##1{\dododefineletterlayer[##1]}%
-      \processcommacommand[\letter!list!marking]\dodododefineletterlayer}
-     {\dododefineletterlayer[#1]}}
-
-\def\dododefineletterlayer[#1]%
-  {\setvalue{\????ls\v!option#1}{\v!yes}%
-   \doifnotinset{#1}\letter!list!layers
-     {\appendtocommalist{#1}\letter!list!layers}%
-   \presetlocalframed[\????ls#1\v!frame]%
-   \definelayer
-     [\v!letter:#1]
-     [\c!width=\paperwidth,
-      \c!height=\paperheight]%
-   \setupletterstyle
-     [#1][\v!option]
-     [\c!symbol=,
-      \c!alternative=\v!a,
-      \c!separator=\crlf,
-      \c!offset=\zeropoint,
-      \c!leftmargin=\zeropoint,
-      \c!rightmargin=\zeropoint]%
-   \setupletterstyle
-     [#1][\v!frame]
-     [\c!frame=\v!off,
-      \c!align=\v!right,
-      \c!offset=\zeropoint,
-      \c!strut=\v!yes]%
-   \setupletterstyle
-     [#1][\v!layer]
-     [\c!state=\v!start,
-      \c!offset=\zeropoint,
-      \c!preset=\v!left\v!top]}
-
-\def\dosetletterlayer[#1]%
-  {\doifinsetelse{#1}{\v!topmark,\v!botmark,\v!cutmark,\v!endmark,\v!usermark}
-     {\doifelseletterstylevalue{#1}\c!symbol
-        {\dodosetletterlayer[#1][\setups{letter:#1}]}
-        {\dodosetletterlayer[#1][\letterstylevalue{#1}\c!symbol]}}
-     {\dodosetletterlayer[#1][\setups{letter:#1}]}}
-
-\def\dodosetletterlayer[#1][#2]%
-  {\setlayer[\v!letter:#1]
-     {\localframed[\????ls#1\v!frame]
-        {\doadaptleftskip {\letterstylevalue{#1}\c!leftmargin}%
-         \doadaptrightskip{\letterstylevalue{#1}\c!rightmargin}%
-         \doattributes{\????ls#1}\c!style\c!color{#2}}}}
-
-\let\letter!list!sections\empty
-
-\def\dodefinelettersection[#1]%
-  {\setvalue{\????ls\v!option#1}{\v!yes}%
-   \doifnotinset{#1}\letter!list!sections
-     {\appendtocommalist{#1}\letter!list!sections}%
-   \setupletterstyle
-     [#1]
-     [\v!option]
-     [\c!before=,
-      \c!after=,
-      \c!align=,
-      \c!leftmargin=\zeropoint,
-      \c!rightmargin=\zeropoint,
-      \c!alternative=\v!a,
-      \c!separator=\crlf,
-      \c!style=,
-      \c!color=]}
-
-\def\dosetlettersection[#1]%
-  {\begingroup
-   \edef\@@lettersection{#1}%
-   \doifelseletterstylevalue\@@lettersection\c!before
-     {\letterstylevalue\@@lettersection\c!before}
-      \endgraf
-   \doadaptleftskip {\letterstylevalue\@@lettersection\c!leftmargin}%
-   \doadaptrightskip{\letterstylevalue\@@lettersection\c!rightmargin}%
-   \doifletterstylevalue\@@lettersection\c!align
-     {\setupalign[\letterstylevalue\@@lettersection\c!align]}%
-   \dostartattributes{\????ls#1}\c!style\c!color\empty
-     \setups[letter:#1]%
-   \dostopattributes
-   \doifletterstylevalue\@@lettersection\c!after
-     {\endgraf\letterstylevalue\@@lettersection\c!after}
-      \endgraf
-   \endgroup}
-
-\let\letter!list!descriptions\empty
-
-\def\dodefineletterdescription[#1]%
-  {\setvalue{\????ls\v!option#1}{\v!yes}%
-   \doifnotinset{#1}\letter!list!descriptions
-     {\appendtocommalist{#1}\letter!list!descriptions}%
-   \definedescription
-     [\v!letter#1]
-     [\c!location=\v!top,
-      \c!inbetween=\nowhitespace]}
-
-\def\dosetletterdescription[#1]%
-  {\doiftext{\setups[letter:#1]}
-     {\csname\e!start\v!letter#1\endcsname{\labeltext{\v!letter:#1}}
-      \setups[letter:#1]%
-      \csname\e!stop \v!letter#1\endcsname}}
-
-\def\doflushletterdescription
-  {\def\dodoflushletterdescription##1%
-     {\doif{\letterstylevalue\v!option{##1}}\v!yes{\dosetletterdescription[##1]}}%
-   \processcommacommand[\letter!list!descriptions]\dodoflushletterdescription}
+\definecorrespondencelayer      [\v!letter][\????ls]
+\definecorrespondencesection    [\v!letter][\????ls]
+\definecorrespondencedescription[\v!letter][\????ls]
 
 %D \subject{Placement of the content}
 %D 
 %D Enable the layouts for the first and second page.
 
-\startsetups[letter:layout]
+\startsetups[\v!letter:\v!layout]
 
   \setuplayout[\v!letter\v!firstpage]
 
@@ -607,7 +298,7 @@
 
 \dodefineletterlayer[\v!head]
 
-\startsetups[letter:place:head]
+\startsetups[\v!letter:\v!place:\v!head]
 
   \dosetletterlayer[\v!head]
 
@@ -617,7 +308,7 @@
 
 \dodefineletterlayer[\v!address]
 
-\startsetups[letter:place:address]
+\startsetups[\v!letter:\v!place:\v!address]
 
   \dosetletterlayer[\v!address]
 
@@ -627,7 +318,7 @@
 
 \dodefineletterlayer[\v!backaddress]
 
-\startsetups[letter:place:backaddress]
+\startsetups[\v!letter:\v!place:\v!backaddress]
 
   \dosetletterlayer[\v!backaddress]
 
@@ -637,7 +328,7 @@
 
 \dodefineletterlayer[\v!reference]
 
-\startsetups[letter:place:reference]
+\startsetups[\v!letter:\v!place:\v!reference]
 
   \dosetletterlayer[\v!reference]
 
@@ -647,7 +338,7 @@
 
 \dodefineletterlayer[\v!location]
 
-\startsetups[letter:place:location]
+\startsetups[\v!letter:\v!place:\v!location]
 
   \dosetletterlayer[\v!location]
 
@@ -660,7 +351,7 @@
 
 \dodefineletterlayer[\v!foot]
 
-\startsetups[letter:place:foot]
+\startsetups[\v!letter:\v!place:\v!foot]
 
   \dosetletterlayer[\v!foot]
 
@@ -673,7 +364,7 @@
 
 \dodefineletterlayer[\v!lettermain]
 
-\startsetups[letter:place:lettermain]
+\startsetups[\v!letter:\v!place:\v!lettermain]
 
   \dosetletterlayer[\v!lettermain]
 
@@ -681,7 +372,7 @@
 
 \dodefineletterlayer[\v!letternext]
 
-\startsetups[letter:place:letternext]
+\startsetups[\v!letter:\v!place:\v!letternext]
 
   \dosetletterlayer[\v!letternext]
 
@@ -691,7 +382,7 @@
 
 \dodefineletterlayer[\v!nexthead]
 
-\startsetups[letter:place:nexthead]
+\startsetups[\v!letter:\v!place:\v!nexthead]
 
   \dosetletterlayer[\v!nexthead]
 
@@ -699,7 +390,7 @@
 
 \dodefineletterlayer[\v!nextfoot]
 
-\startsetups[letter:place:nextfoot]
+\startsetups[\v!letter:\v!place:\v!nextfoot]
 
   \dosetletterlayer[\v!nextfoot]
 
@@ -709,7 +400,7 @@
 
 \dodefinelettersection[\v!letter\v!head]
 
-\startsetups[letter:place:\v!letter\v!head]
+\startsetups[\v!letter:\v!place:\v!letter\v!head]
 
   \dosetlettersection[\v!letter\v!head]
 
@@ -719,7 +410,7 @@
 
 \dodefinelettersection[\v!date\v!line]
 
-\startsetups[letter:place:\v!date\v!line]
+\startsetups[\v!letter:\v!place:\v!date\v!line]
 
   \dosetlettersection[\v!date\v!line]
 
@@ -729,7 +420,7 @@
 
 \dodefinelettersection[\v!reference\v!line]
 
-\startsetups[letter:place:\v!reference\v!line]
+\startsetups[\v!letter:\v!place:\v!reference\v!line]
 
   \dosetlettersection[\v!reference\v!line]
 
@@ -739,7 +430,7 @@
 
 \dodefinelettersection[\v!special\v!notation]
 
-\startsetups[letter:place:\v!special\v!notation]
+\startsetups[\v!letter:\v!place:\v!special\v!notation]
 
   \dosetlettersection[\v!special\v!notation]
 
@@ -749,7 +440,7 @@
 
 \dodefinelettersection[\v!inside\v!address]
 
-\startsetups[letter:place:\v!inside\v!address]
+\startsetups[\v!letter:\v!place:\v!inside\v!address]
 
   \dosetlettersection[\v!inside\v!address]
 
@@ -759,7 +450,7 @@
 
 \dodefinelettersection[\v!title]
 
-\startsetups[letter:place:\v!title]
+\startsetups[\v!letter:\v!place:\v!title]
 
   \dosetlettersection[\v!title]
 
@@ -769,7 +460,7 @@
 
 \dodefinelettersection[\v!subject]
 
-\startsetups[letter:place:\v!subject]
+\startsetups[\v!letter:\v!place:\v!subject]
 
   \dosetlettersection[\v!subject]
 
@@ -779,7 +470,7 @@
 
 \dodefinelettersection[\v!opening]
 
-\startsetups[letter:place:\v!opening]
+\startsetups[\v!letter:\v!place:\v!opening]
 
   \dosetlettersection[\v!opening]
 
@@ -789,7 +480,7 @@
 
 \dodefinelettersection[\v!content]
 
-\startsetups[letter:place:\v!content]
+\startsetups[\v!letter:\v!place:\v!content]
 
   \begingroup
 
@@ -805,17 +496,17 @@
 
 \dodefinelettersection[\v!closing]
 
-\startsetups[letter:place:\v!closing]
+\startsetups[\v!letter:\v!place:\v!closing]
 
   \dosetlettersection[\v!closing]
 
 \stopsetups
 
-%D Apendices
+%D Appendices
 
 \dodefinelettersection[\v!appendices]
 
-\startsetups[letter:place:\v!appendices]
+\startsetups[\v!letter:\v!place:\v!appendices]
 
   \dosetlettersection[\v!appendices]
 
@@ -826,11 +517,11 @@
 
 \dodefineletterlayer[\v!foldmark]
 
-\startsetups[letter:place:foldmark]
+\startsetups[\v!letter:\v!place:\v!foldmark]
 
   % Upper foldmark
 
-  \startlocalsetups[letter:place:topmark]
+  \startlocalsetups[\v!letter:\v!place:\v!topmark]
 
     \dosetletterlayer[\v!topmark]
 
@@ -838,7 +529,7 @@
 
   % Lower foldmark
 
-  \startlocalsetups[letter:place:botmark]
+  \startlocalsetups[\v!letter:\v!place:\v!botmark]
 
     \dosetletterlayer[\v!botmark]
 
@@ -846,7 +537,7 @@
 
   % Cutmark
 
-  \startlocalsetups[letter:place:cutmark]
+  \startlocalsetups[\v!letter:\v!place:\v!cutmark]
 	
     \dosetletterlayer[\v!cutmark]
 
@@ -854,7 +545,7 @@
 
   % Endmark, a relict from the typewriter area
 
-  \startlocalsetups[letter:place:endmark]
+  \startlocalsetups[\v!letter:\v!place:\v!endmark]
 
     \dosetletterlayer[\v!endmark]
 
@@ -862,17 +553,17 @@
 
   % Free mark, you could use it to place your own symbols
 
-  \startlocalsetups[letter:place:usermark]
+  \startlocalsetups[\v!letter:\v!place:\v!usermark]
 
     \dosetletterlayer[\v!usermark]
 
   \stoplocalsetups
 
-  \doif\@@@@lsoptiontopmark \v!yes{\setups[letter:place:topmark]}
-  \doif\@@@@lsoptionbotmark \v!yes{\setups[letter:place:botmark]}
-  \doif\@@@@lsoptioncutmark \v!yes{\setups[letter:place:cutmark]}
-  \doif\@@@@lsoptionendmark \v!yes{\setups[letter:place:endmark]}
-  \doif\@@@@lsoptionusermark\v!yes{\setups[letter:place:usermark]}
+  \doif\@@@@lsoptiontopmark \v!yes{\directsetup{\v!letter:\v!place:\v!topmark }}
+  \doif\@@@@lsoptionbotmark \v!yes{\directsetup{\v!letter:\v!place:\v!botmark }}
+  \doif\@@@@lsoptioncutmark \v!yes{\directsetup{\v!letter:\v!place:\v!cutmark }}
+  \doif\@@@@lsoptionendmark \v!yes{\directsetup{\v!letter:\v!place:\v!endmark }}
+  \doif\@@@@lsoptionusermark\v!yes{\directsetup{\v!letter:\v!place:\v!usermark}}
 
 \stopsetups
 
@@ -880,7 +571,7 @@
 
 \defineoverlay
   [\v!letter:\c!backgroundimage]
-  [\doifsomething\@@@@lsoptionbackgroundimage
+  [\doifletterstylevalue\v!option\c!backgroundimage
      {\overlayfigure{\@@@@lsoptionbackgroundimage}}]
 
 \defineoverlay
@@ -892,12 +583,12 @@
    \v!letter:\v!letternext,\v!letter:\v!lettermain,\v!letter:\v!head,%
    \v!letter:\v!foot,\v!letter:\v!backaddress,\v!letter:\v!address,%
    \v!letter:\v!reference,\v!letter:\v!location,\v!letter:\v!nexthead,%
-   \v!letter:\v!nextfoot,\v!letter:\v!topmark,\v!letter:\v!botmark,
+   \v!letter:\v!nextfoot,\v!letter:\v!topmark,\v!letter:\v!botmark,%
    \v!letter:\v!cutmark,\v!letter:\v!endmark,\v!letter:\v!usermark}
 
 %D Settings at the begin of every letter.
 
-\startsetups[letter:initialize]
+\startsetups[\v!letter:\v!initialize]
 
   \@@@@lsoptionbefore
 
@@ -929,15 +620,14 @@
     [\c!background=\letter!list!backgrounds,
      \c!backgroundcolor=\@@@@lsoptionbackgroundcolor]
 
-  \doifletterstylevalue\v!option\c!bodyfont  {\switchtobodyfont[\@@@@lsoptionbodyfont]}
-
-  \doifletterstylevalue\v!option\c!whitespace{\setupwhitespace[\@@@@lsoptionwhitespace]}
+  \doifletterstylevalue\v!option\c!bodyfont  {\switchtobodyfont[\@@@@lsoptionbodyfont  ]}
+  \doifletterstylevalue\v!option\c!whitespace{\setupwhitespace [\@@@@lsoptionwhitespace]}
 
 \stopsetups
 
 %D Settings at the end of every letter.
 
-\startsetups[letter:finish]
+\startsetups[\v!letter:\v!finish]
 
   \page
 
@@ -953,15 +643,15 @@
 
 %D Place the letter.
 
-\startsetups[letter:place]
+\startsetups[\v!letter:\v!place]
 
-  \setups[letter:initialize] % Settings at the begin
-  \setups[letter:optimize]   % Interface dependend
-  \setups[letter:layout]     % Page layout
-  \setups[letter:reset]      % Reset layers
-  \setups[letter:layer]      % Place layers
-  \setups[letter:sequence]   % Place content
-  \setups[letter:finish]     % Settings at the end
+  \directsetup{\v!letter:\v!initialize} % Settings at the begin
+  \directsetup{\v!letter:\v!optimize  } % Interface dependend
+  \directsetup{\v!letter:\v!layout    } % Page layout
+  \directsetup{\v!letter:\v!reset     } % Reset layers
+  \directsetup{\v!letter:\v!layer     } % Place layers
+  \directsetup{\v!letter:\v!sequence  } % Place content
+  \directsetup{\v!letter:\v!finish    } % Settings at the end
 
 \stopsetups
 
@@ -973,7 +663,7 @@
 \def\dodoresetletterlayer#1%
   {\resetlayer[#1]}
 
-\startsetups[letter:reset]
+\startsetups[\v!letter:\v!reset]
 
   \processcommacommand[\letter!list!resetlayers]\dodoresetletterlayer
   
@@ -981,19 +671,19 @@
 
 \stopsetups
 
-\startsetups[letter:layer]
+\startsetups[\v!letter:\v!layer]
 
-  \doif\@@@@lsoptionmarking    \v!yes{\setups[letter:place:foldmark]}
-  \doif\@@@@lsoptionhead       \v!yes{\setups[letter:place:head]}
-  \doif\@@@@lsoptionbackaddress\v!yes{\setups[letter:place:backaddress]}
-  \doif\@@@@lsoptionaddress    \v!yes{\setups[letter:place:address]}
-  \doif\@@@@lsoptionreference  \v!yes{\setups[letter:place:reference]}
-  \doif\@@@@lsoptionlocation   \v!yes{\setups[letter:place:location]}
-  \doif\@@@@lsoptionfoot       \v!yes{\setups[letter:place:foot]}
-  \doif\@@@@lsoptionlettermain \v!yes{\setups[letter:place:lettermain]}
-  \doif\@@@@lsoptionletternext \v!yes{\setups[letter:place:letternext]}
-  \doif\@@@@lsoptionnexthead   \v!yes{\setups[letter:place:nexthead]}
-  \doif\@@@@lsoptionnextfoot   \v!yes{\setups[letter:place:nextfoot]}
+  \doif\@@@@lsoptionmarking    \v!yes{\directsetup{\v!letter:\v!place:\v!foldmark   }}
+  \doif\@@@@lsoptionhead       \v!yes{\directsetup{\v!letter:\v!place:\v!head       }}
+  \doif\@@@@lsoptionbackaddress\v!yes{\directsetup{\v!letter:\v!place:\v!backaddress}}
+  \doif\@@@@lsoptionaddress    \v!yes{\directsetup{\v!letter:\v!place:\v!address    }}
+  \doif\@@@@lsoptionreference  \v!yes{\directsetup{\v!letter:\v!place:\v!reference  }}
+  \doif\@@@@lsoptionlocation   \v!yes{\directsetup{\v!letter:\v!place:\v!location   }}
+  \doif\@@@@lsoptionfoot       \v!yes{\directsetup{\v!letter:\v!place:\v!foot       }}
+  \doif\@@@@lsoptionlettermain \v!yes{\directsetup{\v!letter:\v!place:\v!lettermain }}
+  \doif\@@@@lsoptionletternext \v!yes{\directsetup{\v!letter:\v!place:\v!letternext }}
+  \doif\@@@@lsoptionnexthead   \v!yes{\directsetup{\v!letter:\v!place:\v!nexthead   }}
+  \doif\@@@@lsoptionnextfoot   \v!yes{\directsetup{\v!letter:\v!place:\v!nextfoot   }}
 
 \stopsetups
 
@@ -1002,7 +692,7 @@
 \let\letter!order!sections\letter!list!sections
 
 \def\doflushlettersection#1%
-  {\doif{\letterstylevalue\v!option{#1}}\v!yes{\setups[letter:place:#1]}}
+  {\doif{\letterstylevalue\v!option{#1}}\v!yes{\directsetup{\v!letter:\v!place:#1}}}
 
 \startsetups[letter:sequence]
 

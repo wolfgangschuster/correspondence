@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=blockstyle,
-%D        version=2008.05.28,
+%D        version=2008.11.29,
 %D          title=\CONTEXT\ Letter Style,
 %D       subtitle=Blockstyle initalization,
 %D         author=Wolfgang Schuster,
@@ -28,28 +28,28 @@
    \c!reference=\v!no,
    \c!marking=\v!no]
 
-\startsetups[letter:head]
+\startsetups[\v!letter:\v!head]
 % sender information appear in a lettersection
 \stopsetups
 
-\startsetups[letter:\v!letter\v!head]
+\startsetups[\v!letter:\v!letter\v!head]
 \let\\\crlf
 \lettervalue\c!fromaddress
 \stopsetups
 
-\startsetups[letter:\v!date\v!line]
+\startsetups[\v!letter:\v!date\v!line]
 \lettervalue\c!date
 \stopsetups
 
-\startsetups[letter:\v!reference\v!line]
+\startsetups[\v!letter:\v!reference\v!line]
 \lettervalue\c!reference
 \stopsetups
 
-\startsetups[letter:\v!special\v!notation]
+\startsetups[\v!letter:\v!special\v!notation]
 \lettervalue\c!dispatch
 \stopsetups
 
-\startsetups[letter:\v!inside\v!address]
+\startsetups[\v!letter:\v!inside\v!address]
 \let\\\crlf
 \doiflettervalue\c!toname   {\lettervalue\c!toname   \crlf}
 \doiflettervalue\c!toaddress{\lettervalue\c!toaddress\crlf}

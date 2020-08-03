@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-00,
-%D      version=2012.05.30,
+%D      version=2012.06.10,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Correspondence,
 %D       author=Wolfgang Schuster,
@@ -60,6 +60,26 @@
   \setinterfaceconstant {datecolor}       {datecolor}
   \setinterfaceconstant {subtitlestyle}   {subtitlestyle}
   \setinterfaceconstant {subtitlecolor}   {subtitlecolor}
+  \setinterfaceconstant {street}          {street}
+  \setinterfaceconstant {city}            {city}
+  \setinterfaceconstant {phone}           {phone}
+  \setinterfaceconstant {email}           {email}
+  \setinterfaceconstant {bankname}        {bankname}
+  \setinterfaceconstant {banknumber}      {banknumber}
+  \setinterfaceconstant {accountnumber}   {accountnumber}
+  \setinterfaceconstant {room}            {room}
+  \setinterfaceconstant {yourref}         {yourref}
+  \setinterfaceconstant {yourmail}        {yourmail}
+  \setinterfaceconstant {myref}           {myref}
+  \setinterfaceconstant {mymail}          {mymail}
+  \setinterfaceconstant {customer}        {customer}
+  \setinterfaceconstant {invoice}         {invoice}
+  \setinterfaceconstant {fax}             {fax}
+  \setinterfaceconstant {url}             {url}
+  \setinterfaceconstant {bank}            {bank}
+  \setinterfaceconstant {organization}    {organization}
+  \setinterfaceconstant {zip}             {zip}
+  \setinterfaceconstant {country}         {country}
 \stopinterface
 
 \startinterface all
@@ -72,6 +92,11 @@
   \setinterfacevariable {nextfoot}        {nextfoot}
   \setinterfacevariable {leftfoot}        {leftfoot}
   \setinterfacevariable {rightfoot}       {rightfoot}
+  \setinterfacevariable {topmark}         {topmark}
+  \setinterfacevariable {botmark}         {botmark}
+  \setinterfacevariable {cutmark}         {cutmark}
+  \setinterfacevariable {endmark}         {endmark}
+  \setinterfacevariable {usermark}        {usermark}
   % letter
   \setinterfacevariable {letter}          {letter}
   \setinterfacevariable {lettermain}      {lettermain}
@@ -79,11 +104,6 @@
   \setinterfacevariable {address}         {address}
   \setinterfacevariable {backaddress}     {backaddress}
   \setinterfacevariable {location}        {location}
-  \setinterfacevariable {topmark}         {topmark}
-  \setinterfacevariable {botmark}         {botmark}
-  \setinterfacevariable {cutmark}         {cutmark}
-  \setinterfacevariable {endmark}         {endmark}
-  \setinterfacevariable {usermark}        {usermark}
   \setinterfacevariable {opening}         {opening}
   \setinterfacevariable {closing}         {closing}
   \setinterfacevariable {secondpage}      {secondpage}
@@ -92,27 +112,6 @@
   \setinterfacevariable {french}          {french}
   \setinterfacevariable {specialnotation} {specialnotation}
   \setinterfacevariable {e}               {e}
-  \setinterfacevariable {attention}       {attention}
-  \setinterfacevariable {room}            {room}
-  \setinterfacevariable {yourref}         {yourref}
-  \setinterfacevariable {yourmail}        {yourmail}
-  \setinterfacevariable {myref}           {myref}
-  \setinterfacevariable {mymail}          {mymail}
-  \setinterfacevariable {customer}        {customer}
-  \setinterfacevariable {invoice}         {invoice}
-  \setinterfacevariable {to}              {to}
-  \setinterfacevariable {toname}          {toname}
-  \setinterfacevariable {from}            {from}
-  \setinterfacevariable {fromname}        {fromname}
-  \setinterfacevariable {phone}           {phone}
-  \setinterfacevariable {fax}             {fax}
-  \setinterfacevariable {email}           {email}
-  \setinterfacevariable {bank}            {bank}
-  \setinterfacevariable {organization}    {organization}
-  \setinterfacevariable {city}            {city}
-  \setinterfacevariable {zip}             {zip}
-  \setinterfacevariable {country}         {country}
-  \setinterfacevariable {street}          {street}
   \setinterfacevariable {place}           {place}
   \setinterfacevariable {gbrief}          {gbrief}
   \setinterfacevariable {fullblock}       {fullblock}
@@ -125,8 +124,6 @@
   \setinterfacevariable {memo}            {memo}
   \setinterfacevariable {memomain}        {memomain}
   \setinterfacevariable {memonext}        {memonext}
-  \setinterfacevariable {casual}          {casual}
-  \setinterfacevariable {classic}         {classic}
   % resume
   \setinterfacevariable {resume}          {resume}
   \setinterfacevariable {resumemain}      {resumemain}
@@ -532,6 +529,18 @@
 
 \setvalue{\????correspondencedescriptionformat\v!none}%
   {\m_correspondence_description_items}
+
+%\def\correspondence_description_item#text%
+%  {\begingroup
+%   \setbox\scratchbox\hbox
+%     {\usecorrespondencedescriptionstyleandcolor\c!symbolstyle\c!symbolcolor
+%      \symbol{\correspondencedescriptionparameter\c!symbol}}%
+%   \assignwidth
+%     {\correspondencedescriptionparameter\c!symbolwidth}
+%     {\scratchdimen}
+%     {\unhcopy\scratchbox}
+%     {\correspondencedescriptionparameter\c!symboldistance}%
+%   \endgroup}
 
 \setupcorrespondencedescription
   [   \c!width=\v!fit,

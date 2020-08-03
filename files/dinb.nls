@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=dinb,
-%D        version=2009.09.20,
+%D        version=2009.10.07,
 %D          title=\CONTEXT\ Letter Style,
 %D       subtitle=DIN 676 B,
 %D         author=Wolfgang Schuster,
@@ -55,7 +55,7 @@
 
 \setupletterstyle
   [\v!topmark,\v!botmark,\v!cutmark]
-  [\c!state=\v!repeat,
+  [\c!state={\v!first,\v!next},
    \c!hoffset=5mm,
    \c!strut=\v!no,
    \c!symbol={\blackrule[\c!width=\plusfour\c!mm,\c!height=.4\points]}]

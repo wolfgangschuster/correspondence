@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-letter,
-%D        version=2009.06.29,
+%D        version=2009.10.07,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Framework for Letters,
 %D         author=Wolfgang Schuster,
@@ -570,15 +570,12 @@
 
   \stoplocalsetups
 
-  \ifx\@@@@lsoptionmarking\v!yes
-
-    \doif\@@@@lsoptiontopmark \v!yes{\directsetup{\v!letter:\v!place:\v!topmark }}
-    \doif\@@@@lsoptionbotmark \v!yes{\directsetup{\v!letter:\v!place:\v!botmark }}
-    \doif\@@@@lsoptioncutmark \v!yes{\directsetup{\v!letter:\v!place:\v!cutmark }}
-    \doif\@@@@lsoptionendmark \v!yes{\directsetup{\v!letter:\v!place:\v!endmark }}
-    \doif\@@@@lsoptionusermark\v!yes{\directsetup{\v!letter:\v!place:\v!usermark}}
-
-  \fi
+  \doif\@@@@lsoptionmarking\v!yes
+    {\doif\@@@@lsoptiontopmark \v!yes{\directsetup{\v!letter:\v!place:\v!topmark }}
+     \doif\@@@@lsoptionbotmark \v!yes{\directsetup{\v!letter:\v!place:\v!botmark }}
+     \doif\@@@@lsoptioncutmark \v!yes{\directsetup{\v!letter:\v!place:\v!cutmark }}
+     \doif\@@@@lsoptionendmark \v!yes{\directsetup{\v!letter:\v!place:\v!endmark }}
+     \doif\@@@@lsoptionusermark\v!yes{\directsetup{\v!letter:\v!place:\v!usermark}}}
 
 \stopsetups
 
@@ -698,6 +695,9 @@
 \setupletterstyle
   [\v!option]
   [\c!marking=\v!yes,
+   \c!topmark=\v!yes,
+   \c!botmark=\v!yes,
+   \c!cutmark=\v!yes,
    \c!endmark=\v!no,
    \c!usermark=\v!no,
    \c!backaddress=\v!no,

@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-letter,
-%D        version=2008.07.06,
+%D        version=2008.07.07,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Framework for Letters,
 %D         author=Wolfgang Schuster,
@@ -35,6 +35,8 @@
           backgroundimage: backgroundimage
                whitespace: whitespace
                  optimize: optimize
+                 nexthead: nexthead
+                 nextfoot: nextfoot
 \stopconstants
 
 \startvariables            all
@@ -61,6 +63,8 @@
                   special: special
                  notation: notation
                    inside: inside
+                 nexthead: nexthead
+                 nextfoot: nextfoot
 \stopvariables
 
 %D Before we start the real module let us introduce two namespaces
@@ -620,6 +624,24 @@
 
 \stopsetups
 
+%D Layer to set head and foot blocks at the second and all following pages.
+
+\dodefineletterlayer[\v!nexthead]
+
+\startsetups[letter:place:nexthead]
+
+  \dosetletterlayer[\v!nexthead]
+
+\stopsetups
+
+\dodefineletterlayer[\v!nextfoot]
+
+\startsetups[letter:place:nextfoot]
+
+  \dosetletterlayer[\v!nextfoot]
+
+\stopsetups
+
 %D Letterhead, american only
 
 \dodefinelettersection[\v!letter\v!head]
@@ -794,13 +816,18 @@
 %D Background graphic:
 
 \defineoverlay
-  [\v!graphic] % choose a better name!
+  [\v!letter:\c!backgroundimage]
   [\doifsomething\@@@@lsoptionbackgroundimage
      {\overlayfigure{\@@@@lsoptionbackgroundimage}}]
 
+\defineoverlay
+  [\v!letter:\c!background]
+  [\@@@@lsoptionbackground]
+
 \def\letter!list!backgrounds
-  {\v!graphic,\v!letternext,\v!lettermain,\v!head,\v!foot,%
-   \v!backaddress,\v!address,\v!reference,\v!location,%
+  {\v!letter:\c!backgroundimage,\v!letter:\c!background,%
+   \v!letternext,\v!lettermain,\v!head,\v!foot,\v!backaddress,%
+   \v!address,\v!reference,\v!location,\v!nexthead,\v!nextfoot,%
    \v!topmark,\v!botmark,\v!cutmark,\v!endmark,\v!usermark}
 
 %D Settings at the begin of every letter.
@@ -900,6 +927,8 @@
   \doif\@@@@lsoptionfoot       \v!yes{\setups[letter:place:foot]}
   \doif\@@@@lsoptionlettermain \v!yes{\setups[letter:place:lettermain]}
   \doif\@@@@lsoptionletternext \v!yes{\setups[letter:place:letternext]}
+  \doif\@@@@lsoptionnexthead   \v!yes{\setups[letter:place:nexthead]}
+  \doif\@@@@lsoptionnextfoot   \v!yes{\setups[letter:place:nextfoot]}
 
 \stopsetups
 
@@ -930,6 +959,7 @@
    \c!backaddress=\v!no,
    \c!indenting=,
    \c!whitespace=,
+   \c!background=,
    \c!backgroundcolor=\v!white,
    \c!backgroundimage=,
    \c!before=,

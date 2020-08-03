@@ -185,34 +185,34 @@
 
 \installcommandhandler \????correspondence {correspondence} \????correspondence
 
-\unexpanded\def\correspondence_beg[#environment]%
+\unexpanded\def\correspondence_start[#environment]%
   {\starttext
    \begingroup
    \def\currentcorrespondence{#environment}%
-   \dosingleempty\correspondence_beg_parameters}
+   \dosingleempty\correspondence_start_parameters}
 
-\def\correspondence_beg_parameters[#parameters]%
+\def\correspondence_start_parameters[#parameters]%
   {\iffirstargument
      \setupcurrentcorrespondence[#parameters]%
    \fi
    \grabbufferdatadirect{\????correspondencebuffer\currentcorrespondence}{\e!start\currentcorrespondence}{\e!stop\currentcorrespondence}}
 
-\unexpanded\def\correspondence_end[#environment]%
+\unexpanded\def\correspondence_stop[#environment]%
   {\correspondence_place[#environment]%
    \endgroup
    \stoptext}
 
 \appendtoks
-  \setuevalue{\e!start\currentcorrespondence}{\correspondence_beg[\currentcorrespondence]}%
-  \setuevalue{\e!stop \currentcorrespondence}{\correspondence_end[\currentcorrespondence]}%
+  \setuevalue{\e!start\currentcorrespondence}{\correspondence_start[\currentcorrespondence]}%
+  \setuevalue{\e!stop \currentcorrespondence}{\correspondence_stop [\currentcorrespondence]}%
 \to \everydefinecorrespondence
 
-\unexpanded\def\correspondence_content_beg[#environment]%
+\unexpanded\def\correspondence_content_start[#environment]%
   {\begingroup
    \edef\currentcorrespondence{#environment}%
    \grabbufferdatadirect{\????correspondencebuffer\currentcorrespondence}{\e!start\currentcorrespondence\v!content}{\e!stop\currentcorrespondence\v!content}}
 
-\unexpanded\def\correspondence_content_end[#environment]%
+\unexpanded\def\correspondence_content_stop[#environment]%
   {\endgroup}
 
 \unexpanded\def\correspondence_content_get[#environment]%
@@ -220,9 +220,9 @@
    \getbufferdata[\????correspondencebuffer\currentcorrespondence]}
 
 \appendtoks
-  \setuevalue{\e!start\currentcorrespondence\v!content}{\correspondence_content_beg[\currentcorrespondence]}%
-  \setuevalue{\e!stop \currentcorrespondence\v!content}{\correspondence_content_end[\currentcorrespondence]}%
-  \setuevalue{\e!get  \currentcorrespondence\v!content}{\correspondence_content_get[\currentcorrespondence]}%
+  \setuevalue{\e!start\currentcorrespondence\v!content}{\correspondence_content_start[\currentcorrespondence]}%
+  \setuevalue{\e!stop \currentcorrespondence\v!content}{\correspondence_content_stop [\currentcorrespondence]}%
+  \setuevalue{\e!get  \currentcorrespondence\v!content}{\correspondence_content_get  [\currentcorrespondence]}%
 \to \everydefinecorrespondence
 
 \unexpanded\def\correspondence_parameters#environment#element%
@@ -655,21 +655,21 @@
    \processcommacommand[#elements]\correspondence_paragraph_command}
 
 \unexpanded\def\correspondence_paragraph_commands[#environment][#element]%
-  {\setuevalue{\e!start#element}{\correspondence_paragraph_beg[#environment][#element]}%
-   \setuevalue{\e!stop #element}{\correspondence_paragraph_end[#environment][#element]}}
+  {\setuevalue{\e!start#element}{\correspondence_paragraph_start[#environment][#element]}%
+   \setuevalue{\e!stop #element}{\correspondence_paragraph_stop [#environment][#element]}}
 
-\unexpanded\def\correspondence_paragraph_beg[#environment][#element]%
+\unexpanded\def\correspondence_paragraph_start[#environment][#element]%
   {\begingroup
    \correspondence_parameters{#environment}{#element}%
-   \dodoubleempty\correspondence_paragraph_beg_parameters}%
+   \dodoubleempty\correspondence_paragraph_start_parameters}%
 
-\unexpanded\def\correspondence_paragraph_beg_parameters[#parameters][#dummy]% #dummy removes the linebreak before the first line
+\unexpanded\def\correspondence_paragraph_start_parameters[#parameters][#dummy]% #dummy removes the linebreak before the first line
   {\iffirstargument
      \setupcurrentcorrespondenceparagraph[#parameters]%
    \fi
    \grabbufferdatadirect{\????correspondenceparagraphbuffer\currentcorrespondenceparagraph}{\e!start\currentcorrespondenceelement}{\e!stop\currentcorrespondenceelement}}
 
-\unexpanded\def\correspondence_paragraph_end[#environment][#element]%
+\unexpanded\def\correspondence_paragraph_stop[#environment][#element]%
   {\edef\p_correspondence_paragraph_setups{\correspondenceparagraphparameter\c!setups}%
    \ifx\p_correspondence_paragraph_setups\empty \else
      \doifsetupselse{\????correspondenceparagraphsetups:#environment:\p_correspondence_paragraph_setups}
@@ -784,11 +784,31 @@
      \doadaptrightskip{\dimexpr\p_correspondence_paragraph_rightwidth+\p_correspondence_paragraph_rightmargin\relax}%
    \fi}
 
+% \startsetups[\????correspondenceparagraphrenderings:\v!columns]
+%   \dontleavehmode
+%   \correspondence_paragraph_leftcolumn
+%   \correspondence_paragraph_rightcolumn
+%   \getbufferdata[\????correspondenceparagraphbuffer\currentcorrespondenceparagraph]
+% \stopsetups
+
 \startsetups[\????correspondenceparagraphrenderings:\v!columns]
-  \dontleavehmode
-  \correspondence_paragraph_leftcolumn
-  \correspondence_paragraph_rightcolumn
-  \getbufferdata[\????correspondenceparagraphbuffer\currentcorrespondenceparagraph]
+
+  \correspondence_paragraph_columns_start
+
+    \correspondence_paragraph_cell_start
+      \correspondenceparagraphparameter\c!lefttext
+    \correspondence_paragraph_cell_stop
+
+    \correspondence_paragraph_cell_start
+      \getbufferdata[\????correspondenceparagraphbuffer\currentparentcorrespondenceparagraph]
+    \correspondence_paragraph_cell_stop
+
+    \correspondence_paragraph_cell_start
+      \correspondenceparagraphparameter\c!righttext
+    \correspondence_paragraph_cell_stop
+
+  \correspondence_paragraph_columns_stop
+
 \stopsetups
 
 \setupcorrespondenceparagraph
@@ -800,7 +820,51 @@
      \c!leftwidth=\zeropoint,
     \c!rightwidth=\zeropoint,
     \c!leftmargin=\zeropoint,
-   \c!rightmargin=\zeropoint]
+   \c!rightmargin=\zeropoint,
+             \c!n=3]
+
+% Columns, only for internal use, take values from paragraphs
+
+\installbasicparameterhandler \????correspondencecolumns {correspondencecolumns}
+\installstyleandcolorhandler  \????correspondencecolumns {correspondencecolumns}
+
+\newbox  \b_correspondence_paragraph
+\newcount\c_correspondence_paragraph
+
+\unexpanded\def\correspondence_paragraph_columns_start
+  {\begingroup
+   \c_correspondence_paragraph\zerocount
+   \let\currentparentcorrespondenceparagraph\currentcorrespondenceparagraph
+   \edef\p_correspondence_paragraph_n       {\correspondenceparagraphparameter\c!n       }%
+   \edef\p_correspondence_paragraph_distance{\correspondenceparagraphparameter\c!distance}%
+   \dontleavehmode\hbox\bgroup}
+
+\unexpanded\def\correspondence_paragraph_columns_stop
+  {\egroup
+   \endgroup}
+
+\unexpanded\def\correspondence_paragraph_cell_start
+  {\advance\c_correspondence_paragraph\plusone
+   \chaintocurrentcorrespondenceparagraph{\currentparentcorrespondenceparagraph:\number\c_correspondence_paragraph}%
+   \edef\currentcorrespondenceparagraph  {\currentparentcorrespondenceparagraph:\number\c_correspondence_paragraph}%
+   \edef\p_correspondence_columns_width  {\correspondenceparagraphparameter\c!width}%
+   \setbox\b_correspondence_paragraph\vtop\bgroup
+   \ifx\p_correspondence_columns_width\empty \else \hsize\p_correspondence_columns_width \fi
+   \begstrut}
+
+\unexpanded\def\correspondence_paragraph_cell_stop
+  {\endstrut
+   \egroup
+   \ifnum\c_correspondence_paragraph>\p_correspondence_paragraph_n
+     % more columns are used than specified
+   \else\ifnum\c_correspondence_paragraph=\p_correspondence_paragraph_n
+     \box\b_correspondence_paragraph
+   \else
+     \box\b_correspondence_paragraph
+     \hskip\p_correspondence_paragraph_distance
+   \fi\fi}
+
+
 
 % Heading
 
@@ -830,40 +894,40 @@
    \processcommacommand[#elements]\correspondence_head_command}
 
 \unexpanded\def\correspondence_head_commands[#environment][#element]%
-  {\setuevalue        {#element}{\correspondence_head_cmd[#environment][#element]}%
-   \setuevalue{\e!start#element}{\correspondence_head_beg[#environment][#element]}%
-   \setuevalue{\e!stop #element}{\correspondence_head_end[#environment][#element]}}
+  {\setuevalue        {#element}{\correspondence_head_direct[#environment][#element]}%
+   \setuevalue{\e!start#element}{\correspondence_head_start [#environment][#element]}%
+   \setuevalue{\e!stop #element}{\correspondence_head_stop  [#environment][#element]}}
 
-\unexpanded\def\correspondence_head_cmd[#environment][#element]%
+\unexpanded\def\correspondence_head_direct[#environment][#element]%
   {\begingroup
    \correspondence_parameters{#environment}{#element}%
-   \doifnextbgroupelse{\dosinglegroupempty\correspondence_head_cmd_argument}{\dosingleempty\correspondence_head_cmd_parameters}}
+   \doifnextbgroupelse{\dosinglegroupempty\correspondence_head_direct_argument}{\dosingleempty\correspondence_head_direct_parameters}}
 
-\unexpanded\def\correspondence_head_cmd_argument#title%
+\unexpanded\def\correspondence_head_direct_argument#title%
   {\setcorrespondenceheadparameter\c!title{#title}%
    \correspondence_head_alternative_place
    \endgroup}
 
-\unexpanded\def\correspondence_head_cmd_parameters[#parameters]%
+\unexpanded\def\correspondence_head_direct_parameters[#parameters]%
   {\iffirstargument
      \setupcurrentcorrespondencehead[#parameters]%
    \fi
    \correspondence_head_alternative_place
    \endgroup}
 
-\unexpanded\def\correspondence_head_beg[#environment][#element]%
+\unexpanded\def\correspondence_head_start[#environment][#element]%
   {\begingroup
    \correspondence_parameters{#environment}{#element}%
-   \dosingleempty\correspondence_head_beg_parameters}
+   \dosingleempty\correspondence_head_start_parameters}
 
-\unexpanded\def\correspondence_head_beg_parameters[#parameters]%
+\unexpanded\def\correspondence_head_start_parameters[#parameters]%
   {\iffirstargument
      \setupcurrentcorrespondencehead[#parameters]%
    \fi
    \correspondence_head_alternative_place
    \endgroup}
 
-\unexpanded\def\correspondence_head_end[#environment][#element]%
+\unexpanded\def\correspondence_head_stop[#environment][#element]%
   {}
 
 \unexpanded\def\correspondence_head_alternative_define[#environment][#self][#parent][#parameters]%

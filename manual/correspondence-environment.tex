@@ -12,7 +12,7 @@
 \setvariables
   [correspondence]
   [title=Correspondence with \ConTeXt,
-   version=\modulecode{tex.sprint(tex.ctxcatcodes,correspondence.files[1]["version"])}]
+   version=\ctxlua{tex.sprint(tex.ctxcatcodes,thirddata.correspondence.files[1]["version"])}]
 
 
 %%%% Farbe
@@ -46,7 +46,6 @@
 %%%% Zusätzliche Module
 
 \usemodule[simplefonts]
-%\usemodule[selectfont]
 \usemodule[visual]
 \usemodule[abr-01]
 \usemodule[letter]
@@ -67,15 +66,12 @@
 \startmode[wolf]
 
 \setupsimplefonts[size=10pt,expansion=quality,protrusion=quality]
-%\setupselectfont[size=10pt]
 
 \setmainfont[Lucida Bright][regularfont={*}]
-%\setmainfont[Lucida Bright][boldfont={Lucida Bright Demi},bolditalicfont={Lucida Bright Demiitalic},capsfont={Lucida Bright Smallcaps}]
-\setsansfont[Lucida Sans]
-\setmonofont[Lucida Sans Typewriter]
+\setsansfont[Lucida Sans][regularfont={*}]
+\setmonofont[Lucida Sans Typewriter][features=none]
 
 \definesimplefonttypeface[examplefont][Delicious][regularfont={* Roman}]
-%\definefontfamily[examplefont][Delicious][style=sans]
 
 \stopmode
 
@@ -85,7 +81,7 @@
 
 \setmainfont[TeX Gyre Pagella]
 \setsansfont[Latin Modern Sans]
-\setmonofont[Latin Modern Mono]
+\setmonofont[Latin Modern Mono][features=none]
 
 \definesimplefonttypeface[examplefont][Latin Modern Sans]
 
@@ -189,6 +185,7 @@
 \setupmakeup
   [standard]
   [pagestate=start,
+   doublesided=empty,
    page=no]
 
 %% Cover

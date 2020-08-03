@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2010.04.04,
+%D        version=2010.06.17,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -15,7 +15,7 @@
 %D 
 %D Dimen value to save the height of the reference line.
 
-\newdimen\letter!height!reference
+\ifdefined\letter!height!reference \else \newdimen\letter!height!reference \fi
 
 %D We come now to the new macros defined in this file, they are meant to place the
 %D information about date, phone number and more information. You could select on of
@@ -318,7 +318,7 @@
    \def\ps     ##1{\doglobal\appendtoks\setvalue{\????ld\c!postscript}{##1}\to\letter!local!commands\doglobal\appendtocommalist\c!postscript\letter!list!descriptions}%
    \def\cc     ##1{\doglobal\appendtoks\setvalue{\????ld\c!copy      }{##1}\to\letter!local!commands\doglobal\appendtocommalist\c!copy      \letter!list!descriptions}%
    \def\encl   ##1{\doglobal\appendtoks\setvalue{\????ld\c!enclosure }{##1}\to\letter!local!commands\doglobal\appendtocommalist\c!enclosure \letter!list!descriptions}%
-   \setbox\scratchbox\vbox{\getbuffer[lettercontent]}%
+   \setbox\scratchbox\vbox{\trialtypesettingtrue\getbuffer[lettercontent]}%
    \doifmode{mkiv}{\processassignmentcommand[\dotoks\letter!local!setups]\processlettersetups}% only available in mkiv
    \flushtoks\letter!local!commands}
 

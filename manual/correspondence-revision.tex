@@ -17,24 +17,24 @@ the end of the log file.
 \NC \bf File \NC \bf Revision \NC \bf Description            \NC\NR
 \stoptabulatehead
 
-\startmodulecode
+\startluacode
 
-local pairs, context = global.pairs, global.context
+local pairs = global.pairs
 
 context.starttabulate( { "|l|l|l|" } )
-for k,v in pairs(correspondence.files) do
+for k,v in pairs(thirddata.correspondence.files) do
     context.NC()
-    context("%s",correspondence.files[k]["name"])
+    context("%s",thirddata.correspondence.files[k]["name"])
     context.NC()
-    context("%s",correspondence.files[k]["version"])
+    context("%s",thirddata.correspondence.files[k]["version"])
     context.NC()
-    context("%s",correspondence.files[k]["description"])
+    context("%s",thirddata.correspondence.files[k]["description"])
     context.NC()
     context.NR()
 end
 context.stoptabulate()
 
-\stopmodulecode
+\stopluacode
 
 \stop
 

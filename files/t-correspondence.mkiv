@@ -485,23 +485,26 @@
 \def\registercorrespondencefile#1%
   {\doifundefined{@@@@#1@@@@}
     {\letgvalueempty{@@@@#1@@@@}%
-     \modulecode{correspondence.checkfile("#1")}}}
+     \ctxlua{thirddata.correspondence.checkfile("#1")}}}
 
 %D Lua table with all macro files and their current version, it is used
 %D to build the revision table in the manual. The Lua alternative is easier
 %D to maintain (same folder as the other files) and allows me to store more
 %D information as I can do with the TeX solution.
 
-\startmodulecode
+\startluacode
 
-correspondence = correspondence or { }
+thirddata                = thirddata or { }
+thirddata.correspondence = thirddata.correspondence or { }
+
+local correspondence = thirddata.correspondence
 
 correspondence.files = {
     {
         name        = "t-correspondence.tex",
         path        = "tex/context/third/letter/base/",
         type        = "base",
-        version     = "2010.04.04",
+        version     = "2010.06.23",
         description = "Core module"
     } ,
     {
@@ -523,7 +526,7 @@ correspondence.files = {
         name        = "default.nli",
         path        = "tex/context/third/letter/interface/",
         type        = "interface",
-        version     = "2010.04.04",
+        version     = "2010.06.17",
         description = "Default letter interface"
 
     } ,
@@ -754,7 +757,7 @@ function correspondence.checkfile(filename)
     end
 end
 
-\stopmodulecode
+\stopluacode
 
 \registercorrespondencefile{t-correspondence.tex}
 

@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-00,
-%D      version=2012.12.13,
+%D      version=2013.01.02,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Correspondence,
 %D       author=Wolfgang Schuster,
@@ -13,7 +13,7 @@
 %C This program is free software: you can redistribute it and/or modify
 %C it under the terms of the GNU General Public License as published by
 %C the Free Software Foundation, either version 3 of the License, or
-%C any later version.
+%C (at your option) any later version.
 %C
 %C This program is distributed in the hope that it will be useful,
 %C but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -81,6 +81,7 @@
   \setinterfaceconstant {zip}             {zip}
   \setinterfaceconstant {country}         {country}
   \setinterfaceconstant {addressentry}    {addressentry}
+  \setinterfaceconstant {rulewidth}       {rulewidth}
 \stopinterface
 
 \startinterface all
@@ -206,23 +207,27 @@
   \setuevalue{\e!stop \currentcorrespondence}{\correspondence_end[\currentcorrespondence]}%
 \to \everydefinecorrespondence
 
-\unexpanded\def\correspondence_beg_content[#environment]%
+\unexpanded\def\correspondence_content_beg[#environment]%
   {\begingroup
-   \def\currentcorrespondence{#environment}%
+   \edef\currentcorrespondence{#environment}%
    \grabbufferdatadirect{\????correspondencebuffer\currentcorrespondence}{\e!start\currentcorrespondence\v!content}{\e!stop\currentcorrespondence\v!content}}
 
-\unexpanded\def\correspondence_end_content[#environment]%
+\unexpanded\def\correspondence_content_end[#environment]%
   {\endgroup}
 
+\unexpanded\def\correspondence_content_get[#environment]%
+  {\edef\currentcorrespondence{#environment}%
+   \getbufferdata[\????correspondencebuffer\currentcorrespondence]}
+
 \appendtoks
-  \setuevalue{\e!start\currentcorrespondence\v!content}{\correspondence_beg_content[\currentcorrespondence]}%
-  \setuevalue{\e!stop \currentcorrespondence\v!content}{\correspondence_end_content[\currentcorrespondence]}%
+  \setuevalue{\e!start\currentcorrespondence\v!content}{\correspondence_content_beg[\currentcorrespondence]}%
+  \setuevalue{\e!stop \currentcorrespondence\v!content}{\correspondence_content_end[\currentcorrespondence]}%
+  \setuevalue{\e!get  \currentcorrespondence\v!content}{\correspondence_content_get[\currentcorrespondence]}%
 \to \everydefinecorrespondence
 
-\unexpanded\def\correspondence_parameters#environment#element#type%
+\unexpanded\def\correspondence_parameters#environment#element%
   {\edef\currentcorrespondenceenvironment{#environment}%
    \edef\currentcorrespondenceelement    {#element}%
-   \edef\currentcorrespondencecontent    {#environment:#type:#element}%
    \edef\currentcorrespondencelayer      {#environment:#element}%
    \edef\currentcorrespondenceframe      {#environment:#element}%
    \edef\currentcorrespondencesection    {#environment:#element}%
@@ -243,6 +248,7 @@
 % Placement
 
 \newtoks\t_correspondence_before
+\newtoks\t_correspondence_between
 \newtoks\t_correspondence_after
 
 % \unexpanded\def\correspondence_place[#environment]%
@@ -276,6 +282,7 @@
    \ifx\p_correspondence_whitespace     \empty \else \setupwhitespace    [\p_correspondence_whitespace    ]\fi
    \ifx\p_correspondence_interlinespace \empty \else \setupinterlinespace[\p_correspondence_interlinespace]\fi
    \ifx\p_correspondence_language       \empty \else \mainlanguage       [\p_correspondence_language      ]\fi
+   \the\t_correspondence_between
    \ifx\p_correspondence_backgroundcolor\empty \else
      \setupbackgrounds[\v!paper][\c!background=\v!color,\c!backgroundcolor=\p_correspondence_backgroundcolor]%
    \fi
@@ -348,7 +355,7 @@
 
 \unexpanded\def\correspondence_layer_place#environment%
   {\def\correspondence_layer_state#element%
-     {\correspondence_parameters{#environment}{#element}\v!layer
+     {\correspondence_parameters{#environment}{#element}%
       \expandcheckedcsname\????correspondencelayerstate{\correspondencelayerparameter\c!state}\v!stop
       \ifnum\c_correspondence_page=\plusone
         \if!!donea\correspondence_layer_direct\fi
@@ -440,7 +447,7 @@
 
 \unexpanded\def\correspondence_section_place#environment#element%
   {\begingroup
-   \correspondence_parameters{#environment}{#element}\v!section
+   \correspondence_parameters{#environment}{#element}%
    \ifcsname\currentcorrespondencesectionhash\s!parent\endcsname
      \doifsomethingelse{\correspondencesectionparameter\c!spacebefore}{\blank[\correspondencesectionparameter\c!spacebefore]}\endgraf
      \correspondencesectionparameter\c!before
@@ -529,7 +536,7 @@
 
 \unexpanded\def\correspondence_description_place#environment#element%
   {\begingroup
-   \edef\currentcorrespondencedescription{#environment:#element}%
+   \correspondence_parameters{#environment}{#element}%
    \ifcsname\currentcorrespondencedescriptionhash\s!parent\endcsname
      \doifsomethingelse{\correspondencedescriptionparameter\c!textcommand}\donetrue\donefalse
      \ifdone
@@ -653,7 +660,7 @@
 
 \unexpanded\def\correspondence_paragraph_beg[#environment][#element]%
   {\begingroup
-   \correspondence_parameters{#environment}{#element}\v!paragraph
+   \correspondence_parameters{#environment}{#element}%
    \dodoubleempty\correspondence_paragraph_beg_parameters}%
 
 \unexpanded\def\correspondence_paragraph_beg_parameters[#parameters][#dummy]% #dummy removes the linebreak before the first line
@@ -829,7 +836,7 @@
 
 \unexpanded\def\correspondence_head_cmd[#environment][#element]%
   {\begingroup
-   \correspondence_parameters{#environment}{#element}\v!head
+   \correspondence_parameters{#environment}{#element}%
    \doifnextbgroupelse{\dosinglegroupempty\correspondence_head_cmd_argument}{\dosingleempty\correspondence_head_cmd_parameters}}
 
 \unexpanded\def\correspondence_head_cmd_argument#title%
@@ -846,7 +853,7 @@
 
 \unexpanded\def\correspondence_head_beg[#environment][#element]%
   {\begingroup
-   \def\currentcorrespondencehead{#environment:#element}%
+   \correspondence_parameters{#environment}{#element}%
    \dosingleempty\correspondence_head_beg_parameters}
 
 \unexpanded\def\correspondence_head_beg_parameters[#parameters]%

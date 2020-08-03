@@ -249,8 +249,8 @@
 \newtoks\letter!local!commands
 
 \def\processlettervalues
-  {\global\let\letter!list!descriptions\empty
-   \global    \letter!local!commands   \emptytoks
+  {\globalletempty\letter!list!descriptions
+   \global\letter!local!commands\emptytoks
    \def\opening##1{\doglobal\appendtoks\setvalue{\????ld\c!opening   }{##1}\to\letter!local!commands}%
    \def\closing##1{\doglobal\appendtoks\setvalue{\????ld\c!closing   }{##1}\to\letter!local!commands}%
    \def\ps     ##1{\doglobal\appendtoks\setvalue{\????ld\c!postscript}{##1}\to\letter!local!commands\doglobal\appendtocommalist\c!postscript\letter!list!descriptions}%

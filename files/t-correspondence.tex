@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-correspondence,
-%D        version=2008.02.17,
+%D        version=2008.02.18,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Correspondence,
 %D         author=Wolfgang Schuster,
@@ -304,12 +304,7 @@
   {\getparameters[#2#3][#4]}
 
 \def\dosetupcorrespondencedescription[#1][#2][#3][#4]%
-  {\setupdescriptions[#1:#3][#4]}
-
-% used in the upcoming version
-%
-% \def\dosetupcorrespondencedescription[#1][#2][#3][#4]%
-%   {\getparameters[#1#3][#4]}
+  {\getparameters[#2#3][#4]}
 
 \def\dosetupcorrespondencelayer[#1][#2][#3][#4]%
   {\dodosetupcorrespondencelayer[#1][#2][#3][\v!layer,\v!frame,\v!option][#4]}
@@ -572,35 +567,10 @@
 
 %D Descriptions
 
-%D I use \CONTEXT's own description environment to format the appendices,
-%D but the mechanism is to complex for such the cases I need in my module
-%D and the code will be replaced in the future by my own code.
-
 \def\definecorrespondencedescription[#1][#2]%
   {\setvalue{\s!do\e!define#1\v!description}{\dodefinecorrespondencedescription[#1][#2]}%
    \setvalue{\s!do\e!set   #1\v!description}{\dosetcorrespondencedescription   [#1][#2]}%
    \setvalue{\s!do\e!flush #1\v!description}{\doflushcorrespondencedescription [#1][#2]}}
-
-% \def\dodefinecorrespondencedescription[#1][#2][#3]%
-%   {\setvalue{#2\v!option#3}{\v!yes}%
-%    \doifundefined{#1:#2:#3}
-%      {\setvalue{#1:#2:#3}{\v!description}%
-%       \appendtovaluelist{#1!list!descriptions}{#3}}%
-%    \definedescription
-%      [#1:#3]
-%      [\c!location=\v!top,
-%       \c!inbetween=\nowhitespace]}
-%
-% \def\dosetcorrespondencedescription[#1][#2][#3]%
-%   {\doiftext{\directsetup{#1:#3}}
-%      {\csname\e!start#1:#3\endcsname{\labeltext{#1:#3}}
-%       \directsetup{#1:#3}%
-%       \csname\e!stop #1:#3\endcsname}}
-%
-% \def\doflushcorrespondencedescription[#1][#2]%
-%   {\def\dodoflushcorrespondencedescription##1%
-%      {\doif{\correspondencestylevalue{#2}\v!option{##1}}\v!yes{\dosetcorrespondencedescription[#1][#2][##1]}}%
-%    \processcommacommand[\csname#1!list!descriptions\endcsname]\dodoflushcorrespondencedescription}
 
 \def\dodefinecorrespondencedescription[#1][#2][#3]%
   {\setvalue{#2\v!option#3}{\v!yes}%
@@ -612,6 +582,9 @@
       \c!before=\blank,
       \c!after=\blank,
       \c!width=\v!broad,
+      \c!distance=\zeropoint,
+      \c!headstyle=,
+      \c!headcolor=,
       \c!distance=\zeropoint]}
 
 \def\dosetcorrespondencedescription[#1][#2][#3]%
@@ -619,20 +592,16 @@
    \doifelsecorrespondencestylevalue{#2}{#3}\c!before
      {\correspondencestylevalue{#2}{#3}\c!before}
       \endgraf
-   \setbox\scratchbox\hbox{\labeltext{#1:#3}}%
-   \ifdim\wd\scratchbox>\zeropoint
-     \processaction
-       [\correspondencestylevalue{#2}{#3}\c!width]
-       [    \v!fit=>\scratchdimen\dimexpr\wd\scratchbox+\correspondencestylevalue{#2}{#3}\c!distance\relax,
-          \v!broad=>\scratchdimen\dimexpr\wd\scratchbox+1em\relax,
-        \s!unknown=>\scratchdimen\dimexpr\correspondencestylevalue{#2}{#3}\c!width+\correspondencestylevalue{#2}{#3}\c!distance\relax]%
-   \else
-     \processaction
-       [\correspondencestylevalue{#2}{#3}\c!width]
-       [    \v!fit=>\scratchdimen\zeropoint,
-          \v!broad=>\scratchdimen\zeropoint,
-        \s!unknown=>\scratchdimen\dimexpr\correspondencestylevalue{#2}{#3}\c!width+\correspondencestylevalue{#2}{#3}\c!distance\relax]%
-   \fi
+   \setbox\scratchbox\hbox{\doattributes{#2#3}\c!headstyle\c!headcolor{\labeltext{#1:#3}}}%
+   \doifelse{\correspondencestylevalue{#2}{#3}\c!width}\v!broad
+     {\ifdim\wd\scratchbox>\zeropoint
+        \scratchdimen\dimexpr\wd\scratchbox+1em\relax
+      \fi}
+     {\doifelse{\correspondencestylevalue{#2}{#3}\c!width}\v!fit
+        {\if\wd\scratchbox>\zeropoint
+           \scratchdimen\dimexpr\wd\scratchbox+\correspondencestylevalue{#2}{#3}\c!distance\relax
+         \fi}
+        {\scratchdimen\dimexpr\correspondencestylevalue{#2}{#3}\c!width+\correspondencestylevalue{#2}{#3}\c!distance\relax}}%
    \executeifdefined{\v!correspondence\v!description\correspondencestylevalue{#2}{#3}\c!location}\gobblethreearguments{#1}{#2}{#3}%
    \doifelsecorrespondencestylevalue{#2}{#3}\c!after
      {\endgraf\correspondencestylevalue{#2}{#3}\c!after}
@@ -640,10 +609,15 @@
    \egroup}
 
 \setvalue{\v!correspondence\v!description\v!left}#1#2#3%
-  {\hangindent\scratchdimen
-   \hangafter\zerocount
+  {\EveryPar{\hangindent\scratchdimen\hangafter\zerocount}%
    \setbox\scratchbox\hbox\!!to\scratchdimen{\box\scratchbox\hss}%
    \noindent\llap{\box\scratchbox}\directsetup{#1:#3}}
+
+\setvalue{\v!correspondence\v!description\v!right}#1#2#3%
+  {\EveryPar{\hangindent-\scratchdimen\hangafter\zerocount}%
+   \setbox\scratchbox\hbox\!!to\scratchdimen{\hss\box\scratchbox}%
+   \setbox\scratchbox\hbox\!!to\!!zeropoint {\hskip\dimexpr\hsize-\scratchdimen\relax\box\scratchbox\hss}%
+   \noindent\rlap{\box\scratchbox}\directsetup{#1:#3}}
 
 \setvalue{\v!correspondence\v!description\v!top}#1#2#3%
   {\box\scratchbox\par

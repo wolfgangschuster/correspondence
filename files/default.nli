@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2010.10.24,
+%D        version=2010.10.06,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -734,7 +734,7 @@
     \executeifdefined{\v!letter:\v!reference:\@@@@lsreferencealternative}\donothing
   \stopnointerference
 
-  \setups[\v!letter:\v!reference:\@@@@lsreferencealternative]
+  \doif\@@@@lsoptionposition\v!yes{\setups[\v!letter:\v!reference:\@@@@lsreferencealternative]}
 
 \stopsetups
 

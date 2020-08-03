@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-letter,
-%D        version=2010.08.27,
+%D        version=2010.09.05,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Framework for Letters,
 %D         author=Wolfgang Schuster,
@@ -64,7 +64,18 @@
 \def\setupletterframe      [#1]{\setupletterstyle[#1]}
 \def\setuplettersection    [#1]{\setupletterstyle[#1][\v!layer]}
 \def\setupletterdescription[#1]{\setupletterstyle[#1][\v!frame]}
-\def\setupletteroptions    [#1]{\setupletterstyle[#1]}
+\def\setupletteroption     [#1]{\setupletterstyle[#1]}
+
+\def\letterstyleparameter        {\letterstylevalue            }
+\def\letterlayoutparameter       {\letterstylevalue            }
+\def\letterlayerparameter      #1{\letterstylevalue{#1\v!layer}}
+\def\letterframeparameter      #1{\letterstylevalue{#1\v!frame}}
+\def\lettersectionparameter      {\letterstylevalue            }
+\def\letterdescriptionparameter  {\letterstylevalue            }
+\def\letteroptionparameter       {\letterstylevalue\v!option   }
+
+\def\correspagenumber   {\subpagenumber}
+\def\numberofcorrespages{\nofsubpages  }
 
 %D \macros
 %D   {setupletter}
@@ -509,7 +520,9 @@
 
   \page[\@@@@lsoptionpage]
 
-  \setupcorrespagenumber[\v!reset]
+  \setupsubpagenumber
+    [\c!way=\v!by\v!text,
+     \c!state=\v!start]
 
   \setuppagenumbering
     [\c!alternative=\@@@@lsoptionalternative,
@@ -541,7 +554,7 @@
 
   \setuplayout[\v!reset]
 
-  \resetcorrespagenumber
+  \resetsubpagenumber
 
   \endgroup
 

@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-resume,
-%D        version=2009.10.10,
+%D        version=2010.09.05,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Resumes,
 %D         author=Wolfgang Schuster,
@@ -34,6 +34,9 @@
 \setvalue{\v!resume:\????rs:\v!secondpage}{\v!layout}
 
 \definecorrespondencesetup[\v!resume\v!style][\v!resume][\????rs]
+
+\def\correspagenumber   {\subpagenumber}
+\def\numberofcorrespages{\nofsubpages  }
 
 %D \macros
 %D   {setupresume}
@@ -218,7 +221,9 @@
 
   \page[\@@@@rsoptionpage]
 
-  \setupcorrespagenumber[\v!reset]
+  \setupsubpagenumber
+    [\c!way=\v!by\v!text,
+     \c!state=\v!start]
 
   \setuppagenumbering
     [\c!alternative=\@@@@rsoptionalternative,
@@ -250,7 +255,7 @@
 
   \setuplayout[\v!reset]
 
-  \resetcorrespagenumber
+  \resetsubpagenumber
 
   \endgroup
 

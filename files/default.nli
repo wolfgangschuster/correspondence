@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2010.06.17,
+%D        version=2010.10.24,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -254,7 +254,8 @@
 \chardef\letterenvironmentmode\zerocount
 
 \def\startletter
-  {\begingroup
+  {\autostarttext
+   \begingroup
    \dodoubleempty\dostartletter}
 
 \def\dostartletter[#1][#2]%
@@ -278,13 +279,15 @@
    \setbuffer[lettercontent]#3\endbuffer
    \processlettervalues
    \directsetup{\v!letter:\v!place}%
-   \endgroup}
+   \endgroup
+   \autostoptext}
 
 \def\dostartbufferletter[#1][#2]%
   {\def\stopletter
      {\processlettervalues
       \directsetup{\v!letter:\v!place}%
-      \endgroup}
+      \endgroup
+      \autostoptext}
    \ifsecondargument
      \getparameters[\????ld][#1]%
      \letter!local!setups{#1}%
@@ -318,7 +321,7 @@
    \def\ps     ##1{\doglobal\appendtoks\setvalue{\????ld\c!postscript}{##1}\to\letter!local!commands\doglobal\appendtocommalist\c!postscript\letter!list!descriptions}%
    \def\cc     ##1{\doglobal\appendtoks\setvalue{\????ld\c!copy      }{##1}\to\letter!local!commands\doglobal\appendtocommalist\c!copy      \letter!list!descriptions}%
    \def\encl   ##1{\doglobal\appendtoks\setvalue{\????ld\c!enclosure }{##1}\to\letter!local!commands\doglobal\appendtocommalist\c!enclosure \letter!list!descriptions}%
-   \setbox\scratchbox\vbox{\trialtypesettingtrue\getbuffer[lettercontent]}%
+   \setbox\scratchbox\vbox{\doifmodeelse\s!mkiv\settrialtypesetting\trialtypesettingtrue\getbuffer[lettercontent]}%
    \doifmode{mkiv}{\processassignmentcommand[\dotoks\letter!local!setups]\processlettersetups}% only available in mkiv
    \flushtoks\letter!local!commands}
 

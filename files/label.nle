@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=label,
-%D        version=2009.07.03,
+%D        version=2010.09.09,
 %D          title=\CONTEXT\ Letter Extension,
 %D       subject=Labels,
 %D         author=Wolfgang Schuster,
@@ -257,6 +257,33 @@
 \setuplabeltext[\s!fr][\v!letter:\c!street=]
 \setuplabeltext[\s!it][\v!letter:\c!street=]
 \setuplabeltext[\s!es][\v!letter:\c!street=]
+
+%D Label: page
+
+\setuplabeltext[\s!en][\v!letter:\c!page=Page ]
+\setuplabeltext[\s!nl][\v!letter:\c!page=]
+\setuplabeltext[\s!de][\v!letter:\c!page=Seite ]
+\setuplabeltext[\s!fr][\v!letter:\c!page=]
+\setuplabeltext[\s!it][\v!letter:\c!page=]
+\setuplabeltext[\s!es][\v!letter:\c!page=]
+
+%D Label: of
+
+\setuplabeltext[\s!en][\v!letter:\c!of= of ]
+\setuplabeltext[\s!nl][\v!letter:\c!of=]
+\setuplabeltext[\s!de][\v!letter:\c!of= von ]
+\setuplabeltext[\s!fr][\v!letter:\c!of=]
+\setuplabeltext[\s!it][\v!letter:\c!of=]
+\setuplabeltext[\s!es][\v!letter:\c!of=]
+
+%D Label: address
+
+\setuplabeltext[\s!en][\v!letter:\c!address=Address]
+\setuplabeltext[\s!nl][\v!letter:\c!address=]
+\setuplabeltext[\s!de][\v!letter:\c!address=Adresse]
+\setuplabeltext[\s!fr][\v!letter:\c!address=]
+\setuplabeltext[\s!it][\v!letter:\c!address=]
+\setuplabeltext[\s!es][\v!letter:\c!address=]
 
 %D \subject{Memo}
 

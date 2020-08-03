@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-00,
-%D      version=2012.05.15,
+%D      version=2012.05.30,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Correspondence,
 %D       author=Wolfgang Schuster,
@@ -524,6 +524,7 @@
   {\def\correspondence_description_format_item#text{\startitem#text\stopitem}%
    \dontleavehmode\vtop\bgroup
      \leftskip\zeropoint % prevent additional offset when “location=left” is used
+     \doif{\correspondencedescriptionparameter\c!symbol}\v!none{\setupitemgroup[\v!correspondence][\v!each][\c!width=\zeropoint,distance=\zeropoint]}%
      \startitemgroup[\v!correspondence][\v!packed,\correspondencedescriptionparameter\c!symbol]%
      \processcommacommand[\m_correspondence_description_items]\correspondence_description_format_item
      \stopitemgroup

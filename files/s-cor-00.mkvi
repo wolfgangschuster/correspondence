@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-00,
-%D      version=2011.12.26,
+%D      version=2012.01.15,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Correspondence,
 %D       author=Wolfgang Schuster,
@@ -59,7 +59,6 @@
   \setinterfacevariable {correspondence}  {correspondence}
   \setinterfacevariable {letter}          {letter}
   \setinterfacevariable {memo}            {memo}
-  \setinterfacevariable {firsthead}       {firsthead}
   \setinterfacevariable {nexthead}        {nexthead}
   \setinterfacevariable {lefthead}        {lefthead}
   \setinterfacevariable {righthead}       {righthead}
@@ -128,9 +127,23 @@
   \setinterfacemessage{correspondence}{3}{Undefined description '--' for the '--' environment}
 \stopinterface
 
+% Namespaces
+
+\installnamespace {correspondence}
+\installnamespace {correspondencebuffer}
+\installnamespace {correspondencelayer}
+\installnamespace {correspondencelayerstate}
+\installnamespace {correspondenceframe}
+\installnamespace {correspondencesection}
+\installnamespace {correspondenceoption}
+\installnamespace {correspondencedescription}
+\installnamespace {correspondencedescriptionlocation}
+\installnamespace {correspondencestyle}
+\installnamespace {correspondenceelement}
+\installnamespace {correspondencelayout}
+
 % Environment
 
-\installnamespace                          {correspondence}
 \installcommandhandler \????correspondence {correspondence} \????correspondence
 
 \unexpanded\def\correspondence_beg[#environment]%
@@ -143,7 +156,7 @@
   {\iffirstargument
      \setupcurrentcorrespondence[#parameters]%
    \fi
-   \dostartbuffer[\currentcorrespondence][\e!start\currentcorrespondence][\e!stop\currentcorrespondence]}
+   \grabbufferdatadirect{\????correspondencebuffer\currentcorrespondence}{\e!start\currentcorrespondence}{\e!stop\currentcorrespondence}}
 
 \unexpanded\def\correspondence_end[#environment]%
   {\correspondence_place[#environment]%
@@ -210,10 +223,7 @@
 
 % Layers
 
-\installnamespace                                           {correspondencelayer}
 \installsimplecommandhandler       \????correspondencelayer {correspondencelayer} \????correspondencelayer
-
-\installnamespace                                           {correspondenceframe}
 \installsimpleframedcommandhandler \????correspondenceframe {correspondenceframe} \????correspondenceframe
 
 \unexpanded\def\correspondence_layer_define[#environment][#element]%
@@ -245,28 +255,28 @@
       \setupcurrentcorrespondenceframe[#parameters]}%
    \processcommalist[#elements]\correspondence_frame_command}
 
-\setvalue{correspondence_layer_state_\v!start }{\!!doneatrue  \!!donebfalse \!!donecfalse}
-\setvalue{correspondence_layer_state_\v!stop  }{\!!doneafalse \!!donebfalse \!!donecfalse}
-\setvalue{correspondence_layer_state_\v!next  }{\!!doneafalse \!!donebtrue  \!!donectrue }
-\setvalue{correspondence_layer_state_\v!repeat}{\!!doneatrue  \!!donebtrue  \!!donectrue }
-\setvalue{correspondence_layer_state_\v!left  }{\!!doneafalse \!!donebfalse \!!donectrue }
-\setvalue{correspondence_layer_state_\v!right }{\!!doneafalse \!!donebtrue  \!!donecfalse}
-\setvalue{correspondence_layer_state_\v!even  }{\!!doneafalse \!!donebfalse \!!donectrue }
-\setvalue{correspondence_layer_state_\v!odd   }{\!!doneafalse \!!donebtrue  \!!donecfalse}
+\setvalue{\????correspondencelayerstate\v!start }{\!!doneatrue  \!!donebfalse \!!donecfalse}
+\setvalue{\????correspondencelayerstate\v!stop  }{\!!doneafalse \!!donebfalse \!!donecfalse}
+\setvalue{\????correspondencelayerstate\v!next  }{\!!doneafalse \!!donebtrue  \!!donectrue }
+\setvalue{\????correspondencelayerstate\v!repeat}{\!!doneatrue  \!!donebtrue  \!!donectrue }
+\setvalue{\????correspondencelayerstate\v!left  }{\!!doneafalse \!!donebfalse \!!donectrue }
+\setvalue{\????correspondencelayerstate\v!right }{\!!doneafalse \!!donebtrue  \!!donecfalse}
+\setvalue{\????correspondencelayerstate\v!even  }{\!!doneafalse \!!donebfalse \!!donectrue }
+\setvalue{\????correspondencelayerstate\v!odd   }{\!!doneafalse \!!donebtrue  \!!donecfalse}
 
 \unexpanded\def\correspondence_layer_place#environment#element%
   {\correspondence_parameters{#environment}{#element}\v!layer
-   \expandcheckedcsname{correspondence_layer_state_}{\correspondencelayerparameter\c!state}\v!stop
+   \expandcheckedcsname\????correspondencelayerstate{\correspondencelayerparameter\c!state}\v!stop
    \ifnum\c_correspondence_page=\plusone
-     \if!!donea\correspondence_layer_direct\fi
+     \if!!donea\doubleexpandafter\correspondence_layer_direct\else\doubleexpandafter\gobbletwoarguments\fi
    \else\ifodd\c_correspondence_page
-     \if!!doneb\correspondence_layer_direct\fi
+     \if!!doneb\tripleexpandafter\correspondence_layer_direct\else\tripleexpandafter\gobbletwoarguments\fi
    \else
-     \if!!donec\correspondence_layer_direct\fi
-   \fi\fi
+     \if!!donec\tripleexpandafter\correspondence_layer_direct\else\tripleexpandafter\gobbletwoarguments\fi
+   \fi\fi{#environment}{#element}%
    \tightlayer[\currentcorrespondencelayer]}
 
-\unexpanded\def\correspondence_layer_direct
+\unexpanded\def\correspondence_layer_direct#environment#element%
   {\setlayer
      [\currentcorrespondencelayer]
      {\inheritedcorrespondenceframeframed
@@ -275,7 +285,7 @@
          \doadaptrightskip{\correspondencelayerparameter\c!rightmargin}%
          \doifsymboldefinedelse{\correspondencelayerparameter\c!symbol}%
            {\symbol[\correspondencelayerparameter\c!symbol]}
-           {\texsetup\currentcorrespondencecontent}}}}
+           {\correspondence_element_place[#environment][\v!layer][#element][\correspondencelayerparameter\c!alternative]}}}}
 
 \unexpanded\def\correspondence_layer_check[#environment][#element]%
   {\def\currentcorrespondencelayer{#environment:#element}%
@@ -285,6 +295,8 @@
 
 \setupcorrespondencelayer
   [      \c!state=\v!start,
+             \c!x=\zeropoint,
+             \c!y=\zeropoint,
    \c!alternative=\s!default,
       \c!distance=\lineheight,
      \c!separator=\crlf]
@@ -296,7 +308,6 @@
 
 % Sections
 
-\installnamespace                                       {correspondencesection}
 \installsimplecommandhandler \????correspondencesection {correspondencesection} \????correspondencesection
 
 \unexpanded\def\correspondence_section_define[#environment][#element]%
@@ -320,7 +331,7 @@
      \doifsomething{\correspondencesectionparameter\c!align    }{\setupalign    [\correspondencesectionparameter\c!align    ]}%
      \doifsomething{\correspondencesectionparameter\c!indenting}{\setupindenting[\correspondencesectionparameter\c!indenting]}%
      \usecorrespondencesectionstyleandcolor\c!style\c!color
-     \texsetup\currentcorrespondencecontent
+     \correspondence_element_place[#environment][\v!section][#element][\correspondencesectionparameter\c!alternative]%
      \correspondencesectionparameter\c!after
      \doifsomethingelse{\correspondencesectionparameter\c!spaceafter }{\blank[\correspondencesectionparameter\c!spaceafter ]}{\endgraf}%
    \else
@@ -337,7 +348,6 @@
 
 % Options
 
-\installnamespace                                      {correspondenceoption}
 \installsimplecommandhandler \????correspondenceoption {correspondenceoption} \????correspondenceoption
 
 \unexpanded\def\correspondence_option_setup[#environment]%
@@ -355,7 +365,6 @@
 
 % Descriptions
 
-\installnamespace                                           {correspondencedescription}
 \installsimplecommandhandler \????correspondencedescription {correspondencedescription} \????correspondencedescription
 
 \unexpanded\def\correspondence_description_define[#environment][#element]%
@@ -368,7 +377,7 @@
       \setupcurrentcorrespondencedescription[#parameters]}%
    \processcommalist[#elements]\correspondence_description_command}
 
-\unexpanded\def\correspondence_description_place[#environment][#element]%
+\unexpanded\def\correspondence_description_place#environment#element%
   {\begingroup
    \edef\currentcorrespondencedescription{#environment:#element}%
    \ifcsname\currentcorrespondencedescriptionhash\s!parent\endcsname
@@ -380,11 +389,11 @@
          {\usecorrespondencedescriptionstyleandcolor\c!headstyle\c!headcolor
           \correspondencedescriptionparameter\c!headcommand}%
        \assignwidth
-         {\scratchdimen}
          {\correspondencedescriptionparameter\c!width}
+         {\scratchdimen}
          {\unhcopy\scratchbox}
          {\correspondencedescriptionparameter\c!distance}%
-       \expandcheckedcsname{correspondence_description_location_}{\correspondencedescriptionparameter\c!location}\v!left
+       \expandcheckedcsname\????correspondencedescriptionlocation{\correspondencedescriptionparameter\c!location}\v!left
        \correspondencedescriptionparameter\c!after
        \doifsomethingelse{\correspondencedescriptionparameter\c!spaceafter}{\blank[\correspondencedescriptionparameter\c!spaceafter]}{\endgraf}%
      \fi
@@ -393,19 +402,19 @@
    \fi
    \endgroup}
 
-\setvalue{correspondence_description_location_\v!left}%
+\setvalue{\????correspondencedescriptionlocation\v!left}%
   {\EveryPar{\hangindent\scratchdimen\hangafter\zerocount}%
    \setbox\scratchbox\hbox to \scratchdimen{\box\scratchbox\hss}%
    \noindent\llap{\box\scratchbox}\correspondencedescriptionparameter\c!textcommand}
 
-\setvalue{correspondence_description_location_\v!top}%
+\setvalue{\????correspondencedescriptionlocation\v!top}%
   {\noindent\box\scratchbox
    \doisomethingelse{\correspondencedescriptionparameter\c!spaceinbetween}
      {\blank[\correspondencedescriptionparameter\c!spaceinbetween]}
      {\nobreak\endgraf}%
    \correspondencedescriptionparameter\c!textcommand}
 
-\setvalue{correspondence_description_location_\v!text}%
+\setvalue{\????correspondencedescriptionlocation\v!text}%
   {\noindent\scratchbox\scratchbox\correspondencedescriptionparameter\c!textcommand}
 
 \setupcorrespondencedescription
@@ -415,11 +424,11 @@
 % Elements
 
 \unexpanded\def\correspondence_element_define[#environment][#type][#element][#name]#content%
-  {\setvalue{correspondence_element_#environment_#type_#element_#name}{#content}}
+  {\setvalue{\????correspondenceelement:#environment:#type:#element:#name}{#content}}
 
 \unexpanded\def\correspondence_element_place[#environment][#type][#element][#name]%
-  {\correspondence_parameters{#environment}{#element}\empty
-   \expandcheckedcsname{correspondence_element_#environment_#type_#element_}{#name}\s!default}
+  {\correspondence_parameters{#environment}{#element}{#type}%
+   \expandcheckedcsname{\????correspondenceelement:#environment:#type:#element:}{#name}\s!default}
 
 % Files
 
@@ -430,7 +439,6 @@
 
 % Style
 
-\installnamespace                                     {correspondencestyle}
 \installsimplecommandhandler \????correspondencestyle {correspondencestyle} \????correspondencestyle
 
 \unexpanded\def\correspondence_style_setup[#environment][#elements][#parameters]%
@@ -455,38 +463,39 @@
 
 \newcount\c_correspondence_page
 
-\ifdefined\changetolayout \else \let\changetolayout\page_layouts_change \fi
-
 \installlayoutmethod \v!correspondence
   {\global\advance\c_correspondence_page\plusone
    \ifnum\c_correspondence_page=\plusone
-     \changetolayout{\currentcorrespondence:\v!firstpage}%
+     \changetolayout{\????correspondencelayout\currentcorrespondence\v!firstpage}%
    \else\ifodd\c_correspondence_page
-     \changetolayout{\currentcorrespondence:\v!rightpage}%
+     \changetolayout{\????correspondencelayout\currentcorrespondence\v!rightpage}%
    \else
-     \changetolayout{\currentcorrespondence:\v!leftpage }%
+     \changetolayout{\????correspondencelayout\currentcorrespondence\v!leftpage }%
    \fi\fi}
 
 \unexpanded\def\correspondence_layout_define
-  {\dotripleempty\correspondence_layout_parameters}
+  {\dotripleempty\correspondence_layout_define_indeed}
 
-\unexpanded\def\correspondence_layout_parameters[#environment][#self][#parent]%
-  {\ifthirdargument
-     \definelayout[#environment:#self][#environment:#parent]%
+\unexpanded\def\correspondence_layout_define_indeed[#environment][#self][#parent]%
+  {\def\m_correspondence_layout_self  {#environment#self}%
+   \def\m_correspondence_layout_parent{#environment#parent}%
+   \ifthirdargument
+     \definelayout[\????correspondencelayout\m_correspondence_layout_self][\????correspondencelayout\m_correspondence_layout_parent]%
    \else
-     \definelayout[#environment:#self]%
+     \definelayout[\????correspondencelayout\m_correspondence_layout_self]%
    \fi}
 
 \unexpanded\def\correspondence_layout_setup[#environment][#elements][#parameters]%
   {\def\correspondence_layout_command#element%
-     {\setuplayout[#environment:#element][#parameters]}%
+     {\def\m_correspondence_layout_current{#environment#element}%
+      \setuplayout[\????correspondencelayout\m_correspondence_layout_current][#parameters]}%
    \processcommalist[#elements]\correspondence_layout_command}
 
 \appendtoks
-  \normalexpanded{\correspondence_layout_define[\currentcorrespondence][\v!firstpage ]}%
-  \normalexpanded{\correspondence_layout_define[\currentcorrespondence][\v!secondpage]}%
-  \normalexpanded{\correspondence_layout_define[\currentcorrespondence][\v!leftpage  ][\v!secondpage]}%
-  \normalexpanded{\correspondence_layout_define[\currentcorrespondence][\v!rightpage ][\v!secondpage]}%
+  \correspondence_layout_define[\currentcorrespondence][\v!firstpage ]%
+  \correspondence_layout_define[\currentcorrespondence][\v!secondpage]%
+  \correspondence_layout_define[\currentcorrespondence][\v!leftpage  ][\v!secondpage]%
+  \correspondence_layout_define[\currentcorrespondence][\v!rightpage ][\v!secondpage]%
 \to \everydefinecorrespondence
 
 % Lists

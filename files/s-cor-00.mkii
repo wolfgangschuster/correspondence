@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-00,
-%D      version=2011.12.26,
+%D      version=2012.01.15,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Correspondence,
 %D       author=Wolfgang Schuster,
@@ -55,7 +55,6 @@
   \setinterfacevariable {correspondence}  {correspondence}
   \setinterfacevariable {letter}          {letter}
   \setinterfacevariable {memo}            {memo}
-  \setinterfacevariable {firsthead}       {firsthead}
   \setinterfacevariable {nexthead}        {nexthead}
   \setinterfacevariable {lefthead}        {lefthead}
   \setinterfacevariable {righthead}       {righthead}
@@ -124,6 +123,21 @@
   \setinterfacemessage{correspondence}{3}{Undefined description '--' for the '--' environment}
 \stopinterface
 
+% Namespaces
+
+\def\????correspondence                    {@@@@correspondence}
+\def\????correspondencebuffer              {@@@@correspondencebuffer}
+\def\????correspondencelayer               {@@@@correspondencelayer}
+\def\????correspondencelayerstate          {@@@@correspondencelayerstate}
+\def\????correspondenceframe               {@@@@correspondenceframe}
+\def\????correspondencesection             {@@@@correspondencesection}
+\def\????correspondenceoption              {@@@@correspondenceoption}
+\def\????correspondencedescription         {@@@@correspondencedescription}
+\def\????correspondencedescriptionlocation {@@@@correspondencedescriptionlocation}
+\def\????correspondencestyle               {@@@@correspondencestyle}
+\def\????correspondenceelement             {@@@@correspondenceelement}
+\def\????correspondencelayout              {@@@@correspondencelayout}
+
 % Environment
 
 \unexpanded\def\startcorrespondence[#1]%
@@ -136,7 +150,7 @@
   {\iffirstargument
      \setupcurrentcorrespondence[#1]%
    \fi
-   \dostartbuffer[\currentcorrespondence][\e!start\currentcorrespondence][\e!stop\currentcorrespondence]}
+   \dostartbuffer[\????correspondencebuffer\currentcorrespondence][\e!start\currentcorrespondence][\e!stop\currentcorrespondence]}
 
 \unexpanded\def\stopcorrespondence[#1]%
   {\placecorrespondence[#1]%
@@ -164,14 +178,17 @@
 
 % Setup
 
-
-\def\????correspondence{@@@@correspondence}
-
 \def\correspondenceparameter
   {\namedcorrespondenceparameter\currentcorrespondence}
 
 \def\namedcorrespondenceparameter#1#2%
-  {\csname\ifcsname\????correspondence#1#2\endcsname\????correspondence#1#2\else\s!empty\fi\endcsname}
+  {\csname
+     \ifcsname\????correspondence#1#2\endcsname
+       \????correspondence#1#2%
+     \else
+       \s!empty
+     \fi
+   \endcsname}
 
 \unexpanded\def\setupcorrespondence[#1]%
   {\def\currentcorrespondence{#1}%
@@ -203,10 +220,10 @@
    \doifsomething{\correspondenceoptionparameter\c!backgroundcolor}%
      {\setupbackgrounds[\v!paper][\c!background=\v!color,\c!backgroundcolor=\correspondenceoptionparameter\c!backgroundcolor]}
    % layers
-   \let\ascii\empty
-   \def\addcorrespondencelayertolist##1{\addtocommalist{\currentcorrespondence:##1}\ascii}
+   \let\correspondencebackgrounds\empty
+   \def\addcorrespondencelayertolist##1{\addtocommalist{\currentcorrespondence:##1}\correspondencebackgrounds}
    \processcommacommand[\accesscorrespondenceelements\currentcorrespondence\v!layer,correspondence:backgroundimage,correspondence:background]\addcorrespondencelayertolist
-   \expanded{\setupbackgrounds[\v!page][\c!background={\ascii}]}%
+   \expanded{\setupbackgrounds[\v!page][\c!background={\correspondencebackgrounds}]}%
    % layout
    \setuppagenumbering[\c!alternative=\v!singlesided,\c!location=]%
    \setupsubpagenumber[\c!way=\v!by\v!text,\c!state=\v!start]%
@@ -224,20 +241,33 @@
 
 % Layers
 
-\def\????correspondencelayer{@@@@correspondencelayer}
-\def\????correspondenceframe{@@@@correspondenceframe}
-
 \def\correspondencelayerparameter
   {\namedcorrespondencelayerparameter\currentcorrespondencelayer}
 
 \def\namedcorrespondencelayerparameter#1#2%
-  {\csname\ifcsname\????correspondencelayer#1#2\endcsname\????correspondencelayer#1#2\else\s!empty\fi\endcsname}
+  {\csname
+     \ifcsname\????correspondencelayer#1#2\endcsname
+       \????correspondencelayer#1#2%
+     \else\ifcsname\????correspondencelayer#2\endcsname
+       \????correspondencelayer#2%
+     \else
+       \s!empty
+     \fi\fi
+   \endcsname}
 
 \def\correspondenceframeparameter
   {\namedcorrespondenceframeparameter\currentcorrespondenceframe}
 
 \def\namedcorrespondenceframeparameter#1#2%
-  {\csname\ifcsname\????correspondenceframe#1#2\endcsname\????correspondenceframe#1#2\else\s!empty\fi\endcsname}
+  {\csname
+     \ifcsname\????correspondenceframe#1#2\endcsname
+       \????correspondenceframe#1#2%
+     \else\ifcsname\????correspondenceframe#2\endcsname
+       \????correspondenceframe#2%
+     \else
+       \s!empty
+     \fi\fi
+   \endcsname}
 
 \unexpanded\def\setupcorrespondencelayer[#1][#2][#3]%
   {\def\dosetupcorrespondencelayer##1%
@@ -261,9 +291,9 @@
 \unexpanded\def\definecorrespondencelayer[#1][#2]%
   {\def\currentcorrespondencelayer{#1:#2}%
    \let\currentcorrespondenceframe\currentcorrespondencelayer
-   \presetlocalframed[\????correspondenceframe\currentcorrespondenceframe]%
-   \setupcurrentcorrespondencelayer[\s!parent=\????correspondencelayer,\c!state=\v!start,\c!alternative=\s!default,\c!distance=\lineheight,\c!separator=\crlf]%
-   \setupcurrentcorrespondenceframe[\s!parent=\????correspondenceframe,\c!frame=\v!off,\c!offset=\zeropoint,\c!align=\v!right]%
+   \copylocalframed[\????correspondenceframe\currentcorrespondenceframe][\????correspondenceframe]%
+   \expandafter\let\csname\????correspondencelayer\currentcorrespondencelayer\s!parent\endcsname\????correspondencelayer
+   \expandafter\let\csname\????correspondenceframe\currentcorrespondenceframe\s!parent\endcsname\????correspondenceframe
    \definelayer  [#1:#2][\c!width=\overlaywidth,\c!height=\overlayheight]%
    \defineoverlay[#1:#2][\placecorrespondencelayer{#1}{#2}]}
 
@@ -277,28 +307,28 @@
      \c!preset=\correspondencelayerparameter\c!preset]%
 \to \everysetupcorrespondencelayer
 
-\setvalue{correspondence_layer_state_\v!start }{\!!doneatrue  \!!donebfalse \!!donecfalse}
-\setvalue{correspondence_layer_state_\v!stop  }{\!!doneafalse \!!donebfalse \!!donecfalse}
-\setvalue{correspondence_layer_state_\v!next  }{\!!doneafalse \!!donebtrue  \!!donectrue }
-\setvalue{correspondence_layer_state_\v!repeat}{\!!doneatrue  \!!donebtrue  \!!donectrue }
-\setvalue{correspondence_layer_state_\v!left  }{\!!doneafalse \!!donebfalse \!!donectrue }
-\setvalue{correspondence_layer_state_\v!right }{\!!doneafalse \!!donebtrue  \!!donecfalse}
-\setvalue{correspondence_layer_state_\v!even  }{\!!doneafalse \!!donebfalse \!!donectrue }
-\setvalue{correspondence_layer_state_\v!odd   }{\!!doneafalse \!!donebtrue  \!!donecfalse}
+\setvalue{\????correspondencelayerstate\v!start }{\!!doneatrue  \!!donebfalse \!!donecfalse}
+\setvalue{\????correspondencelayerstate\v!stop  }{\!!doneafalse \!!donebfalse \!!donecfalse}
+\setvalue{\????correspondencelayerstate\v!next  }{\!!doneafalse \!!donebtrue  \!!donectrue }
+\setvalue{\????correspondencelayerstate\v!repeat}{\!!doneatrue  \!!donebtrue  \!!donectrue }
+\setvalue{\????correspondencelayerstate\v!left  }{\!!doneafalse \!!donebfalse \!!donectrue }
+\setvalue{\????correspondencelayerstate\v!right }{\!!doneafalse \!!donebtrue  \!!donecfalse}
+\setvalue{\????correspondencelayerstate\v!even  }{\!!doneafalse \!!donebfalse \!!donectrue }
+\setvalue{\????correspondencelayerstate\v!odd   }{\!!doneafalse \!!donebtrue  \!!donecfalse}
 
 \unexpanded\def\placecorrespondencelayer#1#2%
   {\correspondenceparameters{#1}{#2}\v!layer
-   \executeifdefined{correspondence_layer_state_\correspondencelayerparameter\c!state}{\getvalue{correspondence_layer_state_\v!stop}}
+   \executeifdefined{\????correspondencelayerstate\correspondencelayerparameter\c!state}{\getvalue{\????correspondencelayerstate\v!stop}}
    \ifnum\correspondencepage=\plusone
-     \if!!donea\doplacecorrespondencelayer\fi
+     \if!!donea\@EAEAEA      \doplacecorrespondencelayer\else\@EAEAEA      \gobbletwoarguments\fi
    \else\ifodd\correspondencepage
-     \if!!doneb\doplacecorrespondencelayer\fi
+     \if!!doneb\@EAEAEAEAEAEA\doplacecorrespondencelayer\else\@EAEAEAEAEAEA\gobbletwoarguments\fi
    \else
-     \if!!donec\doplacecorrespondencelayer\fi
-   \fi\fi
+     \if!!donec\@EAEAEAEAEAEA\doplacecorrespondencelayer\else\@EAEAEAEAEAEA\gobbletwoarguments\fi
+   \fi\fi{#1}{#2}%
    \tightlayer[\currentcorrespondencelayer]}
 
-\unexpanded\def\doplacecorrespondencelayer
+\unexpanded\def\doplacecorrespondencelayer#1#2%
   {\setlayer
      [\currentcorrespondencelayer]
      {\localframed[\????correspondenceframe\currentcorrespondenceframe]
@@ -307,7 +337,7 @@
          \dostartattributes{\????correspondencelayer\currentcorrespondencelayer}\c!style\c!color
          \doifsymboldefinedelse{\correspondencelayerparameter\c!symbol}%
            {\symbol[\correspondencelayerparameter\c!symbol]}
-           {\directsetup\currentcorrespondencecontent}%
+           {\placecorrespondenceelement[#1][\v!layer][#2][\correspondencesectionparameter\c!alternative]}%
          \dostopattributes}}}
 
 \unexpanded\def\checkcorrespondencelayer[#1][#2]%
@@ -316,25 +346,42 @@
      \showmessage\m!correspondence{2}{#1,#2}%
    \fi}
 
-% Sections
+\getparameters
+  [\????correspondencelayer]
+  [      \c!state=\v!start,
+             \c!x=\zeropoint,
+             \c!y=\zeropoint,
+   \c!alternative=\s!default,
+      \c!distance=\lineheight,
+     \c!separator=\crlf]
 
-\def\????correspondencesection{@@@@correspondencesection}
+\presetlocalframed[\????correspondenceframe]
+
+\getparameters
+  [\????correspondenceframe]
+  [ \c!frame=\v!off,
+   \c!offset=\zeropoint,
+    \c!align=\v!right]
+
+% Sections
 
 \def\correspondencesectionparameter
   {\namedcorrespondencesectionparameter\currentcorrespondencesection}
 
 \def\namedcorrespondencesectionparameter#1#2%
-  {\csname\ifcsname\????correspondencesection#1#2\endcsname\????correspondencesection#1#2\else\s!empty\fi\endcsname}
+  {\csname
+     \ifcsname\????correspondencesection#1#2\endcsname
+       \????correspondencesection#1#2%
+     \else\ifcsname\????correspondencesection#2\endcsname
+       \????correspondencesection#2%
+     \else
+       \s!empty
+     \fi\fi
+   \endcsname}
 
 \unexpanded\def\definecorrespondencesection[#1][#2]%
   {\def\currentcorrespondencesection{#1:#2}%
-   \setupcurrentcorrespondencesection
-     [\s!parent=\????correspondencesection,
-      \c!spacebefore=\v!line,
-      \c!spaceafter=\v!line,
-      \c!spaceinbetween={\v!samepage,\v!line},
-      \c!alternative=\s!default,
-      \c!separator=\crlf]}
+   \expandafter\let\csname\????correspondencesection\currentcorrespondencesection\s!parent\endcsname\????correspondencesection}
 
 \unexpanded\def\setupcorrespondencesection[#1][#2][#3]%
   {\def\dosetupcorrespondencesection##1%
@@ -356,7 +403,7 @@
      \doifsomething{\correspondencesectionparameter\c!align    }{\setupalign    [\correspondencesectionparameter\c!align    ]}%
      \doifsomething{\correspondencesectionparameter\c!indenting}{\setupindenting[\correspondencesectionparameter\c!indenting]}%
      \dostartattributes{\????correspondencesection\currentcorrespondencesection}\c!style\c!color
-     \directsetup\currentcorrespondencecontent
+     \placecorrespondenceelement[#1][\v!section][#2][\correspondencesectionparameter\c!alternative]%
      \dostopattributes
      \correspondencesectionparameter\c!after
      \doifsomethingelse{\correspondencesectionparameter\c!spaceafter }{\blank[\correspondencesectionparameter\c!spaceafter ]}{\endgraf}%
@@ -365,15 +412,29 @@
    \fi
    \endgroup}
 
-% Options
+\getparameters
+  [\????correspondencesection]
+  [   \c!spacebefore=\v!line,
+       \c!spaceafter=\v!line,
+   \c!spaceinbetween={\v!samepage,\v!line},
+      \c!alternative=\s!default,
+        \c!separator=\crlf]
 
-\def\????correspondenceoption{@@@@correspondenceoption}
+% Options
 
 \def\correspondenceoptionparameter
   {\namedcorrespondenceoptionparameter\currentcorrespondenceoption}
 
 \def\namedcorrespondenceoptionparameter#1#2%
-  {\csname\ifcsname\????correspondenceoption#1#2\endcsname\????correspondenceoption#1#2\else\s!empty\fi\endcsname}
+  {\csname
+     \ifcsname\????correspondenceoption#1#2\endcsname
+       \????correspondenceoption#1#2%
+     \else\ifcsname\????correspondenceoption#2\endcsname
+       \????correspondenceoption#2%
+     \else
+       \s!empty
+     \fi\fi
+   \endcsname}
 
 \unexpanded\def\setupcorrespondenceoption[#1]%
   {\edef\currentcorrespondenceoption{#1}%
@@ -393,13 +454,19 @@
 
 % Descriptions
 
-\def\????correspondencedescription{@@@@correspondencedescription}
-
 \def\correspondencedescriptionparameter
   {\namedcorrespondencedescriptionparameter\currentcorrespondencedescription}
 
 \def\namedcorrespondencedescriptionparameter#1#2%
-  {\csname\ifcsname\????correspondencedescription#1#2\endcsname\????correspondencedescription#1#2\else\s!empty\fi\endcsname}
+  {\csname
+     \ifcsname\????correspondencedescription#1#2\endcsname
+       \????correspondencedescription#1#2%
+     \else\ifcsname\????correspondencedescription#2\endcsname
+       \????correspondencedescription#2%
+     \else
+       \s!empty
+     \fi\fi
+   \endcsname}
 
 \unexpanded\def\definecorrespondencedescription[#1][#2]%
   {\edef\currentcorrespondencedescription{#1:#2}%
@@ -417,7 +484,7 @@
 \unexpanded\def\setupcurrentcorrespondencedescription
   {\getparameters[\????correspondencedescription\currentcorrespondencedescription]}
 
-\unexpanded\def\placecorrespondencedescription[#1][#2]%
+\unexpanded\def\placecorrespondencedescription#1#2%
   {\begingroup
    \edef\currentcorrespondencedescription{#1:#2}%
    \ifcsname\????correspondencedescription\currentcorrespondencedescription\s!parent\endcsname
@@ -434,7 +501,7 @@
          {\correspondencedescriptionparameter\c!width}
          {\unhcopy\scratchbox}
          {\correspondencedescriptionparameter\c!distance}%
-       \executeifdefined{correspondence_description_location_\correspondencedescriptionparameter\c!location}{\getvalue{correspondence_description_location_\v!left}}%
+       \executeifdefined{\????correspondencedescriptionlocation\correspondencedescriptionparameter\c!location}{\getvalue{\????correspondencedescriptionlocation\v!left}}%
        \correspondencedescriptionparameter\c!after
        \doifsomethingelse{\correspondencedescriptionparameter\c!spaceafter}{\blank[\correspondencedescriptionparameter\c!spaceafter]}{\endgraf}%
      \fi
@@ -443,29 +510,29 @@
    \fi
    \endgroup}
 
-\setvalue{correspondence_description_location_\v!left}%
+\setvalue{\????correspondencedescriptionlocation\v!left}%
   {\EveryPar{\hangindent\scratchdimen\hangafter\zerocount}%
    \setbox\scratchbox\hbox to \scratchdimen{\box\scratchbox\hss}%
    \noindent\llap{\box\scratchbox}\correspondencedescriptionparameter\c!textcommand}
 
-\setvalue{correspondence_description_location_\v!top}%
+\setvalue{\????correspondencedescriptionlocation\v!top}%
   {\noindent\box\scratchbox
    \doisomethingelse{\correspondencedescriptionparameter\c!spaceinbetween}
      {\blank[\correspondencedescriptionparameter\c!spaceinbetween]}
      {\nobreak\endgraf}%
    \correspondencedescriptionparameter\c!textcommand}
 
-\setvalue{correspondence_description_location_\v!text}%
+\setvalue{\????correspondencedescriptionlocation\v!text}%
   {\noindent\scratchbox\scratchbox\correspondencedescriptionparameter\c!textcommand}
 
 % Elements
 
 \unexpanded\long\def\definecorrespondenceelement[#1][#2][#3][#4]#5%
-  {\long\setvalue{correspondence_element_#1_#2_#3_#4}{#5}}
+  {\long\setvalue{\????correspondenceelement:#1:#2:#3:#4}{#5}}
 
 \unexpanded\def\placecorrespondenceelement[#1][#2][#3][#4]%
-  {\correspondenceparameters{#1}{#3}\empty
-   \executeifdefined{correspondence_element_#1_#2_#3_#4}{\getvalue{correspondence_element_#1_#2_#3_\s!default}}}
+  {\correspondenceparameters{#1}{#3}{#2}%
+   \executeifdefined{\????correspondenceelement:#1:#2:#3:#4}{\getvalue{\????correspondenceelement:#1:#2:#3:\s!default}}}
 
 % Files
 
@@ -511,13 +578,19 @@
 
 % Style
 
-\def\????correspondencestyle{@@@@correspondencestyle}
-
 \def\correspondencestyleparameter
   {\namedcorrespondencestyleparameter\currentcorrespondencestyle}
 
 \def\namedcorrespondencestyleparameter#1#2%
-  {\csname\ifcsname\????correspondencestyle#1#2\endcsname\????correspondencestyle#1#2\else\s!empty\fi\endcsname}
+  {\csname
+     \ifcsname\????correspondencestyle#1#2\endcsname
+       \????correspondencestyle#1#2%
+     \else\ifcsname\????correspondencestyle#2\endcsname
+       \????correspondencestyle#2%
+     \else
+       \s!empty
+     \fi\fi
+   \endcsname}
 
 \unexpanded\def\setupcorrespondencestyle[#1][#2][#3]%
   {\def\dosetupcorrespondencestyle##1%
@@ -536,44 +609,44 @@
 %D \section{Layout}
 %D
 %D \startitemize[packed]
-%D \item firstpage,
-%D \item secondpage,
-%D \item leftpage and
-%D \item rightpage.
+%D \item firstpage and
+%D \item secondpage.
 %D \stopitemize
 
 \newcount\correspondencepage
 
 \appendtoks
-  \setuplayout[\currentcorrespondence:\v!firstpage]%
+  \setuplayout[\????correspondencelayout\currentcorrespondence\v!firstpage]%
   \global\correspondencepage\plusone
 \to \everybeforecorrespondence
 
 \appendtoks
-   \everyaftershipout\expandafter{\the\everyaftershipout\setuplayout[\currentcorrespondence:\v!secondpage]}%
-   \everyaftershipout\expandafter{\the\everyaftershipout\global\advance\correspondencepage\plusone        }%
+   \everyaftershipout\expandafter{\the\everyaftershipout\setuplayout[\????correspondencelayout\currentcorrespondence\v!secondpage]}%
+   \everyaftershipout\expandafter{\the\everyaftershipout\global\advance\correspondencepage\plusone                                }%
 \to \everybeforecorrespondence
 
 \unexpanded\def\definecorrespondencelayout[#1][#2]%
-  {\definelayout[#1:#2]}
+  {\def\currentcorrespondencelayout{#1#2}%
+   \definelayout[\????correspondencelayout\currentcorrespondencelayout]}
 
 \unexpanded\def\setupcorrespondencelayout[#1][#2][#3]%
   {\def\dosetupcorrespondencelayout##1%
-     {\setuplayout[#1:##1][#3]}%
+     {\def\currentcorrespondencelayout{#1##1}%
+      \setuplayout[\????correspondencelayout\currentcorrespondencelayout][#3]}%
    \processcommalist[#2]\dosetupcorrespondencelayout}
 
 \appendtoks
-  \expanded{\definecorrespondencelayout[\currentcorrespondence][\v!firstpage ]}%
-  \expanded{\definecorrespondencelayout[\currentcorrespondence][\v!secondpage]}%
+  \definecorrespondencelayout[\currentcorrespondence][\v!firstpage ]%
+  \definecorrespondencelayout[\currentcorrespondence][\v!secondpage]%
 \to \everydefinecorrespondence
 
 % Lists
 
 \unexpanded\def\definecorrespondenceelements[#1][#2][#3]%
-  {\setvalue{correspondence_elements_#1_#2}{#3}}
+  {\setvalue{\????correspondenceelement:#1:#2}{#3}}
 
 \def\accesscorrespondenceelements#1#2%
-  {\executeifdefined{correspondence_elements_#1_#2}\empty}
+  {\executeifdefined{\????correspondenceelement:#1:#2}\empty}
 
 % Extras
 

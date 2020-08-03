@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-01,
-%D      version=2011.11.26,
+%D      version=2012.01.15,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Letters,
 %D       author=Wolfgang Schuster,
@@ -109,8 +109,11 @@
 
 % Setups
 
+% layer: head
+
 \defineletterelement[\v!layer][\v!head][\s!default]
-  {\correspondenceparameter\c!fromname
+  {\def\\{\correspondencelayerparameter\c!separator}%
+   \correspondenceparameter\c!fromname
    \doifsomething{\correspondenceparameter\c!fromname}\\
    \correspondenceparameter\c!fromaddress}
 
@@ -169,12 +172,13 @@
    \egroup}
 
 \defineletterelement[\v!layer][\v!head][\v!gbrief]
-  {\correspondenceparameter\c!fromname\hrule}
+  {\def\\{\correspondencelayerparameter\c!separator}%
+   \correspondenceparameter\c!fromname\hrule}
 
-\startsetups[\v!letter:\v!layer:\v!head]
-\def\\{\correspondencelayerparameter\c!separator}
-\letterelement[\v!layer][\v!head][\correspondencelayerparameter\c!alternative]
-\stopsetups
+\defineletterelement[\v!layer][\v!head][\v!setups]
+  {\texsetup{\v!letter:\v!layer:\v!head}}
+
+% layer: nexthead
 
 \defineletterelement[\v!layer][\v!nexthead][\v!gbrief]
   {\maxaligned
@@ -217,20 +221,20 @@
       \midaligned{\currentdate}%
       \llap{\lettertext\v!page\subpagenumber}}}
 
-\startsetups[\v!letter:\v!layer:\v!nexthead]
-\def\\{\correspondencelayerparameter\c!separator}
-\letterelement[\v!layer][\v!nexthead][\correspondencelayerparameter\c!alternative]
-\stopsetups
+\defineletterelement[\v!layer][\v!nexthead][\v!setups]
+  {\texsetup{\v!letter:\v!layer:\v!nexthead}}
 
-\startsetups[\v!letter:\v!layer:\v!lefthead]
-\def\\{\correspondencelayerparameter\c!separator}
-\letterelement[\v!layer][\v!lefthead][\correspondencelayerparameter\c!alternative]
-\stopsetups
+% layer: lefthead
 
-\startsetups[\v!letter:\v!layer:\v!righthead]
-\def\\{\correspondencelayerparameter\c!separator}
-\letterelement[\v!layer][\v!righthead][\correspondencelayerparameter\c!alternative]
-\stopsetups
+\defineletterelement[\v!layer][\v!lefthead][\v!setups]
+  {\texsetup{\v!letter:\v!layer:\v!lefthead}}
+
+% layer: righthead
+
+\defineletterelement[\v!layer][\v!righthead][\v!setups]
+  {\texsetup{\v!letter:\v!layer:\v!righthead}}
+
+% layer: foot
 
 \defineletterelement[\v!layer][\v!foot][\v!gbrief]
   {\bTABLE[\c!frame=\v!off,\c!width=.25\hsize,\c!offset=\zeropoint]
@@ -248,50 +252,53 @@
      \eTR
    \eTABLE}
 
-\startsetups[\v!letter:\v!layer:\v!foot]
-\def\\{\correspondencelayerparameter\c!separator}
-\letterelement[\v!layer][\v!foot][\correspondencelayerparameter\c!alternative]
-\stopsetups
+\defineletterelement[\v!layer][\v!foot][\v!setups]
+  {\texsetup{\v!letter:\v!layer:\v!foot}}
 
-\startsetups[\v!letter:\v!layer:\v!nextfoot]
-\def\\{\correspondencelayerparameter\c!separator}
-\letterelement[\v!layer][\v!nextfoot][\correspondencelayerparameter\c!alternative]
-\stopsetups
+% layer: nextfoot
 
-\startsetups[\v!letter:\v!layer:\v!leftfoot]
-\def\\{\correspondencelayerparameter\c!separator}
-\letterelement[\v!layer][\v!leftfoot][\correspondencelayerparameter\c!alternative]
-\stopsetups
+\defineletterelement[\v!layer][\v!nextfoot][\v!setups]
+  {\texsetup{\v!letter:\v!layer:\v!nextfoot}}
 
-\startsetups[\v!letter:\v!layer:\v!rightfoot]
-\def\\{\correspondencelayerparameter\c!separator}
-\letterelement[\v!layer][\v!rightfoot][\correspondencelayerparameter\c!alternative]
-\stopsetups
+% layer: leftfoot
+
+\defineletterelement[\v!layer][\v!leftfoot][\v!setups]
+  {\texsetup{\v!letter:\v!layer:\v!leftfoot}}
+
+% layer: rightfoot
+
+\defineletterelement[\v!layer][\v!rightfoot][\v!setups]
+  {\texsetup{\v!letter:\v!layer:\v!rightfoot}}
+
+% layer: address
 
 \defineletterelement[\v!layer][\v!address][\s!default]
-  {\doifsomething{\correspondenceparameter\c!dispatch}{\correspondenceparameter\c!dispatch\\}%
+  {\def\\{\correspondencelayerparameter\c!separator}%
+   \doifsomething{\correspondenceparameter\c!dispatch}{\correspondenceparameter\c!dispatch\\}%
    \doifsomething{\correspondenceparameter\c!toname  }{\correspondenceparameter\c!toname  \\}%
    \correspondenceparameter\c!toaddress}
 
-\startsetups[\v!letter:\v!layer:\v!address]
-\def\\{\correspondencelayerparameter\c!separator}
-\letterelement[\v!layer][\v!address][\correspondencelayerparameter\c!alternative]
-\stopsetups
+\defineletterelement[\v!layer][\v!address][\v!setups]
+  {\texsetup{\v!letter:\v!layer:\v!address}}
+
+% layer: backaddress
 
 \defineletterelement[\v!layer][\v!backaddress][\s!default]
-  {\correspondenceparameter\c!fromname
+  {\def\\{\correspondencelayerparameter\c!separator}%
+   \correspondenceparameter\c!fromname
    \doifsomething{\correspondenceparameter\c!fromaddress}\\
    \correspondenceparameter\c!fromaddress}
 
 \defineletterelement[\v!layer][\v!backaddress][\v!auto]
-  {\doifsomethingelse{\correspondenceparameter\c!backaddress}
+  {\def\\{\correspondencelayerparameter\c!separator}%
+   \doifsomethingelse{\correspondenceparameter\c!backaddress}
      {\correspondenceparameter\c!backaddress}
      {\letterelement[\v!layer][\v!backaddress][\s!default]}}
 
-\startsetups[\v!letter:\v!layer:\v!backaddress]
-\def\\{\correspondencelayerparameter\c!separator}
-\letterelement[\v!layer][\v!backaddress][\correspondencelayerparameter\c!alternative]
-\stopsetups
+\defineletterelement[\v!layer][\v!backaddress][\v!setups]
+  {\texsetup{\v!letter:\v!layer:\v!backaddress}}
+
+% layer: reference
 
 \defineletterelement[\v!layer][\v!reference][\s!default]
   {\correspondenceparameter\c!reference}
@@ -311,120 +318,129 @@
 \defineletterelement[\v!layer][\v!reference][\v!e] % width
   {\ctxlua{thirddata.correspondence.letter.reference_e("\v!letter","\correspondencelayerparameter\c!list")}}
 
-\startsetups[\v!letter:\v!layer:\v!reference]
-\def\\{\correspondencelayerparameter\c!separator}
-\letterelement[\v!layer][\v!reference][\correspondencelayerparameter\c!alternative]
-\stopsetups
+\defineletterelement[\v!layer][\v!reference][\v!setups]
+  {\texsetup{\v!letter:\v!layer:\v!reference}}
+
+% layer: location
 
 \defineletterelement[\v!layer][\v!location][\v!french]
-  {\doifsomething{\correspondenceparameter\c!place}{\correspondenceparameter\c!place\\}%
+  {\def\\{\correspondencelayerparameter\c!separator}%
+   \doifsomething{\correspondenceparameter\c!place}{\correspondenceparameter\c!place\\}%
    \correspondenceparameter\c!date}
 
-\startsetups[\v!letter:\v!layer:\v!location]
-\def\\{\correspondencelayerparameter\c!separator}
-\letterelement[\v!layer][\v!location][\correspondencelayerparameter\c!alternative]
-\stopsetups
+\defineletterelement[\v!layer][\v!location][\v!setups]
+  {\texsetup{\v!letter:\v!layer:\v!location}}
 
-\startsetups[\v!letter:\v!layer:\v!topmark]
-\def\\{\correspondencelayerparameter\c!separator}
-\letterelement[\v!layer][\v!topmark][\correspondencelayerparameter\c!alternative]
-\stopsetups
+% layer: topmark
 
-\startsetups[\v!letter:\v!layer:\v!botmark]
-\def\\{\correspondencelayerparameter\c!separator}
-\letterelement[\v!layer][\v!botmark][\correspondencelayerparameter\c!alternative]
-\stopsetups
+\defineletterelement[\v!layer][\v!topmark][\v!setups]
+  {\texsetup{\v!letter:\v!layer:\v!topmark}}
 
-\startsetups[\v!letter:\v!layer:\v!cutmark]
-\def\\{\correspondencelayerparameter\c!separator}
-\letterelement[\v!layer][\v!cutmark][\correspondencelayerparameter\c!alternative]
-\stopsetups
+% layer: botmark
 
-\startsetups[\v!letter:\v!layer:\v!endmark]
-\def\\{\correspondencelayerparameter\c!separator}
-\letterelement[\v!layer][\v!endmark][\correspondencelayerparameter\c!alternative]
-\stopsetups
+\defineletterelement[\v!layer][\v!botmark][\v!setups]
+  {\texsetup{\v!letter:\v!layer:\v!botmark}}
 
-\startsetups[\v!letter:\v!layer:\v!usermark]
-\def\\{\correspondencelayerparameter\c!separator}
-\letterelement[\v!layer][\v!usermark][\correspondencelayerparameter\c!alternative]
-\stopsetups
+% layer: cutmark
 
-\startsetups[\v!letter:\v!layer:\v!lettermain]
-\def\\{\correspondencelayerparameter\c!separator}
-\letterelement[\v!layer][\v!lettermain][\correspondencelayerparameter\c!alternative]
-\stopsetups
+\defineletterelement[\v!layer][\v!cutmark][\v!setups]
+  {\texsetup{\v!letter:\v!layer:\v!cutmark}}
 
-\startsetups[\v!letter:\v!layer:\v!letternext]
-\def\\{\correspondencelayerparameter\c!separator}
-\letterelement[\v!layer][\v!letternext][\correspondencelayerparameter\c!alternative]
-\stopsetups
+% layer: endmark
+
+\defineletterelement[\v!layer][\v!endmark][\v!setups]
+  {\texsetup{\v!letter:\v!layer:\v!endmark}}
+
+% layer: usermark
+
+\defineletterelement[\v!layer][\v!usermark][\v!setups]
+  {\texsetup{\v!letter:\v!layer:\v!usermark}}
+
+% layer: lettermain
+
+\defineletterelement[\v!layer][\v!lettermain][\v!setups]
+  {\texsetup{\v!letter:\v!layer:\v!lettermain}}
+
+% layer: letternext
+
+\defineletterelement[\v!layer][\v!letternext][\v!setups]
+  {\texsetup{\v!letter:\v!layer:\v!letternext}}
+
+% section: head
 
 \defineletterelement[\v!section][\v!head][\v!blockstyle]
-  {\correspondenceparameter\c!fromaddress}
+  {\def\\{\correspondencesectionparameter\c!separator}%
+   \correspondenceparameter\c!fromaddress}
 
-\startsetups[\v!letter:\v!section:\v!head]
-\def\\{\correspondencesectionparameter\c!separator}
-\letterelement[\v!section][\v!head][\correspondencesectionparameter\c!alternative]
-\stopsetups
+\defineletterelement[\v!section][\v!head][\v!setups]
+  {\texsetup{\v!letter:\v!section:\v!head}}
+
+% section: date
 
 \defineletterelement[\v!section][\v!date][\v!blockstyle]
-  {\correspondenceparameter\c!date}
+  {\def\\{\correspondencesectionparameter\c!separator}%
+   \correspondenceparameter\c!date}
 
-\startsetups[\v!letter:\v!section:\v!date]
-\def\\{\correspondencesectionparameter\c!separator}
-\letterelement[\v!section][\v!date][\correspondencesectionparameter\c!alternative]
-\stopsetups
+\defineletterelement[\v!section][\v!date][\v!setups]
+  {\texsetup{\v!letter:\v!section:\v!date}}
+
+% section: reference
 
 \defineletterelement[\v!section][\v!reference][\v!blockstyle]
-  {\correspondenceparameter\c!reference}
+  {\def\\{\correspondencesectionparameter\c!separator}%
+   \correspondenceparameter\c!reference}
 
-\startsetups[\v!letter:\v!section:\v!reference]
-\def\\{\correspondencesectionparameter\c!separator}
-\letterelement[\v!section][\v!reference][\correspondencesectionparameter\c!alternative]
-\stopsetups
+\defineletterelement[\v!section][\v!reference][\v!setups]
+  {\texsetup{\v!letter:\v!section:\v!reference}}
+
+% section: specialnotation
 
 \defineletterelement[\v!section][\v!specialnotation][\v!blockstyle]
-  {\correspondenceparameter\c!dispatch}
+  {\def\\{\correspondencesectionparameter\c!separator}%
+   \correspondenceparameter\c!dispatch}
 
-\startsetups[\v!letter:\v!section:\v!specialnotation]
-\def\\{\correspondencesectionparameter\c!separator}
-\letterelement[\v!section][\v!specialnotation][\correspondencesectionparameter\c!alternative]
-\stopsetups
+\defineletterelement[\v!section][\v!specialnotation][\v!setups]
+  {\texsetup{\v!letter:\v!section:\v!specialnotation}}
+
+% section: address
 
 \defineletterelement[\v!section][\v!address][\v!blockstyle]
-  {\correspondenceparameter\c!toname
+  {\def\\{\correspondencesectionparameter\c!separator}%
+   \correspondenceparameter\c!toname
    \doifsomething{\correspondenceparameter\c!toname}\\
    \correspondenceparameter\c!toaddress}
 
 \defineletterelement[\v!section][\v!address][\v!knuth]
   {\letterelement[\v!section][\v!address][\v!blockstyle]}
 
-\startsetups[\v!letter:\v!section:\v!address]
-\def\\{\correspondencesectionparameter\c!separator}
-\letterelement[\v!section][\v!address][\correspondencesectionparameter\c!alternative]
-\stopsetups
+\defineletterelement[\v!section][\v!address][\v!setups]
+  {\texsetup{\v!letter:\v!section:\v!address}}
+
+% section: title
 
 \defineletterelement[\v!section][\v!title][\s!default]
-  {\doifsomethingelse{\correspondenceparameter\c!title}
+  {\def\\{\correspondencesectionparameter\c!separator}%
+   \doifsomethingelse{\correspondenceparameter\c!title}
      {\correspondenceparameter\c!title}
      {\lettertext\v!attention\correspondenceparameter\c!attention}}
 
-\startsetups[\v!letter:\v!section:\v!title]
-\def\\{\correspondencesectionparameter\c!separator}
-\letterelement[\v!section][\v!title][\correspondencesectionparameter\c!alternative]
-\stopsetups
+\defineletterelement[\v!section][\v!title][\v!setups]
+  {\texsetup{\v!letter:\v!section:\v!title}}
+
+% section: subject
 
 \defineletterelement[\v!section][\v!subject][\s!default]
-  {\lettertext\v!subject\correspondenceparameter\c!subject}
+  {\def\\{\correspondencesectionparameter\c!separator}%
+   \lettertext\v!subject\correspondenceparameter\c!subject}
 
-\startsetups[\v!letter:\v!section:\v!subject]
-\def\\{\correspondencesectionparameter\c!separator}
-\letterelement[\v!section][\v!subject][\correspondencesectionparameter\c!alternative]
-\stopsetups
+\defineletterelement[\v!section][\v!subject][\v!setups]
+  {\texsetup{\v!letter:\v!section:\v!subject}}
+
+% section: opening
 
 \defineletterelement[\v!section][\v!opening][\s!default]
-  {\doifsomethingelse{\correspondenceparameter\c!opening}
+  {\def\\{\correspondencesectionparameter\c!separator}%
+   \doifsomethingelse{\correspondenceparameter\c!opening}
      {\correspondenceparameter\c!opening}
      {\correspondenceparameter\c!salutation}}
 
@@ -432,26 +448,29 @@
   {\doifsomething{\correspondenceoptionparameter\c!indenting}{\setupindenting[\correspondenceoptionparameter\c!indenting]}%
    \letterelement[\v!section][\v!opening][\s!default]}
 
-\startsetups[\v!letter:\v!section:\v!opening]
-\def\\{\correspondencesectionparameter\c!separator}
-\letterelement[\v!section][\v!opening][\correspondencesectionparameter\c!alternative]
-\stopsetups
+\defineletterelement[\v!section][\v!opening][\v!setups]
+  {\texsetup{\v!letter:\v!section:\v!opening}}
+
+% section: content
 
 \defineletterelement[\v!section][\v!content][\s!default]
-  {\getbuffer[\v!letter]}
+  {\getbufferdata[\????correspondencebuffer\v!letter]}
 
-\startsetups[\v!letter:\v!section:\v!content]
-\letterelement[\v!section][\v!content][\correspondencesectionparameter\c!alternative]
-\stopsetups
+\defineletterelement[\v!section][\v!content][\v!setups]
+  {\texsetup{\v!letter:\v!section:\v!content}}
+
+% section: closing
 
 \defineletterelement[\v!section][\v!closing][\s!default]
-  {\correspondenceparameter\c!closing
+  {\def\\{\correspondencesectionparameter\c!separator}%
+   \correspondenceparameter\c!closing
    \doifsomething{\correspondenceparameter\c!signature}
      {\blank[\correspondencesectionparameter\c!spaceinbetween]%
       \correspondenceparameter\c!signature}}
 
 \defineletterelement[\v!section][\v!closing][\v!french]
-  {\doifsomething{\correspondenceoptionparameter\c!indenting}{\setupindenting[\correspondenceoptionparameter\c!indenting,\v!first]}%
+  {\def\\{\correspondencesectionparameter\c!separator}%
+   \doifsomething{\correspondenceoptionparameter\c!indenting}{\setupindenting[\correspondenceoptionparameter\c!indenting,\v!first]}%
    \correspondenceparameter\c!closing
    \doifsomething{\correspondenceparameter\c!signature}
      {\blank[\correspondencesectionparameter\c!spaceinbetween]%
@@ -459,29 +478,31 @@
       \correspondenceparameter\c!signature\endgraf}}
 
 \defineletterelement[\v!section][\v!closing][\v!simplified]
-  {\doifsomething{\correspondenceparameter\c!signature}{\blank[\correspondencesectionparameter\c!spaceinbetween]}%
+  {\def\\{\correspondencesectionparameter\c!separator}%
+   \doifsomething{\correspondenceparameter\c!signature}{\blank[\correspondencesectionparameter\c!spaceinbetween]}%
    \correspondenceparameter\c!signature}
 
 \defineletterelement[\v!section][\v!closing][\v!knuth]
-  {\doadaptleftskip{\dimexpr\textwidth/13*8\relax}%
+  {\def\\{\correspondencesectionparameter\c!separator}%
+   \doadaptleftskip{\dimexpr\textwidth/13*8\relax}%
    \correspondenceparameter\c!closing
    \doifsomething{\correspondenceparameter\c!signature}
      {\blank[\correspondencesectionparameter\c!spaceinbetween]%
       \correspondenceparameter\c!signature}}
 
-\startsetups[\v!letter:\v!section:\v!closing]
-\def\\{\correspondencesectionparameter\c!separator}
-\letterelement[\v!section][\v!closing][\correspondencesectionparameter\c!alternative]
-\stopsetups
+\defineletterelement[\v!section][\v!closing][\v!setups]
+  {\texsetup{\v!letter:\v!section:\v!closing}}
+
+% section: appendices
 
 \defineletterelement[\v!section][\v!appendices][\s!default]
-  {\startpacked
-   \normalexpanded{\processcommalistwithparameters[\correspondence_elements_access\v!letter\v!description]}{\correspondence_description_place[\v!letter]}%
+  {\def\\{\correspondencesectionparameter\c!separator}%
+   \startpacked
+   \processcommacommand[\correspondence_elements_access\v!letter\v!description]{\correspondence_description_place\v!letter}%
    \stoppacked}
 
-\startsetups[\v!letter:\v!section:\v!appendices]
-\letterelement[\v!section][\v!appendices][\correspondencesectionparameter\c!alternative]
-\stopsetups
+\defineletterelement[\v!section][\v!appendices][\v!setups]
+  {\texsetup{\v!letter:\v!section:\v!appendices}}
 
 \startsetups[\v!letter:\v!place]
 \correspondence_place[\v!letter]
@@ -495,7 +516,10 @@
 
 \appendtoks
   \ifx\currentcorrespondence\v!letter
-    \doif{\correspondenceoptionparameter\c!option}\v!test{\useletterstyle[test]}%
+    \processallactionsinset
+      [\correspondenceoptionparameter\c!option]
+      [  \v!test=>{\useletterstyle[test]},
+       \v!setups=>{\useletterstyle[setups]}]%
   \fi
 \to \t_correspondence_before
 

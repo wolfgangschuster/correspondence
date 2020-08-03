@@ -87,14 +87,6 @@ function correspondence.file(environment,name)
     }
 end
 
-correspondence.styles = { }
-
-function correspondence.style(environment,value,width)
-    local width = width
-    local style = concat({environment,value},":")
-    correspondence.styles[style] = { width = width }
-end
-
 -- moved from TeX to Lua because it’s easier with the lists for the sections and layers
 
 function correspondence.place(environment,settings)

@@ -1,8 +1,8 @@
 %D \module
-%D   [       file=modern,
-%D        version=2009.04.10,
-%D          title=\CONTEXT\ Resume Style,
-%D       subtitle=Modern Style,
+%D   [       file=moderncv,
+%D        version=2009.03.31,
+%D          title=\CONTEXT\ Resume Interface,
+%D       subtitle=moderncv Interface,
 %D         author=Wolfgang Schuster,
 %D           date=\currentdate,
 %D      copyright=Wolfgang Schuster,
@@ -10,8 +10,6 @@
 %D        license=Public Domain]
 
 \unprotect
-
-\useresumestyle[default]
 
 \setupcolors[\c!state=\v!start]
 
@@ -33,7 +31,6 @@
 \setuphead
   [\v!section]
   [\c!color=resume:7,
-   \c!number=\v!no,
    \c!incrementnumber=\v!no,
    \c!before={\blank[2*\v!medium]},
    \c!after={\blank[\v!medium]},
@@ -47,7 +44,6 @@
 \setuphead
   [\v!subsection]
   [\c!color=resume:8,
-   \c!number=\v!no,
    \c!incrementnumber=\v!no,
    \c!before={\blank[2*\v!medium]},
    \c!after={\blank[\v!medium]},
@@ -100,7 +96,6 @@
       \doifsomething{#4}{, {#4}}%
       \doifsomething{#5}{, {#5}}%
       .%
-      %\doifsomething{#6}{\crlf\vtop{\hsize\measure{maincolumnwidth}\tx#6}}}}% should also work without the box
       \doifsomething{#6}{\crlf\tx#6}}}
 
 \def\cvlanguage#1#2#3%
@@ -152,5 +147,7 @@
 \setupresumestyle
   [\v!nexthead,\v!nextfoot]
   [\c!state=\v!next]
+
+\useresumestyle[classic]
 
 \protect \endinput

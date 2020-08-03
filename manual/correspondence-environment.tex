@@ -1,0 +1,261 @@
+\startenvironment correspondence-environment
+
+%%%% Anleitung für das Correspondenz-Modul
+
+% Um die Anleitung Erstellen zu können muss LuaTeX benutzt werden,
+% um das gleiche Aussehen wie in der fertigen PDF-Version zu erhalten
+% müssen die Lucida- und Delicious-Schriften installiert sein.
+
+
+%%%% Variablen für das Dokument
+
+\setvariables
+  [correspondence]
+  [title=Correspondence with \ConTeXt,
+   version=\ctxlua{tex.sprint(tex.ctxcatcodes,thirddata.correspondence.files[1]["version"])}]
+
+
+%%%% Farbe
+
+\setupcolor[hex]
+
+\setupcolors[state=start]
+
+\definecolor[lettercolor][green]
+\definecolor[lettercolor][h=BBD0B4]
+%\definecolor[lettercolor][h=E7DDAF]
+\definecolor[fakerulecolor][darkgray]
+
+\definecolor[twhite][r=1,g=1,b=1,t=.75,a=1]
+
+
+%%%% Bilder
+
+\setupexternalfigures[directory=images]
+
+
+%%%% Hyperlinks etc.
+
+\appendtoks\def\\{ }\to\simplifiedcommands
+
+\setupinteraction
+  [state=stop,
+   title={Correspondence with ConTeXt},
+   author={Wolfgang Schuster},
+   color=black,
+   style=]
+
+
+%%%% Zusätzliche Module
+
+\usemodule[visual]
+\usemodule[letter]
+\usemodule[resume]
+\usemodule[set-11]\loadsetups[cont-en.xml]\loadsetups[t-letter.xml]\loadsetups[t-resume.xml]
+\usemodule[examplecontent]
+
+\setupframedtexts
+  [setuptext]
+  [frame=on,
+   rulethickness=1pt,
+   corner=round,
+   framecolor=lettercolor]
+
+
+%%%% Schriften
+
+\startmode[wolf]
+
+\definefontfeature[default][default][mode=node,expansion=quality,protrusion=quality]
+
+\usetypescriptfile[type-delicious]
+\usetypescriptfile[type-lucida]
+
+\usetypescript[lucida,delicious]
+\setupbodyfont[lucida,11pt]
+
+\stopmode
+
+\startnotmode[wolf]
+
+\definefontfeature[default][default][mode=node,expansion=quality,protrusion=quality]
+
+\usetypescript[palatino,modern]
+\setupbodyfont[palatino,12pt]
+
+\stopnotmode
+
+
+%%%% Layout
+
+%% Einnstellungen für die Musterbriefe
+
+\doifmodeelse{wolf}
+  {\setupletterstyle[option][bodyfont={delicious,ss}]}
+  {\setupletterstyle[option][bodyfont={modern,ss}]}
+
+\setupletterstyle
+  [option]
+  [whitespace=line,
+   marking=no,
+   before={\page[left]},
+   backgroundcolor=gray]
+
+\setupletterstyle
+  [content]
+  [align=normal]
+
+\setupletterstyle
+  [enclosure,copy,postscript]
+  [before=\nowhitespace,
+   after=\nowhitespace]
+
+\setupletterstyle
+  [closing]
+  [after={\blank[2*line]}]
+
+\doifmodeelse{wolf}
+  {\setupresumestyle[option][bodyfont={delicious,ss}]}
+  {\setupresumestyle[option][bodyfont={modern,ss}]}
+
+\setupresumestyle
+  [option]
+  [whitespace=none,
+   before={\page[left]},
+   backgroundcolor=gray]
+
+%% Absatzeinstellungen
+
+\setupwhitespace[line]
+
+\setupalign[stretch,hanging,hz]
+%\setupalign[right,broad]
+
+%% Überschriften
+
+\setuphead
+  [part]
+  [placehead=yes,
+   alternative=middle,
+   resetnumber=no,
+   style=\tfd]
+
+\setuphead
+  [chapter]
+  [header=empty,
+   style=\tfc]
+
+\setuphead
+  [section,subject]
+  [style=\tfb]
+
+\setuphead
+  [subsection,subsubject]
+  [style=\tfa]
+
+%% Inhaltsverzeichnis
+
+\setupcombinedlist
+  [content]
+  [interaction=all,
+   color=black,
+   partnumber=no]
+
+%% Index
+
+\setupregister
+  [index]
+  [partnumber=no]
+
+%% Seitennummerierung
+
+\setuppagenumbering
+  [alternative=doublesided,
+   location=footer,
+   way=bytext,
+   partnumber=no]
+
+%% Kopf- und Fußzeilen
+
+\setupheadertexts[{\getmarking[chapter]}]
+
+%% Verbatim
+
+\doifmode{wolf}{\setuptyping[bodyfont=10pt]}
+
+%% Misc
+
+\setupmakeup
+  [standard]
+  [pagestate=start,
+   page=no]
+
+%% Cover
+
+\defineoverlay[coverfigure][\overlayfigure{980559_60280625}]
+
+\def\TitlePage
+  {%\setupbackgrounds[page][background={coverfigure,color},backgroundcolor=twhite]% später
+   \setupbackgrounds[page][background=color,backgroundcolor=lettercolor]
+   \startstandardmakeup[align=middle]
+   \vfill
+   \definedfont[SansBold sa 4]\setupinterlinespace\getvariable{correspondence}{title}\par
+   \blank[2*medium]
+   \definedfont[Sans sa 2]\setupinterlinespace Version: \getvariable{correspondence}{version}\par
+   \vfill\vfill\vfill
+   \stopstandardmakeup
+   \setupbackgrounds[page][background=]}
+
+\def\LastPage
+  {\page[yes,left]
+   \setupbackgrounds[page][background=color,backgroundcolor=lettercolor]
+   \startstandardmakeup % warum nicht
+   \stopstandardmakeup  % \page[empty]?
+   \setupbackgrounds[page][background=]}
+
+\def\CommandList
+  {\chapter{Command definitions}
+   \placesetup}
+
+%% Beispiele für die Briefelemente
+
+\defineframedtext
+  [element]
+  [width=\textwidth,
+   rulethickness=1pt,
+   corner=round,
+   framecolor=lettercolor]
+
+\defineframedtext
+  [smallelement]
+  [width=.35\textwidth,
+   rulethickness=1pt,
+   corner=round,
+   framecolor=lettercolor]
+
+%% Test-Modus
+
+\startmode[test]
+
+  \showframe
+  \showgrid
+
+\stopmode
+
+%% Notwendig for TeX Live um das Dokument auch bei einem fehlenden
+%% examplecontent Modul erstellen zu können.
+
+\ifx\startexamplecontent\undefined
+
+  \def\startexamplecontent     {\gobbleuntil\stopexamplecontent}
+  \def\examplecontent          {\dodoubleempty\doexamplecontent}
+  \def\doexamplecontent[#1][#2]{\framed[width=6cm,height=8cm]{}}
+
+\fi
+
+%% Parameter-Check
+
+% \idefined\enablecheckparameters \enablecheckparameters \fi
+
+
+\stopenvironment

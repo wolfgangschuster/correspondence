@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2009.02.14,
+%D        version=2009.03.31,
 %D          title=\CONTEXT\ Resume Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -51,16 +51,6 @@
 %D text \cr
 %D \stopcontent
 %D \stoptyping
-
-% \def\startresume
-%   {\bgroup\dosingleempty\dostartresume}
-%
-% \def\dostartresume[#1]%
-%   {\iffirstargument
-%      \getparameters[\????rd][#1]%
-%    \fi
-%    \def\stopresume{\directsetup{\v!resume:\v!place}\egroup\setupsubpagenumber[\c!state=\v!start]}%
-%    \dostartbuffer[resumecontent][startresume][stopresume]}
 
 \long\def\dosetbuffer[#1]#2\endbuffer % added \long
   {\begingroup

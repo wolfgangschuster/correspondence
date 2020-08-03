@@ -1,0 +1,630 @@
+%D \module
+%D   [       file=t-correspondence,
+%D        version=2009.04.26,
+%D          title=\CONTEXT\ User Module,
+%D       subtitle=Correspondence,
+%D         author=Wolfgang Schuster,
+%D           date=\currentdate,
+%D      copyright=Wolfgang Schuster,
+%D          email=schuster.wolfgang@googlemail.com,
+%D        license=Public Domain]
+
+\unprotect
+
+% For MkII users only
+
+\startconstants            all
+                     head: head
+                     foot: foot
+                  topmark: topmark
+                  botmark: botmark
+                  cutmark: cutmark
+                  endmark: endmark
+                 usermark: usermark
+                 foldmark: foldmark
+                extension: extension
+                interface: interface
+          backgroundimage: backgroundimage}
+               whitespace: whitespace
+                 nexthead: nexthead
+                 lefthead: lefthead
+                righthead: righthead
+                 nextfoot: nextfoot
+                 leftfoot: leftfoot
+                rightfoot: rightfoot
+                  content: content
+              backaddress: backaddress
+                 optimize: optimize
+                  opening: opening
+                  closing: closing
+                signature: signature
+                 dispatch: dispatch
+               appendices: appendices
+              fromaddress: fromaddress
+                 frombank: frombank
+                 frommail: frommail
+                  fromfax: fromfax
+                 fromlogo: fromlogo
+                 fromname: fromname
+                fromphone: fromphone
+                  fromurl: fromurl
+                   toname: toname
+                toaddress: toaddress
+                enclosure: enclosure
+                     copy: copy
+                       ps: ps
+               postscript: postscript
+                attention: attention
+             distribution: distribution
+               salutation: salutation
+                addressee: addressee
+                   prefix: prefix
+                   suffix: suffix
+                 initials: initials
+               formalname: formalname
+             informalname: informalname
+                  yourref: yourref
+                 yourmail: yourmail
+                    myref: myref
+                   mymail: mymail
+                 customer: customer
+                  invoice: invoice
+                  subject: subject
+                       cc: cc
+                enclosure: enclosure
+                     encl: encl
+                    phone: phone
+                      fax: fax
+                    email: email
+                      url: url
+                     bank: bank
+                     name: name
+                     room: room
+                yourorder: yourorder
+               ourinvoice: ourinvoice
+                rulewidth: rulewidth
+                fromalign: fromalign
+                 fromrule: fromrule
+\stopconstants
+
+\startvariables            all
+               secondpage: secondpage
+                     foot: foot
+                  topmark: topmark
+                  botmark: botmark
+                  cutmark: cutmark
+                  endmark: endmark
+                   option: option
+                 foldmark: foldmark
+                 usermark: usermark
+                    layer: layer
+                firsthead: firsthead
+                 nexthead: nexthead
+                 lefthead: lefthead
+                righthead: righthead
+                firstfoot: firstfoot
+                 nextfoot: nextfoot
+                 leftfoot: leftfoot
+                rightfoot: rightfoot
+                   layout: layout
+                    place: place
+               initialize: initialize
+                   finish: finish
+                 sequence: sequence
+                    style: style
+                extension: extension
+                interface: interface
+                   resume: resume
+                   letter: letter
+              backaddress: backaddress
+                reference: reference
+                 location: location
+                  address: address
+                  opening: opening
+                  closing: closing
+               letternext: letternext
+               lettermain: lettermain
+                  special: special
+                 notation: notation
+                   inside: inside
+                 optimize: optimize
+                     file: file
+                        e: e
+                     data: data
+                   sender: sender
+                 dispatch: dispatch
+                enclosure: enclosure
+                     copy: copy
+                  nobreak: nobreak
+                  endgraf: endgraf
+                     memo: memo
+                addressee: addressee
+                   french: french
+               simplified: simplified
+                fullblock: fullblock
+                  hanging: hanging
+                 modified: modified
+                semiblock: semiblock
+                  contact: contact
+                   handle: handle
+                   casual: casual
+                  classic: classic
+                    knuth: knuth
+                firstname: firstname
+               familyname: familyname
+                   street: street
+                     town: town
+                   mobile: mobile
+                    phone: phone
+                      fax: fax
+                    email: email
+                     info: info
+           correspondence: correspondence
+\stopvariables
+
+\startelements             all
+                      set: set
+                    value: value
+                  complex: complex
+                   simple: simple
+                      use: use
+                   define: define
+                    flush: flush
+\stopinterface
+
+% Placeholders for the messages:
+%
+% 1: letter|resume / interface|style|extension / filename
+% 2: letter|resume / interface|style|extension / filename
+% 3: ‹number› / ‹number›
+
+\definemessageconstant {correspondence}
+
+\startmessages all library: correspondence
+        title: correspondence
+            1: loading -- -- --
+            2: -- -- -- not found
+            3: correspage set -- processed (size --)
+\stopmessages
+
+%D Page numbering
+
+\def\????cn{@@@@cn}
+
+\definesystemconstant {correspage}
+
+\definetwopasslist\s!correspage
+
+\definenumber[\s!correspage]
+
+\newcount\correspageno
+\newif\ifresettingcorrespagenumber
+
+\def\newnofcorrespages{0}
+\def\nofcorrespages   {0}
+
+\def\savenofcorrespages
+  {\showmessage\m!correspondence{3}{\newnofcorrespages,\the\correspageno}%
+   \immediatesavetwopassdata{\s!correspage}{\newnofcorrespages}{\the\correspageno}}
+
+\def\numberofcorrespages
+  {\nofcorrespages}
+
+\def\correspagenumber
+  {\the\correspageno}
+
+\appendtoks\savenofcorrespages\to\everybye
+
+\def\setupcorrespagenumber
+  {\dosingleargument\dosetupcorrespagenumber}
+
+\def\dosetupcorrespagenumber[#1]%
+  {\doifelse{#1}\v!reset
+     {\resetcorrespagenumber}
+     {\getparameters[\????cn][#1]}}
+
+\def\resetcorrespagenumber
+  {\global\resettingcorrespagenumbertrue}
+
+\def\setcorrespagenumbers
+  {\iftwopassdatafound
+     \xdef\nofcorrespages{\twopassdata}%
+   \else
+     \xdef\nofcorrespages{0}%
+   \fi}
+
+\def\gotonextcorrespage
+  {\ifresettingcorrespagenumber
+     \resetnumber[\s!correspage]%
+     \global\resettingcorrespagenumberfalse
+   \fi
+   \xdef\oldcorrespage{\the\correspageno}%
+   \incrementnumber[\s!correspage]%
+   \global\correspageno\rawnumber[\s!correspage]\relax
+   \ifnum\correspageno=\plusone
+     \gettwopassdata\s!correspage
+     \setcorrespagenumbers
+     \ifnum\oldcorrespage>\zerocount
+       \showmessage\m!correspondence{3}{\newnofcorrespages,\oldcorrespage}%
+       \immediatesavetwopassdata{\s!correspage}{\newnofcorrespages}{\oldcorrespage}%
+     \fi
+     \doglobal\increment\newnofcorrespages\relax
+   \fi}
+
+\appendtoks\gotonextcorrespage\to\beforeeverypage
+
+%D Setup command for the styles
+
+\def\definecorrespondencesetup[#1][#2][#3]%
+  {\setvalue{\e!setup#1\e!endsetup}{\doquintupleempty\dosetupcorrespondencestyle[#2][#3]}}
+
+\def\dosetupcorrespondencestyle[#1][#2][#3][#4][#5]%
+  {\iffifthargument
+     \dodosetupcorrespondencelayer[#1][#2][#3][#4][#5]%
+   \else\iffourthargument
+     \dodosetupcorrespondencestyle[#1][#2][#3][#4]%
+   \else
+     \dosetupcorrespondenceoption[][#2][\v!option][#3]%
+   \fi\fi}
+
+\def\dodosetupcorrespondencestyle[#1][#2][#3][#4]%
+  {\def\dododosetupcorrespondencestyle##1%
+     {\csname dosetupcorrespondence\ifcsname#1:#2:##1\endcsname
+        \csname#1:#2:##1\endcsname
+      \else
+        \v!option
+      \fi\endcsname[#1][#2][##1][#4]}%
+   \processcommalist[#3]\dododosetupcorrespondencestyle}
+
+\def\dosetupcorrespondenceoption[#1][#2][#3][#4]%
+  {\getparameters[#2#3][#4]}
+
+\def\dosetupcorrespondencelayout[#1][#2][#3][#4]%
+  {\definelayout[#1#3][#4]}
+
+\def\dosetupcorrespondencesection[#1][#2][#3][#4]%
+  {\getparameters[#2#3][#4]}
+
+\def\dosetupcorrespondencedescription[#1][#2][#3][#4]%
+  {\getparameters[#2#3][#4]}
+
+\def\dosetupcorrespondencelayer[#1][#2][#3][#4]%
+  {\dodosetupcorrespondencelayer[#1][#2][#3][\v!layer,\v!frame,\v!option][#4]}
+
+\def\dodosetupcorrespondencelayer[#1][#2][#3][#4][#5]%
+  {\def\dododosetupcorrespondencelayer##1%
+     {\def\dodododosetupcorrespondencelayer####1%
+        {\ifcsname dosetupcorrespondencelayer####1\endcsname
+           \@EA\@EA\csname dosetupcorrespondencelayer####1\endcsname
+         \else
+           \@EA\dosetupcorrespondencelayeroption
+         \fi[#1][#2][##1][#5]}%
+      \processcommalist[#4]\dodododosetupcorrespondencelayer}%
+   \processcommalist[#3]\dododosetupcorrespondencelayer}
+
+\def\dosetupcorrespondencelayerlayer[#1][#2][#3][#4]%
+  {\setuplayer[#1:#3][#4]%
+   \getparameters[#2#3\v!layer][#4]}
+
+\def\dosetupcorrespondencelayerframe[#1][#2][#3][#4]%
+  {\setuplocalframed[#2#3\v!frame][#4]}
+
+\def\dosetupcorrespondencelayeroption[#1][#2][#3][#4]%
+  {\getparameters[#2#3][#4]}
+
+%D Setup command for the values
+
+\def\definecorrespondencevalue
+  {\dodoubleargument\dodefinecorrespondencevalue}
+
+\def\dodefinecorrespondencevalue[#1][#2]%
+  {\setvalue{\e!setup#1\e!endsetup}{\dotripleempty\docorrespondencesetup[#2]}%
+   \@EA\definecomplexorsimple\csname\e!set#1\e!value\endcsname
+   \setvalue{\e!complex\e!set#1\e!value}[##1]##2{\setvalue{#2##1}{##2}}%
+   \setvalue{\e!simple \e!set#1\e!value}##1##2{\setvalue{#2##1}{##2}}}
+
+\def\docorrespondencesetup[#1][#2][#3]%
+  {\doifelsenothing{#3}
+     {\getparameters[#1][#2]}
+     {\def\dodocorrespondencesetup##1%
+        {\getparameters[#1##1][#3]}%
+      \processcommalist[#2]\dodocorrespondencesetup}}
+
+%D Tests
+
+\long\def\doifcorrespondencevalue#1#2%
+  {\ifcsname#1#2\endcsname
+     \edef\!!stringa{\csname#1#2\endcsname}%
+     \ifx\!!stringa\empty
+       \@EAEAEA\gobbleoneargument
+     \else
+       \@EAEAEA\firstofoneargument
+     \fi
+   \else
+     \@EA\gobbleoneargument
+   \fi}
+
+\long\def\doifelsecorrespondencevalue#1#2%
+  {\ifcsname#1#2\endcsname
+     \edef\!!stringa{\csname#1#2\endcsname}%
+     \ifx\!!stringa\empty
+       \@EAEAEA\secondoftwoarguments
+     \else
+       \@EAEAEA\firstoftwoarguments
+     \fi
+   \else
+     \@EA\secondoftwoarguments
+   \fi}
+
+\long\def\doifcorrespondencestylevalue#1#2#3%
+  {\ifcsname#1#2#3\endcsname
+     \edef\!!stringa{\csname#1#2#3\endcsname}%
+     \ifx\!!stringa\empty
+       \@EAEAEA\gobbleoneargument
+     \else
+       \@EAEAEA\firstofoneargument
+     \fi
+   \else
+     \@EA\firstofoneargument
+   \fi}
+
+\long\def\doifelsecorrespondencestylevalue#1#2#3%
+  {\ifcsname#1#2#3\endcsname
+     \edef\!!stringa{\csname#1#2#3\endcsname}%
+     \ifx\!!stringa\empty
+       \@EAEAEA\secondoftwoarguments
+     \else
+       \@EAEAEA\firstoftwoarguments
+     \fi
+   \else
+     \@EA\secondoftwoarguments
+   \fi}
+
+\def\correspondencestylevalue#1#2#3%
+  {\csname#1#2#3\endcsname}
+
+%D External files
+
+\def\definecorrespondencefile[#1][#2][#3]%
+  {\setvalue{\e!use#1#2}[##1]{\usecorrespondencefile[#1][#2][#3][##1]}}
+
+\def\usecorrespondencefile[#1][#2][#3][#4]%
+  {\def\dousecorrespondencefile##1%
+     {\readfile{##1.#3}
+        {\showmessage\m!correspondence{1}{#1,#2,##1.#3}}
+        {\showmessage\m!correspondence{2}{#1,#2,##1.#3}}}%
+   \processcommacommand[#4]\dousecorrespondencefile}
+
+%D Layers
+
+\def\definecorrespondencelayer[#1][#2]%
+  {\setvalue{\s!do\e!define#1\v!layer}{\dodefinecorrespondencelayer[#1][#2]}%
+   \setvalue{\s!do\e!set   #1\v!layer}{\dosetcorrespondencelayer   [#1][#2]}}
+
+\def\dodefinecorrespondencelayer[#1][#2][#3]%
+  {\def\dodododefinecorrespondencelayer##1{\dododefinecorrespondencelayer[#1][#2][##1]}%
+   \processaction
+     [#3]
+     [\v!foldmark=>{\processcommacommand[\csname#1!list!marking\endcsname]\dodododefinecorrespondencelayer},
+        \v!header=>{\processcommacommand[\csname#1!list!header\endcsname ]\dodododefinecorrespondencelayer},
+        \v!footer=>{\processcommacommand[\csname#1!list!footer\endcsname ]\dodododefinecorrespondencelayer},
+       \s!unknown=>{\dododefinecorrespondencelayer[#1][#2][#3]}]}
+
+\def\dododefinecorrespondencelayer[#1][#2][#3]%
+  {\letvalue{#2\v!option#3}\v!yes
+   \doifundefined{#1:#2:#3}
+     {\letvalue{#1:#2:#3}\v!layer
+      \addvalue{#1!list!layers}{#3}}%
+   \presetlocalframed[#2#3\v!frame]%
+   \definelayer
+     [#1:#3]
+     [\c!width=\paperwidth,
+      \c!height=\paperheight]%
+   \dodosetupcorrespondencelayer
+     [#1][#2][#3][\v!option]%
+     [\c!state=\v!stop,
+      \c!symbol=,
+      \c!list=,
+      \c!alternative=\v!a,
+      \c!rule=\v!off,
+      \c!rulethickness=\linewidth,
+      \c!separator=\crlf,
+      \c!offset=\zeropoint,
+      \c!spacebefore=\zeropoint,
+      \c!spaceafter=\zeropoint,
+      \c!leftmargin=\zeropoint,
+      \c!rightmargin=\zeropoint]%
+   \dodosetupcorrespondencelayer
+     [#1][#2][#3][\v!frame]%
+     [\c!frame=\v!off,
+      \c!align=\v!right,
+      \c!offset=\zeropoint,
+      \c!strut=\v!yes]%
+   \dodosetupcorrespondencelayer
+     [#1][#2][#3][\v!layer]%
+     [\c!state=\v!start,
+      \c!offset=\zeropoint,
+      \c!preset=\v!left\v!top]}
+
+\def\dosetcorrespondencelayer[#1][#2][#3]%
+  {\doifelsecorrespondencestylevalue{#2}{#3}\c!symbol
+     {\dodosetcorrespondencelayer[#1][#2][#3][\correspondencestylevalue{#2}{#3}\c!symbol]}
+     {\dodosetcorrespondencelayer[#1][#2][#3][\directsetup{#1:#3}]}}
+
+\def\dodosetcorrespondencelayer[#1][#2][#3][#4]%
+  {\setlayer[#1:#3]
+     {\localframed[#2#3\v!frame]
+        {\edef\currentcorrespondenceelement{#3}%
+         \doadaptleftskip {\correspondencestylevalue{#2}{#3}\c!leftmargin }%
+         \doadaptrightskip{\correspondencestylevalue{#2}{#3}\c!rightmargin}%
+         \doattributes{#2#3}\c!style\c!color{#4}}}}
+
+\def\dodosetheaderfooterlayer#1{\csname @@headfoot@@#1\endcsname}
+
+\setvalue{@@headfoot@@\v!start    }{\!!doneatrue            }
+\setvalue{@@headfoot@@\v!stop     }{\!!doneafalse           }
+\setvalue{@@headfoot@@\v!first    }{\!!doneatrue            }
+\setvalue{@@headfoot@@\v!next     }{\!!donebtrue\!!donectrue}
+\setvalue{@@headfoot@@\v!left     }{\!!donebtrue            }
+\setvalue{@@headfoot@@\v!right    }{\!!donectrue            }
+\setvalue{@@headfoot@@\v!leftpage }{\!!donebtrue            }
+\setvalue{@@headfoot@@\v!rightpage}{\!!donectrue            }
+\setvalue{@@headfoot@@\v!page     }{\!!donedtrue            }
+\setvalue{@@headfoot@@\v!subpage  }{\!!donedfalse           }
+
+% \def\dosetheaderfooterlayer[#1][#2][#3]%
+%   {\!!doneafalse % first page
+%    \!!donebfalse % even numbered pages
+%    \!!donecfalse % odd numbered pages
+%    \!!donedfalse % real pagenumber
+%    \processcommacommand[\csname#2#3\c!state\endcsname]\dodosetheaderfooterlayer
+%    \doifnotvalue{#2#3\v!layer\c!state}\v!stop{\setuplayer[#1:#3][\c!state=\v!start]}%
+%    \ifnum\if!!doned\pagenumber\else\subpagenumber\fi=\plusone
+%      \if!!donea\dosetcorrespondencelayer[#1][#2][#3]\fi
+%    \else
+%      \ifodd\if!!doned\pagenumber\else\subpagenumber\fi
+%        \if!!donec\dosetcorrespondencelayer[#1][#2][#3]\fi
+%      \else
+%        \if!!doneb\dosetcorrespondencelayer[#1][#2][#3]\fi
+%    \fi\fi}
+
+% Alternative version of the macro above for the experimental
+% interface because \subpagenumber can't be used in \ifnum.
+
+\def\dosetheaderfooterlayer[#1][#2][#3]%
+  {\!!doneafalse % first page
+   \!!donebfalse % even numbered pages
+   \!!donecfalse % odd numbered pages
+   \!!donedfalse % real pagenumber
+   \processcommacommand[\csname#2#3\c!state\endcsname]\dodosetheaderfooterlayer
+   \doifnotvalue{#2#3\v!layer\c!state}\v!stop{\setuplayer[#1:#3][\c!state=\v!start]}%
+   \ifnum\if!!doned\pagenumber\else\correspagenumber\fi=\plusone
+     \if!!donea\dosetcorrespondencelayer[#1][#2][#3]\fi
+   \else
+     \ifodd\if!!doned\pagenumber\else\correspagenumber\fi
+       \if!!donec\dosetcorrespondencelayer[#1][#2][#3]\fi
+     \else
+       \if!!doneb\dosetcorrespondencelayer[#1][#2][#3]\fi
+   \fi\fi}
+
+%D Sections
+
+\def\definecorrespondencesection[#1][#2]%
+  {\setvalue{\s!do\e!define#1\v!section}{\dodefinecorrespondencesection[#1][#2]}%
+   \setvalue{\s!do\e!set   #1\v!section}{\dosetcorrespondencesection   [#1][#2]}}
+
+\def\dodefinecorrespondencesection[#1][#2][#3]%
+  {\letvalue{#2\v!option#3}\v!yes
+   \doifundefined{#1:#2:#3}
+     {\letvalue{#1:#2:#3}\v!section
+      \addvalue{#1!list!sections}{#3}}%
+   \getparameters
+     [#2#3]
+     [\c!before=,
+      \c!after=,
+      \c!inbetween=,
+      \c!align=,
+      \c!leftmargin=\zeropoint,
+      \c!rightmargin=\zeropoint,
+      \c!alternative=\v!a,
+      \c!separator=\crlf,
+      \c!optimize=\v!no,
+      \c!command=,
+      \c!style=,
+      \c!color=]}
+
+\def\dosetcorrespondencesection[#1][#2][#3]%
+  {\begingroup
+   \doifelsecorrespondencestylevalue{#2}{#3}\c!before
+     {\correspondencestylevalue{#2}{#3}\c!before}
+      \endgraf
+   \doadaptleftskip {\correspondencestylevalue{#2}{#3}\c!leftmargin}%
+   \doadaptrightskip{\correspondencestylevalue{#2}{#3}\c!rightmargin}%
+   \doifcorrespondencestylevalue{#2}{#3}\c!align
+     {\setupalign[\correspondencestylevalue{#2}{#3}\c!align]}%
+   \dostartattributes{#2#3}\c!style\c!color\empty
+     \correspondencestylevalue{#2}{#3}\c!command{\directsetup{#1:#3}}%
+   \dostopattributes
+   \doifcorrespondencestylevalue{#2}{#3}\c!after
+     {\endgraf\correspondencestylevalue{#2}{#3}\c!after}
+      \endgraf
+   \endgroup}
+
+%D Descriptions
+
+\def\definecorrespondencedescription[#1][#2]%
+  {\setvalue{\s!do\e!define#1\v!description}{\dodefinecorrespondencedescription[#1][#2]}%
+   \setvalue{\s!do\e!set   #1\v!description}{\dosetcorrespondencedescription   [#1][#2]}%
+   \setvalue{\s!do\e!flush #1\v!description}{\doflushcorrespondencedescription [#1][#2]}}
+
+\def\dodefinecorrespondencedescription[#1][#2][#3]%
+  {\letvalue{#2\v!option#3}\v!yes
+   \doifundefined{#1:#2:#3}{\letvalue{#1:#2:#3}\v!description}%
+   \getparameters
+     [#2#3]
+     [\c!location=\v!left,
+      \c!inbetween=\nowhitespace,
+      \c!before=\blank,
+      \c!after=\blank,
+      \c!width=\v!broad,
+      \c!headstyle=,
+      \c!headcolor=,
+      \c!distance=\zeropoint]}
+
+\def\dosetcorrespondencedescription[#1][#2][#3]%
+  {\bgroup
+   \doifelsecorrespondencestylevalue{#2}{#3}\c!before
+     {\correspondencestylevalue{#2}{#3}\c!before}
+      \endgraf
+   \scratchdimen\zeropoint
+   \setbox\scratchbox\hbox{\doattributes{#2#3}\c!headstyle\c!headcolor{\labeltext{#1:#3}}}%
+   \doifelse{\correspondencestylevalue{#2}{#3}\c!width}\v!broad
+     {\ifdim\wd\scratchbox>\zeropoint
+        \scratchdimen\dimexpr\wd\scratchbox+1em\relax
+      \fi}
+     {\doifelse{\correspondencestylevalue{#2}{#3}\c!width}\v!fit
+        {\if\wd\scratchbox>\zeropoint
+           \scratchdimen\dimexpr\wd\scratchbox+\correspondencestylevalue{#2}{#3}\c!distance\relax
+         \fi}
+        {\scratchdimen\dimexpr\correspondencestylevalue{#2}{#3}\c!width+\correspondencestylevalue{#2}{#3}\c!distance\relax}}%
+   \executeifdefined{@@description@@\correspondencestylevalue{#2}{#3}\c!location}\gobblethreearguments{#1}{#2}{#3}%
+   \doifelsecorrespondencestylevalue{#2}{#3}\c!after
+     {\endgraf\correspondencestylevalue{#2}{#3}\c!after}
+      \endgraf
+   \egroup}
+
+\setvalue{@@description@@\v!left}#1#2#3%
+  {\EveryPar{\hangindent\scratchdimen\hangafter\zerocount}%
+   \setbox\scratchbox\hbox\!!to\scratchdimen{\box\scratchbox\hss}%
+   \noindent\llap{\box\scratchbox}\directsetup{#1:#3}}
+
+\setvalue{@@description@@\v!right}#1#2#3%
+  {\EveryPar{\hangindent-\scratchdimen\hangafter\zerocount}%
+   \setbox\scratchbox\hbox\!!to\scratchdimen{\hss\box\scratchbox}%
+   \setbox\scratchbox\hbox\!!to\!!zeropoint {\hskip\dimexpr\hsize-\scratchdimen\relax\box\scratchbox\hss}%
+   \noindent\rlap{\box\scratchbox}\directsetup{#1:#3}}
+
+\setvalue{@@description@@\v!top}#1#2#3%
+  {\box\scratchbox\par
+   \nobreak
+   \doifcorrespondencestylevalue{#2}{#3}\c!inbetween{\correspondencestylevalue{#2}{#3}\c!inbetween}%
+   \nobreak
+   \directsetup{#1:#3}}
+
+\setvalue{@@description@@\v!text}#1#2#3%
+  {\noindent\box\scratchbox\directsetup{#1:#3}}
+
+\def\doflushcorrespondencedescription[#1][#2]%
+  {\def\dodoflushcorrespondencedescription##1%
+     {\doif{\correspondencestylevalue{#2}\v!option{##1}}\v!yes{\dosetcorrespondencedescription[#1][#2][##1]}}%
+   \processcommacommand[\csname#1!list!descriptions\endcsname]\dodoflushcorrespondencedescription}
+
+%D Commands to define named elements for header, footer etc. and use them,
+%D clone them or delete their content.
+
+\def\definecorrespondenceelement  [#1]#2[#3]#4[#5]#6{\setvalue{#1:#3:#5}{#6}}
+\def\resetcorrespondenceelement     [#1]#2[#3]#4[#5]{\resetvalue{#1:#3:#5}}
+\def\copycorrespondenceelement[#1]#2[#3]#4[#5]#6[#7]{\copycsname#1:#3:#5\endcsname\csname#1:#3:#7\endcsname}
+\def\correspondenceelement          [#1]#2[#3]#4[#5]{\csname#1:#3:#5\endcsname}
+
+\protect \endinput

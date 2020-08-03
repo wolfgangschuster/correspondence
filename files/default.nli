@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2009.03.13,
+%D        version=2009.03.31,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -286,6 +286,136 @@
    \doiflettervalue\c!fromname\\
    \lettervalue\c!fromaddress}
 
+\setvalue{@@head@@\c!rule\v!no    }{0}
+\setvalue{@@head@@\c!rule\v!none  }{0}
+\setvalue{@@head@@\c!rule\v!off   }{0}
+\setvalue{@@head@@\c!rule\v!top   }{1}
+\setvalue{@@head@@\c!rule\v!before}{1}
+\setvalue{@@head@@\c!rule\v!bottom}{2}
+\setvalue{@@head@@\c!rule\v!after }{2}
+\setvalue{@@head@@\c!rule\v!yes   }{2}
+\setvalue{@@head@@\c!rule\v!on    }{2}
+
+\def\simpleexecuteifdefined#1#2{\ifcsname#1\endcsname\csname#1\endcsname\else#2\fi}% -> t-correspondence?
+  
+\defineletterelement[\v!head][\v!left]
+  {\normalhbox
+     {\def\!!fromrule{\simpleexecuteifdefined{@@head@@\c!rule\letterstylevalue\v!head\c!fromrule}{0}}%
+      \framed[frame=off,location=bottom,align=right,width=\hsize]
+        {\dostartattributes{\????ld\c!fromname}\c!style\c!color
+         \lettervalue\c!fromname
+         \ifnum\!!fromrule=\plusone
+           \doifelselettervalue\c!fromlogo
+             {\setbox\scratchbox\hbox{\lettervalue\c!fromlogo}%
+              \scratchdimen\dimexpr\letterstylevalue\v!head\c!rulewidth-\wd\scratchbox\relax}
+             {\scratchdimen\letterstylevalue\v!head\c!rulewidth}%
+           \vskip-.5\lineheight\blackrule
+             [width=\scratchdimen,
+              height=\letterstylevalue\v!head\c!rulethickness,
+              color=\letterstylevalue\v!head\c!rulecolor]%
+         \fi
+         \dostopattributes
+         \\
+         \dostartattributes{\????ld\c!fromaddress}\c!style\c!color
+         \lettervalue\c!fromaddress
+         \doiflettervalue\c!fromphone{\\\lettervalue\c!fromphone}%
+         \doiflettervalue\c!fromfax  {\\\lettervalue\c!fromfax  }%
+         \doiflettervalue\c!frommail {\\\lettervalue\c!frommail }%
+         \doiflettervalue\c!fromurl  {\\\lettervalue\c!fromurl  }%
+         \ifnum\!!fromrule=\plustwo
+           \ifzeropt\letterstylevalue\v!head\c!rulewidth
+             \scratchdimen\hsize
+           \else
+             \scratchdimen\letterstylevalue\v!head\c!rulewidth
+           \fi
+           \vskip-.5\lineheight\blackrule
+             [width=\scratchdimen,
+              height=\letterstylevalue\v!head\c!rulethickness,
+              color=\letterstylevalue\v!head\c!rulecolor]%
+         \fi
+         \dostopattributes}%
+      \doiflettervalue\c!fromlogo{\llap{\lettervalue\c!fromlogo}}}}%
+
+\defineletterelement[\v!head][\v!middle]
+  {\normalhbox
+     {\def\!!fromrule{\simpleexecuteifdefined{@@head@@\c!rule\letterstylevalue\v!head\c!fromrule}{0}}%
+      \framed[frame=off,location=bottom,align=middle,width=\hsize]
+        {\dostartattributes{\????ld\c!fromname}\c!style\c!color
+         \lettervalue\c!fromname
+         \ifnum\!!fromrule=\plusone
+           \ifzeropt\letterstylevalue\v!head\c!rulewidth
+             \scratchdimen\hsize
+           \else
+             \scratchdimen\letterstylevalue\v!head\c!rulewidth
+           \fi
+           \vskip-.5\lineheight\blackrule
+             [width=\scratchdimen,
+              height=\letterstylevalue\v!head\c!rulethickness,
+              color=\letterstylevalue\v!head\c!rulecolor]%
+         \fi
+         \dostopattributes
+         \\
+         \dostartattributes{\????ld\c!fromaddress}\c!style\c!color
+         \lettervalue\c!fromaddress
+         \doiflettervalue\c!fromphone{\\\lettervalue\c!fromphone}%
+         \doiflettervalue\c!fromfax  {\\\lettervalue\c!fromfax  }%
+         \doiflettervalue\c!frommail {\\\lettervalue\c!frommail }%
+         \doiflettervalue\c!fromurl  {\\\lettervalue\c!fromurl  }%
+         \ifnum\!!fromrule=\plustwo
+           \ifzeropt\letterstylevalue\v!head\c!rulewidth
+             \scratchdimen\hsize
+           \else
+             \scratchdimen\letterstylevalue\v!head\c!rulewidth
+           \fi
+           \vskip-.5\lineheight\blackrule
+             [width=\scratchdimen,
+              height=\letterstylevalue\v!head\c!rulethickness,
+              color=\letterstylevalue\v!head\c!rulecolor]%
+         \fi
+         \dostopattributes}}}
+
+\defineletterelement[\v!head][\v!right]
+  {\normalhbox
+     {\def\!!fromrule{\simpleexecuteifdefined{@@head@@\c!rule\letterstylevalue\v!head\c!fromrule}{0}}%
+      \doiflettervalue\c!fromlogo{\rlap{\lettervalue\c!fromlogo}}%
+      \framed[frame=off,location=bottom,align=left,width=\hsize]
+        {\dostartattributes{\????ld\c!fromname}\c!style\c!color
+         \lettervalue\c!fromname
+         \ifnum\!!fromrule=\plusone
+           \ifzeropt\letterstylevalue\v!head\c!rulewidth
+             \scratchdimen\hsize
+           \else
+             \doifelselettervalue\c!fromlogo
+               {\setbox\scratchbox\hbox{\lettervalue\c!fromlogo}%
+                \scratchdimen\dimexpr\letterstylevalue\v!head\c!rulewidth-\wd\scratchbox\relax}
+               {\scratchdimen\letterstylevalue\v!head\c!rulewidth}%
+           \fi
+           \vskip-.5\lineheight\blackrule
+             [width=\scratchdimen,
+              height=\letterstylevalue\v!head\c!rulethickness,
+              color=\letterstylevalue\v!head\c!rulecolor]%
+         \fi
+         \dostopattributes
+         \\
+         \dostartattributes{\????ld\c!fromaddress}\c!style\c!color
+         \\\lettervalue\c!fromaddress
+         \doiflettervalue\c!fromphone{\\\lettervalue\c!fromphone}%
+         \doiflettervalue\c!fromfax  {\\\lettervalue\c!fromfax  }%
+         \doiflettervalue\c!frommail {\\\lettervalue\c!frommail }%
+         \doiflettervalue\c!fromurl  {\\\lettervalue\c!fromurl  }%
+         \ifnum\!!fromrule=\plustwo
+           \ifzeropt\letterstylevalue\v!head\c!rulewidth
+             \scratchdimen\hsize
+           \else
+             \scratchdimen\letterstylevalue\v!head\c!rulewidth
+           \fi
+           \vskip-.5\lineheight\blackrule
+             [width=\scratchdimen,
+              height=\letterstylevalue\v!head\c!rulethickness,
+              color=\letterstylevalue\v!head\c!rulecolor]%
+         \fi
+         \dostopattributes}}}
+
 \startsetups[\v!letter:\v!head]
 \def\\{\letterstylevalue\v!head\c!separator}
 \executeifdefined{\v!letter:\v!head:\@@@@lsheadalternative}{\letterelement[\v!head][\v!a]}
@@ -541,7 +671,8 @@
 %D The labels are stored in a common file, you could use them in your own interface
 %D but you have to live with my names.
 
-\useletterstyle    [dinb]    % layout
-\useletterextension[label]   % labels
+\useletterstyle    [dinb]      % layout
+\useletterextension[label]     % labels
+\useletterextension[addrentry] % database
 
 \protect \endinput

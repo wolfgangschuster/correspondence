@@ -1,0 +1,31 @@
+\startcomponent correspondence-revision
+
+\environment correspondence-environment
+
+\chapter{File versions}
+
+The letter module comes as a package with many different files
+and each of them has their own version tag, you could read this
+version tag at the bottom of each file in the field date.
+
+\setuptabulate[header=repeat]
+
+\starttabulatehead
+\NC \bf File \NC \bf Revision \NC \bf Description            \NC\NR
+\stoptabulatehead
+
+\startluacode
+tex.sprint(tex.ctxcatcodes,"\\starttabulate[|l|l|l|]")
+for k,v in pairs(thirddata.correspondence.files) do
+    tex.sprint(tex.ctxcatcodes,"\\NC")
+    tex.sprint(tex.ctxcatcodes,thirddata.correspondence.files[k]["name"])
+    tex.sprint(tex.ctxcatcodes,"\\NC")
+    tex.sprint(tex.ctxcatcodes,thirddata.correspondence.files[k]["version"])
+    tex.sprint(tex.ctxcatcodes,"\\NC")
+    tex.sprint(tex.ctxcatcodes,thirddata.correspondence.files[k]["description"])
+    tex.sprint(tex.ctxcatcodes,"\\NC\\NR")
+end
+tex.sprint(tex.ctxcatcodes,"\\stoptabulate")
+\stopluacode
+
+\stopcomponent

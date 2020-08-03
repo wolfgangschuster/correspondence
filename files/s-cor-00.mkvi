@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-00,
-%D      version=2011.12.24,
+%D      version=2011.12.26,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Correspondence,
 %D       author=Wolfgang Schuster,
@@ -115,6 +115,7 @@
   \setinterfacevariable {simplified}      {simplified}
   \setinterfacevariable {modified}        {modified}
   \setinterfacevariable {blockstyle}      {blockstyle}
+  \setinterfacevariable {knuth}           {knuth}
 \stopinterface
 
 % Messages
@@ -439,11 +440,9 @@
    \processcommalist[#elements]\correspondence_style_command}
 
 \unexpanded\def\correspondence_style_width#environment#element#content%
-  {\def\currentcorrespondencestyle{#environment:#element}%
-   \hbox \ifzeropt\correspondencestyleparameter\c!width \else to \correspondencestyleparameter\c!width \fi{#content\hss}}
-
-\setupcorrespondencestyle
-  [\c!width=\zeropoint]
+  {\edef\currentcorrespondencestyle  {#environment:#element}%
+   \edef\p_correspondence_style_width{\correspondencestyleparameter\c!width}%
+   \hbox \ifx\p_correspondence_style_width\empty \else to \p_correspondence_style_width \fi{#content\hss}}
 
 %D \section{Layout}
 %D

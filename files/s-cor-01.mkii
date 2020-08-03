@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-01,
-%D      version=2011.12.24,
+%D      version=2011.12.26,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Letters,
 %D       author=Wolfgang Schuster,
@@ -176,6 +176,40 @@
       \midaligned{\lettertext\v!page\subpagenumber\lettertext\v!of\lastsubpagenumber}
       \llap{\correspondenceparameter\c!date}}
    \hairline}
+
+\defineletterelement[\v!layer][\v!nexthead][\v!fullblock]
+  {\maxaligned
+     {\rlap{\correspondenceparameter\c!toname}%
+      \midaligned{\subpagenumber}%
+      \llap{\framed[\c!frame=\v!off,\c!location=\v!top,\c!align=\v!left]
+        {\correspondenceparameter\c!date   \\
+         \correspondenceparameter\c!reference}}}}
+
+\defineletterelement[\v!layer][\v!nexthead][\v!hanging]
+  {\maxaligned
+     {\framed[\c!frame=\v!off,\c!location=\v!top,\c!align=v!right]
+       {\correspondenceparameter\c!toname    \\
+        \correspondenceparameter\c!date      \\
+        \correspondenceparameter\c!reference \\
+        \lettertext\v!page\subpagenumber}}}
+
+\defineletterelement[\v!layer][\v!nexthead][\v!semiblock]
+  {\maxaligned
+     {\rlap{\correspondenceparameter\c!toname}%
+      \midaligned{\subpagenumber}%
+      \llap{\correspondenceparameter\c!date}}}
+
+\defineletterelement[\v!layer][\v!nexthead][\v!simplified]
+  {\letterelement[\v!layer][\v!nexthead][\v!fullblock]}
+
+\defineletterelement[\v!layer][\v!nexthead][\v!modified]
+  {\letterelement[\v!layer][\v!nexthead][\v!hanging]}
+
+\defineletterelement[\v!layer][\v!nexthead][\v!knuth]
+  {\maxaligned
+     {\rlap{\correspondenceparameter\c!toname}%
+      \midaligned{\currentdate}%
+      \llap{\lettertext\v!page\subpagenumber}}}
 
 \startsetups[\v!letter:\v!layer:\v!nexthead]
 \def\\{\correspondencelayerparameter\c!separator}
@@ -452,6 +486,9 @@
    \doifsomething{\correspondenceparameter\c!toname}\\
    \correspondenceparameter\c!toaddress}
 
+\defineletterelement[\v!section][\v!address][\v!knuth]
+  {\letterelement[\v!section][\v!address][\v!blockstyle]}
+
 \startsetups[\v!letter:\v!section:\v!address]
 \def\\{\correspondencesectionparameter\c!separator}
 \letterelement[\v!section][\v!address][\correspondencesectionparameter\c!alternative]
@@ -509,6 +546,13 @@
      {\blank[\correspondencesectionparameter\c!spaceinbetween]%
       \raggedcenter\doadaptleftskip{.5\textwidth}%
       \correspondenceparameter\c!signature\endgraf}}
+
+\defineletterelement[\v!section][\v!closing][\v!knuth]
+  {\doadaptleftskip{\dimexpr\textwidth/13*8\relax}%
+   \correspondenceparameter\c!closing
+   \doifsomething{\correspondenceparameter\c!signature}
+     {\blank[\correspondencesectionparameter\c!spaceinbetween]%
+      \correspondenceparameter\c!signature}}
 
 \startsetups[\v!letter:\v!section:\v!closing]
 \def\\{\correspondencesectionparameter\c!separator}

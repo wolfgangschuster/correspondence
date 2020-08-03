@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-01,
-%D      version=2013.01.07,
+%D      version=2013.01.14,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Letters,
 %D       author=Wolfgang Schuster,
@@ -303,11 +303,21 @@
 % layer: address
 
 \defineletterlayeralternative[\v!address:\s!default][\c!renderingsetup=\????correspondencelayerrenderings:\v!letter:\v!address:\s!default]
+\defineletterlayeralternative[\v!address:\v!a      ][\c!renderingsetup=\????correspondencelayerrenderings:\v!letter:\v!address:\v!a      ]
 
 \startsetups[\????correspondencelayerrenderings:\v!letter:\v!address:\s!default]
   \def\\{\correspondencelayerparameter\c!separator}%
   \doifsomething{\correspondenceparameter\c!dispatch}{\correspondenceparameter\c!dispatch\\}
   \doifsomething{\correspondenceparameter\c!toname  }{\correspondenceparameter\c!toname  \\}
+  \correspondenceparameter\c!toaddress
+\stopsetups
+
+\startsetups[\????correspondencelayerrenderings:\v!letter:\v!address:\v!a]
+  \def\\{\correspondencelayerparameter\c!separator}%
+  \doifsomethingelse{\correspondenceparameter\c!dispatch}
+    {\correspondenceparameter\c!dispatch\\} % check number of lines!
+    {\blank[2*\v!line]}
+  \doifsomething{\correspondenceparameter\c!toname}{\correspondenceparameter\c!toname\\}
   \correspondenceparameter\c!toaddress
 \stopsetups
 

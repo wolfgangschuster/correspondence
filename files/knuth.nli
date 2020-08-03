@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=knuth,
-%D        version=2009.01.23,
+%D        version=2009.02.19,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Lettformat Interface, % Donald Knuth's own letter format
 %D         author=Wolfgang Schuster,
@@ -24,13 +24,17 @@
    \dostartbuffer[closing][closing][endletter]}
 
 \def\annotations
-  {\blank[\v!line]\leftskip=0pt}
+  {\blank[\v!line]\leftskip\zeropoint}
 
 \def\ps
   {\let\par\space
-   \blank[\v!medium]\leftskip=0pt}
+   \blank[\v!medium]\leftskip\zeropoint}
 
 \startsetups[\v!letter:\v!reference]
+
+\stopsetups
+
+\startsetups[\v!letter:\v!optimize]
 
 \stopsetups
 
@@ -50,10 +54,10 @@
 
 \startsetups[\v!letter:\v!closing]
 
-  \leftskip=4in
+  \leftskip\dimexpr\textwidth/13*8\relax
   \obeylines
   \def\par{\normalpar\vskip1cm\def\par{\normalpar\nowhitespace}}
-  \getbuffer[closing]
+  \getbuffer[closing]\normalpar
 
 \stopsetups
 

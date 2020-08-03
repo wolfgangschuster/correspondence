@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2009.02.17,
+%D        version=2009.03.13,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -43,7 +43,7 @@
    \egroup
    \hfill}
 
-\setvalue{\v!letter:\v!reference:\v!a}%
+\defineletterelement[\v!reference][\v!a]
   {\setbox\scratchbox\hbox\!!to\hsize
      {\getcommacommandsize[\@@@@lsreferencelist]% \@@@@ldreference?
       \ifnum\commalistsize<\plustwo\hfill\fi
@@ -80,7 +80,7 @@
            {\lettervalue{#1}}}}%
    \egroup}
 
-\setvalue{\v!letter:\v!reference:\v!b}%
+\defineletterelement[\v!reference][\v!b]
   {\vtop % why not \vbox?
      {\processcommacommand[\@@@@lsreferencelist]\formatreferencelistb}}
 
@@ -116,7 +116,7 @@
      {\lettervalue\ascii}%
    \egroup}
 
-\setvalue{\v!letter:\v!reference:\v!c}%
+\defineletterelement[\v!reference][\v!c]
   {\hbox\!!to\hsize
      {\processcommacommand[\@@@@lsreferencelist]\formatreferencelistc}}
 
@@ -140,7 +140,7 @@
 \def\formatreferencelistd#1%
   {\appendtoks\doformatreferencelistd{#1}\to\scratchtoks}
 
-\setvalue{\v!letter:\v!reference:\v!d}%
+\defineletterelement[\v!reference][\v!d]
   {\vtop % why not \vbox?
      {\scratchtoks\emptytoks
       \processcommacommand[\@@@@lsreferencelist]\formatreferencelistd
@@ -185,7 +185,7 @@
            {\doformatreferenceliste{\lettervalue\ascii}}}}}%
    \egroup}
 
-\setvalue{\v!letter:\v!reference:\v!e}%
+\defineletterelement[\v!reference][\v!e]
   {\hbox\!!to\hsize
      {\processcommacommand[\@@@@lsreferencelist]\formatreferenceliste\hss}}
 
@@ -201,7 +201,7 @@
 %D method to get this result to use alternative c and remove all values from
 %D the reference but the none key is better.
 
-\resetvalue{\v!letter:\v!reference:\v!none}
+\resetletterelement[\v!reference][\v!none]
 
 \startsetups[\v!letter:\v!reference:\v!none]
 
@@ -234,7 +234,7 @@
      \getparameters[\????ld][#1]%
      \doifundefinedelse{\????ld\????ld#2}
        {\setvalue{\????ld\c!toaddress}{#2}}
-      {\setvalue{\????ld\c!toaddress}{\getvalue{\????ld\????ld#2}}}%
+       {\setvalue{\????ld\c!toaddress}{\getvalue{\????ld\????ld#2}}}%
    \else\iffirstargument
      \doifassignmentelse{#1}
        {\getparameters[\????ld][#1]}
@@ -281,14 +281,14 @@
 %D in the corresponding setups, this is only important if you want
 %D to define your own layout for header, address etc.
 
-\setvalue{\v!letter:\v!head:\v!a}%
+\defineletterelement[\v!head][\v!a]
   {\lettervalue\c!fromname
    \doiflettervalue\c!fromname\\
    \lettervalue\c!fromaddress}
 
 \startsetups[\v!letter:\v!head]
-\def\\{\letterstylevalue\v!head\c!separator}%
-\executeifdefined{\v!letter:\v!head:\@@@@lsheadalternative}{\getvalue{\v!letter:\v!head:\v!a}}%
+\def\\{\letterstylevalue\v!head\c!separator}
+\executeifdefined{\v!letter:\v!head:\@@@@lsheadalternative}{\letterelement[\v!head][\v!a]}
 \stopsetups
 
 \startsetups[\v!letter:\v!foot]
@@ -303,7 +303,7 @@
 \executeifdefined{\v!letter:\v!nextfoot:\@@@@lsnextfootalternative}\donothing
 \stopsetups
 
-\setvalue{\v!letter:\v!nexthead:\v!fullblock}%
+\defineletterelement[\v!nexthead][\v!fullblock]
   {\hbox\!!to\hsize
      {\rlap{\lettervalue\c!toname}%
       \midaligned{\pagenumber}%
@@ -311,7 +311,7 @@
         {\lettervalue\c!date   \\
          \lettervalue\c!reference}}}}
 
-\setvalue{\v!letter:\v!nexthead:\v!hanging}%
+\defineletterelement[\v!nexthead][\v!hanging]
   {\hbox\!!to\hsize
      {\framed[\c!frame=\v!off,\c!location=\v!top,\c!align=v!right]
        {\lettervalue\c!toname    \\
@@ -319,14 +319,14 @@
         \lettervalue\c!reference \\
         \labeltext\c!page\pagenumber}}\hss}
 
-\setvalue{\v!letter:\v!nexthead:\v!semiblock}%
+\defineletterelement[\v!nexthead][\v!semiblock]
   {\hbox\!!to\hsize
      {\rlap{\lettervalue\c!toname}%
       \midaligned{\pagenumber}%
       \llap{\lettervalue\c!date}}}
 
-\copycsname\v!letter:\v!nexthead:\v!simplified\endcsname\csname\v!letter:\v!nexthead:\v!fullblock\endcsname
-\copycsname\v!letter:\v!nexthead:\v!modified  \endcsname\csname\v!letter:\v!nexthead:\v!hanging  \endcsname
+\copyletterelement[\v!nexthead][\v!simplified][\v!fullblock]
+\copyletterelement[\v!nexthead][\v!modified  ][\v!hanging  ]
 
 %D \subject{Addressee field}
 %D 
@@ -366,13 +366,13 @@
 
 \stopsetups
 
-\setvalue{\v!letter:\v!address:\v!a}%
+\defineletterelement[\v!address][\v!a]
   {\doif\@@@@lsoptiondispatch \v!yes{\directsetup{\v!letter:\v!place:\v!dispatch }}%
    \doif\@@@@lsoptionaddressee\v!yes{\directsetup{\v!letter:\v!place:\v!addressee}}}
 
 \startsetups[\v!letter:\v!address]
 \offinterlineskip\endgraf
-\executeifdefined{\v!letter:\v!address:\@@@@lsaddressalternative}{\getvalue{\v!letter:\v!address:\v!a}}%
+\executeifdefined{\v!letter:\v!address:\@@@@lsaddressalternative}{\letterelement[\v!address][\v!a]}%
 \stopsetups
 
 \startsetups[\v!letter:\v!address:\v!dispatch]
@@ -393,10 +393,10 @@
 %D a not defined alternative the definition a is choosen.
 
 \startsetups[\v!letter:\v!reference]
-\executeifdefined{\v!letter:\v!reference:\@@@@lsreferencealternative}{\getvalue{\v!letter:\v!reference:\v!a}}
+\executeifdefined{\v!letter:\v!reference:\@@@@lsreferencealternative}{\letterelement[\v!reference][\v!a]}
 \stopsetups
 
-\resetvalue{\v!letter:\v!location:\v!a}
+\resetletterelement[\v!location][\v!a]
 
 \setvalue{\v!letter:\v!location:\v!french}%
   {\lettervalue\c!place
@@ -404,7 +404,7 @@
    \lettervalue\c!date}
 
 \startsetups[\v!letter:\v!location]
-\executeifdefined{\v!letter:\v!location:\@@@@lslocationalternative}{\getvalue{\v!letter:\v!location:\v!a}}
+\executeifdefined{\v!letter:\v!location:\@@@@lslocationalternative}{\letterelement[\v!location][\v!a]}
 \stopsetups
 
 \startsetups[\v!letter:\v!title]
@@ -419,19 +419,19 @@
 \labeltext{\v!letter:\c!subject}\lettervalue\c!subject
 \stopsetups
 
-\setvalue{\v!letter:\v!opening:\v!a}%
+\defineletterelement[\v!opening][\v!a]
   {\doifelselettervalue\c!opening
      {\lettervalue\c!opening}
      {\doiflettervalue\c!salutation
         {\lettervalue\c!salutation}}}
 
-\setvalue{\v!letter:\v!opening:\v!french}%
+\defineletterelement[\v!opening][\v!french]
   {\ExpandSecondAfter\doifsomething{\letterstylevalue\v!option\c!indenting}
      {\setupindenting[\@@@@lsoptionindenting]}%
-   \getvalue{\v!letter:\v!opening:\v!a}}
+   \letterelement[\v!opening][\v!a]}
 
 \startsetups[\v!letter:\v!opening]
-\executeifdefined{\v!letter:\v!opening:\@@@@lsopeningalternative}{\getvalue{\v!letter:\v!opening:\v!a}}
+\executeifdefined{\v!letter:\v!opening:\@@@@lsopeningalternative}{\letterelement[\v!opening][\v!a]}
 \stopsetups
 
 \startsetups[\v!letter:\v!content]
@@ -446,12 +446,12 @@
 %D own handwritten signature and to have a little bit space between the closing text
 %D and the appendices.
 
-\setvalue{\v!letter:\v!closing:\v!a}%
+\defineletterelement[\v!closing][\v!a]
   {\lettervalue\c!closing
    \doiflettervalue\c!signature{\letterstylevalue\v!closing\c!inbetween}%
    \lettervalue\c!signature}
 
-\setvalue{\v!letter:\v!closing:\v!french}%
+\defineletterelement[\v!closing][\v!french]
   {\ExpandSecondAfter\doifsomething{\letterstylevalue\v!option\c!indenting}
      {\setupindenting[\@@@@lsoptionindenting,\v!first]}%
    \lettervalue\c!closing
@@ -459,13 +459,13 @@
    \raggedcenter\doadaptleftskip{.5\textwidth}% quick and dirty
    \lettervalue\c!signature\endgraf}
 
-\setvalue{\v!letter:\v!closing:\v!simplified}%
+\defineletterelement[\v!closing][\v!simplified]
   {\doiflettervalue\c!signature{\letterstylevalue\v!closing\c!inbetween}%
    \lettervalue\c!signature}
 
 \startsetups[\v!letter:\v!closing]
-\def\\{\letterstylevalue\v!closing\c!separator}%
-\executeifdefined{\v!letter:\v!closing:\@@@@lsclosingalternative}{\getvalue{\v!letter:\v!closing:\v!a}}%
+\def\\{\letterstylevalue\v!closing\c!separator}
+\executeifdefined{\v!letter:\v!closing:\@@@@lsclosingalternative}{\letterelement[\v!closing][\v!a]}
 \stopsetups
 
 \startsetups[\v!letter:\v!appendices]
@@ -491,14 +491,14 @@
 \lettervalue\c!postscript
 \stopsetups
 
-\setvalue{\v!letter:\v!backaddress:\v!yes}%
+\defineletterelement[\v!backaddress][\v!yes]
   {\lettervalue\c!fromname
    \doiflettervalue\c!fromaddress\\
    \lettervalue\c!fromaddress}
 
-\resetvalue{\v!letter:\v!backaddress:\v!no}
+\resetletterelement[\v!backaddress][\v!no]
 
-\setvalue{\v!letter:\v!backaddress:\v!auto}%
+\defineletterelement[\v!backaddress][\v!auto]
   {\doifelselettervalue\c!backaddress
      {\lettervalue\c!backaddress}
      {\lettervalue\c!fromname
@@ -506,8 +506,8 @@
       \lettervalue\c!fromaddress}}
 
 \startsetups[\v!letter:\v!backaddress]
-\def\\{\letterstylevalue\c!backaddress\c!separator}%
-\executeifdefined{\v!letter:\v!backaddress:\@@@@lsbackaddressalternative}{\getvalue{\v!letter:\v!backaddress:\v!no}}%
+\def\\{\letterstylevalue\c!backaddress\c!separator}
+\executeifdefined{\v!letter:\v!backaddress:\@@@@lsbackaddressalternative}{\letterelement[\v!backaddress][\v!no]}
 \stopsetups
 
 %D To prevent a pagebreak between the last line of the text and
@@ -528,7 +528,7 @@
 \startsetups[\v!letter:\v!optimize]
 
   \setbox\scratchbox\hbox % trial typesetting to get the heigth of the reference line
-    {\executeifdefined{\v!letter:\v!reference:\@@@@lsreferencealternative}{\getvalue{\v!letter:\v!reference:\v!a}}}
+    {\dontcomplain\executeifdefined{\v!letter:\v!reference:\@@@@lsreferencealternative}\donothing}
 
   \setups[\v!letter:\v!reference:\@@@@lsreferencealternative]
 

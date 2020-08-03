@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=optimize,
-%D        version=2008.04.23,
+%D        version=2008.12.03,
 %D          title=\CONTEXT\ Letter Extension,
 %D       subtitle=Alternative input method,
 %D         author=Wolfgang Schuster,
@@ -10,14 +10,6 @@
 %D        license=Public Domain]
 
 \unprotect
-
-%D The \tex{minustwo} counter was added with the \CONTEXT\ version
-%D from \date[d=18,m=4,y=2008] and older versions will complain
-%D about a undefined control sequence, to prevend this problem
-%D I added a test if \tex{minustwo} is undefined and define it this
-%D is necessary.
-
-\ifx\minustwo\undefined \newcount\minustwo \minustwo=-2 \fi
 
 \newcount\letter!value!skip   \letter!value!skip  \plusten
 \newcount\letter!value!number \letter!value!number\zerocount
@@ -39,5 +31,8 @@
      \advance\letter!value!skip\plustwo
    \fi\fi
    \lazysavetwopassdata{\v!letter}{\number\letter!value!number}{\number\letter!value!skip}}
+
+\setvalue{\v!letter\v!content\v!start\v!optimize\v!yes}{}
+\setvalue{\v!letter\v!content\v!stop \v!optimize\v!yes}{}
 
 \protect \endinput

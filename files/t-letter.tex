@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-letter,
-%D        version=2008.02.13,
+%D        version=2009.03.04,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Framework for Letters,
 %D         author=Wolfgang Schuster,
@@ -73,6 +73,11 @@
 \def\doifelselettervalue     {\doifelsecorrespondencevalue     \????ld}
 \def\doifletterstylevalue    {\doifcorrespondencestylevalue    \????ls}
 \def\doifelseletterstylevalue{\doifelsecorrespondencestylevalue\????ls}
+
+\def\defineletterelement{\definecorrespondenceelement[\v!letter]}
+\def\resetletterelement {\resetcorrespondenceelement [\v!letter]}
+\def\copyletterelement  {\copycorrespondenceelement  [\v!letter]}
+\def\letterelement      {\correspondenceelement      [\v!letter]}
 
 %D \subject{Interface, Style and Extension files}
 %D 
@@ -527,7 +532,7 @@
 
   \startlocalsetups[\v!letter:\v!place:\v!topmark]
 
-    \dosetletterlayer[\v!topmark]
+    \dosetheaderfooterlayer[\v!letter][\????ls][\v!topmark]
 
   \stoplocalsetups
 
@@ -535,7 +540,7 @@
 
   \startlocalsetups[\v!letter:\v!place:\v!botmark]
 
-    \dosetletterlayer[\v!botmark]
+    \dosetheaderfooterlayer[\v!letter][\????ls][\v!botmark]
 
   \stoplocalsetups
 
@@ -543,7 +548,7 @@
 
   \startlocalsetups[\v!letter:\v!place:\v!cutmark]
 	
-    \dosetletterlayer[\v!cutmark]
+    \dosetheaderfooterlayer[\v!letter][\????ls][\v!cutmark]
 
   \stoplocalsetups
 
@@ -551,7 +556,7 @@
 
   \startlocalsetups[\v!letter:\v!place:\v!endmark]
 
-    \dosetletterlayer[\v!endmark]
+    \dosetheaderfooterlayer[\v!letter][\????ls][\v!endmark]
 
   \stoplocalsetups
 
@@ -559,15 +564,19 @@
 
   \startlocalsetups[\v!letter:\v!place:\v!usermark]
 
-    \dosetletterlayer[\v!usermark]
+    \dosetheaderfooterlayer[\v!letter][\????ls][\v!usermark]
 
   \stoplocalsetups
 
-  \doif\@@@@lsoptiontopmark \v!yes{\directsetup{\v!letter:\v!place:\v!topmark }}
-  \doif\@@@@lsoptionbotmark \v!yes{\directsetup{\v!letter:\v!place:\v!botmark }}
-  \doif\@@@@lsoptioncutmark \v!yes{\directsetup{\v!letter:\v!place:\v!cutmark }}
-  \doif\@@@@lsoptionendmark \v!yes{\directsetup{\v!letter:\v!place:\v!endmark }}
-  \doif\@@@@lsoptionusermark\v!yes{\directsetup{\v!letter:\v!place:\v!usermark}}
+  \ifx\@@@@lsoptionmarking\v!yes
+
+    \doif\@@@@lsoptiontopmark \v!yes{\directsetup{\v!letter:\v!place:\v!topmark }}
+    \doif\@@@@lsoptionbotmark \v!yes{\directsetup{\v!letter:\v!place:\v!botmark }}
+    \doif\@@@@lsoptioncutmark \v!yes{\directsetup{\v!letter:\v!place:\v!cutmark }}
+    \doif\@@@@lsoptionendmark \v!yes{\directsetup{\v!letter:\v!place:\v!endmark }}
+    \doif\@@@@lsoptionusermark\v!yes{\directsetup{\v!letter:\v!place:\v!usermark}}
+
+  \fi
 
 \stopsetups
 
@@ -614,7 +623,7 @@
 
   \setupbackgrounds
     [\v!page]
-    [\c!setups={\v!letter:\v!place:\v!head,\v!letter:\v!place:\v!foot},
+    [\c!setups={\v!letter:\v!place:\v!head,\v!letter:\v!place:\v!foot,\v!letter:\v!place:\v!foldmark},
      \c!background=\letter!list!backgrounds]
 
   \doifletterstylevalue\v!option\c!bodyfont  {\setupbodyfont  [\@@@@lsoptionbodyfont  ]}
@@ -653,7 +662,6 @@
 
 \startsetups[\v!letter:\v!layer]
 
-  \doif\@@@@lsoptionmarking    \v!yes{\directsetup{\v!letter:\v!place:\v!foldmark   }}
   \doif\@@@@lsoptionbackaddress\v!yes{\directsetup{\v!letter:\v!place:\v!backaddress}}
   \doif\@@@@lsoptionaddress    \v!yes{\directsetup{\v!letter:\v!place:\v!address    }}
   \doif\@@@@lsoptionreference  \v!yes{\directsetup{\v!letter:\v!place:\v!reference  }}

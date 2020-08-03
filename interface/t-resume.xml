@@ -128,4 +128,79 @@
   </cd:arguments>
 </cd:command>
 
+<cd:command name="cvline" file="modern.nrs">
+  <cd:sequence>
+    <cd:string value="cvline"/>
+  </cd:sequence>
+  <cd:arguments>
+    <cd:keywords n="1" optional="yes">
+      <cd:constant type="cd:dimension"/>
+    </cd:keywords>
+    <cd:content n="2"/>
+    <cd:content n="3"/>
+  </cd:arguments>
+</cd:command>
+
+<cd:command name="cvlistitem" file="modern.nrs">
+  <cd:sequence>
+    <cd:string value="cvlistitem"/>
+  </cd:sequence>
+  <cd:arguments>
+    <cd:keywords n="1" optional="yes">
+      <cd:constant type="cd:text"/>
+    </cd:keywords>
+    <cd:content n="2"/>
+  </cd:arguments>
+</cd:command>
+
+<cd:command name="cvlistdoubleitem" file="modern.nrs">
+  <cd:sequence>
+    <cd:string value="cvlistdoubleitem"/>
+  </cd:sequence>
+  <cd:arguments>
+    <cd:keywords n="1" optional="yes">
+      <cd:constant type="cd:text"/>
+    </cd:keywords>
+    <cd:content n="2"/>
+    <cd:content n="3"/>
+  </cd:arguments>
+</cd:command>
+
+<cd:command name="cventry" file="modern.nrs">
+  <cd:sequence>
+    <cd:string value="cventry"/>
+  </cd:sequence>
+  <cd:arguments>
+    <cd:content n="1"/>
+    <cd:content n="2"/>
+    <cd:content n="3"/>
+    <cd:content n="4"/>
+    <cd:content n="5"/>
+    <cd:content n="6"/>
+  </cd:arguments>
+</cd:command>
+
+<cd:command name="cvlanguage" file="modern.nrs">
+  <cd:sequence>
+    <cd:string value="cvlanguage"/>
+  </cd:sequence>
+  <cd:arguments>
+    <cd:content n="1"/>
+    <cd:content n="2"/>
+    <cd:content n="3"/>
+  </cd:arguments>
+</cd:command>
+
+<cd:command name="cvcomputer" file="modern.nrs">
+  <cd:sequence>
+    <cd:string value="cvcomputer"/>
+  </cd:sequence>
+  <cd:arguments>
+    <cd:content n="1"/>
+    <cd:content n="2"/>
+    <cd:content n="3"/>
+    <cd:content n="4"/>
+  </cd:arguments>
+</cd:command>
+
 </cd:interface>

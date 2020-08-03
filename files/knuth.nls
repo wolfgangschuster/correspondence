@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=knuth,
-%D        version=2009.02.13,
+%D        version=2009.02.19,
 %D          title=\CONTEXT\ Letter Style,
 %D       subtitle=Letterformat Style,
 %D         author=Wolfgang Schuster,
@@ -17,7 +17,7 @@
 \setupletterstyle
   [\v!firstpage,\v!secondpage]
   [\c!backspace=1in,
-   \c!width=6.5in]
+   \c!width=\dimexpr\paperwidth-\plustwo\backspace\relax]
 
 \setupletterstyle
   [\v!firstpage]
@@ -34,17 +34,11 @@
   [\v!option]
   [\c!whitespace=\v!line]
 
-\newcount\knuthcount
-
 \setvalue{\v!letter:\v!nexthead:\v!knuth}%
-  {\global\advance\knuthcount\plusone
-   \hbox\!!to\hsize
-     {\midaligned{\currentdate}%
-      \llap{\labeltext\c!page\number\knuthcount}}}
-
-\setvalue{\v!letter:\v!nexthead:\v!knuth}%
-  {\global\advance\knuthcount\plusone
-   \hskip\knuthcount em\number\knuthcount\relax}
+  {\hbox\!!to\hsize
+     {\rlap{\lettervalue\c!toname}%
+      \midaligned{\currentdate}%
+      \llap{\labeltext\c!page\correspagenumber}}}
 
 \setupletterstyle
   [\v!nexthead]

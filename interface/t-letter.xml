@@ -38,6 +38,12 @@
   <cd:constant type="lettermain"/>
 </cd:define>
 
+<cd:define name="letterdescription">
+  <cd:constant type="postscript"/>
+  <cd:constant type="copy"/>
+  <cd:constant type="enclosure"/>
+</cd:define>
+
 <cd:command name="setupletterstyle:layout" file="t-letter.tex">
   <cd:sequence>
     <cd:string value="setupletterstyle"/>
@@ -246,6 +252,48 @@
       </cd:parameter>
     </cd:assignments>
   </cd:arguments>
+</cd:command>
+
+<cd:command name="setupletterdescription" file="t-letter.tex">
+  <cd:sequence>
+    <cd:string value="setupletterstyle"/>
+  </cd:sequence>
+  <cd:arguments>
+    <cd:keywords list="yes">
+      <cd:resolve name="letterdescription"/>
+    </cd:keywords>
+    <cd:assignments list="yes">
+      <cd:parameter name="location">
+        <cd:constant type="left" default="yes"/>
+        <cd:constant type="right"/>
+        <cd:constant type="top"/>
+        <cd:constant type="text"/>
+      </cd:parameter>
+      <cd:parameter name="width">
+        <cd:constant type="fit"/>
+        <cd:constant type="broad" default="yes"/>
+        <cd:constant type="cd:dimension"/>
+      </cd:parameter>
+      <cd:parameter name="distance">
+        <cd:constant type="cd:dimension"/>
+      </cd:parameter>
+      <cd:parameter name="before">
+        <cd:constant type="cd:command"/>
+      </cd:parameter>
+      <cd:parameter name="after">
+        <cd:constant type="cd:command"/>
+      </cd:parameter>
+      <cd:parameter name="inbetween">
+        <cd:constant type="cd:command"/>
+      </cd:parameter>
+      <cd:parameter name="headstyle">
+        <cd:resolve name="style"/>
+      </cd:parameter>
+      <cd:parameter name="headcolor">
+        <cd:constant type="cd:name"/>
+      </cd:parameter>
+    </cd:assignments>
+   </cd:arguments>
 </cd:command>
 
 <cd:command name="useletterinterface" file="t-letter.tex">

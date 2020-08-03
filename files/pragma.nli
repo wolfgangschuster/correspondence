@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=pragma,
-%D        version=2009.02.12,
+%D        version=2009.02.19,
 %D          title=\CONTEXT\ Letter Extension,
 %D       subtitle=Pragma Style,
 %D         author=Wolfgang Schuster,
@@ -11,12 +11,8 @@
 
 \unprotect
 
-\useletterstyle    [pragma] % prefined layout
+\useletterstyle    [pragma] % predefined layout
 \useletterextension[pragma] % example text
-
-\setupletterstyle
-  [\v!reference]
-  [\c!alternative=\v!none]
 
 \setvariables
   [letter:head]
@@ -117,6 +113,10 @@
        {\hss
         \getvariable{letter:data}{residence},\space
         \getvariable{letter:data}{date}}}
+
+\stopsetups
+
+\startsetups[letter:optimize]
 
 \stopsetups
 

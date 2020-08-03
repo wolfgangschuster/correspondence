@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=modern,
-%D        version=2009.02.13,
+%D        version=2009.03.22,
 %D          title=\CONTEXT\ Resume Style,
 %D       subtitle=Modern Style,
 %D         author=Wolfgang Schuster,
@@ -57,9 +57,11 @@
   {\dosingleempty\docvline}
 
 \def\docvline[#1]#2#3%
-  {\starttable[s0|s0rp(\measure{hintscolumnwidth})|s0w(\measure{separatorcolumnwidth})|s0p(\measure{maincolumnwidth})|]
-   \NC\doifelsenothing{#2}{~}{#2}\NC\NC#3\NC\NR
+  {\bgroup\dontcomplain
+   \starttable[s0|s0rp(\measure{hintscolumnwidth})|s0w(\measure{separatorcolumnwidth})|s0p(\measure{maincolumnwidth})|]
+   \NC\doifelsenothing{#2}{~}{\setupinterlinespace\relax#2}\NC\NC\setupinterlinespace\relax#3\NC\NR
    \stoptable
+   \egroup
    \doifelsenothing{#1}{\blank[.25em]}{\blank[#1]}}
 
 \def\cvdoubleitem#1#2#3#4%
@@ -117,7 +119,7 @@
 
 \startsetups[\v!resume:\v!optimize]
 
-  \setbox\scratchbox\vbox{\getvalue{\v!resume:\v!head:\@@@@rsheadalternative}}
+  \setbox\scratchbox\vbox{\dontcomplain\getvalue{\v!resume:\v!head:\@@@@rsheadalternative}}
 
   \ifdim\htdp\scratchbox>\zeropoint
 

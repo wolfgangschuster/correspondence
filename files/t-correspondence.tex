@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-correspondence,
-%D        version=2008.02.18,
+%D        version=2009.03.18,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Correspondence,
 %D         author=Wolfgang Schuster,
@@ -251,26 +251,6 @@
 
 \appendtoks\gotonextcorrespage\to\beforeeverypage
 
-%D Value list
-
-\ifx\appendtovaluelist\undefined
-
-\def\appendtovaluelist#1%
-  {\ifcsname#1\endcsname
-     \@EA\ifx\csname#1\endcsname\empty
-       \@EA\noappendtovaluelist\csname#1\@EAEAEA\endcsname
-     \else
-       \@EA\doappendtovaluelist\csname#1\@EAEAEA\endcsname
-     \fi
-   \else
-     \@EA\noappendtovaluelist\csname#1\@EA\endcsname
-   \fi}
-
-\def\doappendtovaluelist#1#2{\@EA\def\@EA#1\@EA{#1,#2}}
-\def\noappendtovaluelist#1#2{\def#1{#2}}
-
-\fi
-
 %D Setup command for the styles
 
 \def\definecorrespondencesetup[#1][#2][#3]%
@@ -301,10 +281,10 @@
   {\definelayout[#1#3][#4]}
 
 \def\dosetupcorrespondencesection[#1][#2][#3][#4]%
-  {\getparameters[#2#3][#4]}
+  {\getcheckedparameters[#1\v!section:#3][#2#3][#4]}
 
 \def\dosetupcorrespondencedescription[#1][#2][#3][#4]%
-  {\getparameters[#2#3][#4]}
+  {\getcheckedparameters[#1\v!description:#3][#2#3][#4]}
 
 \def\dosetupcorrespondencelayer[#1][#2][#3][#4]%
   {\dodosetupcorrespondencelayer[#1][#2][#3][\v!layer,\v!frame,\v!option][#4]}
@@ -315,7 +295,7 @@
         {\ifcsname dosetupcorrespondencelayer####1\endcsname
            \@EA\@EA\csname dosetupcorrespondencelayer####1\endcsname
          \else
-           \@EA\@EA\csname dosetupcorrespondencelayer\v!option\endcsname
+           \@EA\dosetupcorrespondencelayeroption
          \fi[#1][#2][##1][#5]}%
       \processcommalist[#4]\dodododosetupcorrespondencelayer}%
    \processcommalist[#3]\dododosetupcorrespondencelayer}
@@ -328,7 +308,7 @@
   {\setuplocalframed[#2#3\v!frame][#4]}
 
 \def\dosetupcorrespondencelayeroption[#1][#2][#3][#4]%
-  {\getparameters[#2#3][#4]}
+  {\getcheckedparameters[#1\v!layer\v!option:#3][#2#3][#4]}
 
 %D Setup command for the values
 
@@ -415,6 +395,10 @@
 
 %D Layers
 
+\def\correspondencelayerkeys
+  {\c!state,\c!symbol,\c!separator,\c!offset,\c!spacebefore,\c!list,%
+   \c!alternative,\c!spaceafter,\c!leftmargin,\c!rightmargin}
+
 \def\definecorrespondencelayer[#1][#2]%
   {\setvalue{\s!do\e!define#1\v!layer}{\dodefinecorrespondencelayer[#1][#2]}%
    \setvalue{\s!do\e!set   #1\v!layer}{\dosetcorrespondencelayer   [#1][#2]}}
@@ -424,15 +408,16 @@
    \processaction
      [#3]
      [\v!foldmark=>{\processcommacommand[\csname#1!list!marking\endcsname]\dodododefinecorrespondencelayer},
-        \v!header=>{\processcommacommand[\csname#1!list!header\endcsname]\dodododefinecorrespondencelayer},
-        \v!footer=>{\processcommacommand[\csname#1!list!footer\endcsname]\dodododefinecorrespondencelayer},
+        \v!header=>{\processcommacommand[\csname#1!list!header\endcsname ]\dodododefinecorrespondencelayer},
+        \v!footer=>{\processcommacommand[\csname#1!list!footer\endcsname ]\dodododefinecorrespondencelayer},
        \s!unknown=>{\dododefinecorrespondencelayer[#1][#2][#3]}]}
 
 \def\dododefinecorrespondencelayer[#1][#2][#3]%
-  {\setvalue{#2\v!option#3}{\v!yes}%
+  {\letvalue{#2\v!option#3}\v!yes
    \doifundefined{#1:#2:#3}
-     {\setvalue{#1:#2:#3}{\v!layer}%
-      \appendtovaluelist{#1!list!layers}{#3}}%
+     {\letvalue{#1:#2:#3}\v!layer
+      \addvalue{#1!list!layers}{#3}}%
+   \setvalidparameterkeys[#1\v!layer\v!option:#3][\correspondencelayerkeys]%
    \presetlocalframed[#2#3\v!frame]%
    \definelayer
      [#1:#3]
@@ -442,6 +427,7 @@
      [#1][#2][#3][\v!option]%
      [\c!state=\v!stop,
       \c!symbol=,
+      \c!list=,
       \c!alternative=\v!a,
       \c!separator=\crlf,
       \c!offset=\zeropoint,
@@ -462,16 +448,14 @@
       \c!preset=\v!left\v!top]}
 
 \def\dosetcorrespondencelayer[#1][#2][#3]%
-  {\ExpandSecondAfter\doifinsetelse{#1}{\csname#1!list!marking\endcsname}
-     {\doifelsecorrespondencestylevalue{#2}{#3}\c!symbol
-        {\dodosetcorrespondencelayer[#1][#2][#3][\directsetup{#1:#3}]}
-        {\dodosetcorrespondencelayer[#1][#2][#3][\correspondencestylevalue{#2}{#3}\c!symbol]}}
+  {\doifelsecorrespondencestylevalue{#2}{#3}\c!symbol
+     {\dodosetcorrespondencelayer[#1][#2][#3][\correspondencestylevalue{#2}{#3}\c!symbol]}
      {\dodosetcorrespondencelayer[#1][#2][#3][\directsetup{#1:#3}]}}
 
 \def\dodosetcorrespondencelayer[#1][#2][#3][#4]%
   {\setlayer[#1:#3]
      {\localframed[#2#3\v!frame]
-        {\doadaptleftskip {\correspondencestylevalue{#2}{#3}\c!leftmargin}%
+        {\doadaptleftskip {\correspondencestylevalue{#2}{#3}\c!leftmargin }%
          \doadaptrightskip{\correspondencestylevalue{#2}{#3}\c!rightmargin}%
          \doattributes{#2#3}\c!style\c!color{#4}}}}
 
@@ -525,19 +509,25 @@
 
 %D Sections
 
+\def\correspondencesectionkeys
+  {\c!before,\c!after,\c!align,\c!leftmargin,\c!rightmargin,\c!alternative,%
+   \c!inbetween,\c!separator,\c!optimize,\c!command,\c!style,\c!color}
+
 \def\definecorrespondencesection[#1][#2]%
   {\setvalue{\s!do\e!define#1\v!section}{\dodefinecorrespondencesection[#1][#2]}%
    \setvalue{\s!do\e!set   #1\v!section}{\dosetcorrespondencesection   [#1][#2]}}
 
 \def\dodefinecorrespondencesection[#1][#2][#3]%
-  {\setvalue{#2\v!option#3}{\v!yes}%
+  {\letvalue{#2\v!option#3}\v!yes
    \doifundefined{#1:#2:#3}
-     {\setvalue{#1:#2:#3}{\v!section}%
-      \appendtovaluelist{#1!list!sections}{#3}}%
+     {\letvalue{#1:#2:#3}\v!section
+      \addvalue{#1!list!sections}{#3}}%
+   \setvalidparameterkeys[#1\v!section:#3][\correspondencesectionkeys]%
    \getparameters
      [#2#3]
      [\c!before=,
       \c!after=,
+      \c!inbetween=,
       \c!align=,
       \c!leftmargin=\zeropoint,
       \c!rightmargin=\zeropoint,
@@ -567,14 +557,18 @@
 
 %D Descriptions
 
+\def\correspondencedescriptionkeys
+  {\c!location,\c!inbetween,\c!before,\c!after,\c!width,\c!headstyle,\c!headcolor,\c!distance}
+
 \def\definecorrespondencedescription[#1][#2]%
   {\setvalue{\s!do\e!define#1\v!description}{\dodefinecorrespondencedescription[#1][#2]}%
    \setvalue{\s!do\e!set   #1\v!description}{\dosetcorrespondencedescription   [#1][#2]}%
    \setvalue{\s!do\e!flush #1\v!description}{\doflushcorrespondencedescription [#1][#2]}}
 
 \def\dodefinecorrespondencedescription[#1][#2][#3]%
-  {\setvalue{#2\v!option#3}{\v!yes}%
-   \doifundefined{#1:#2:#3}{\setvalue{#1:#2:#3}{\v!description}}%
+  {\letvalue{#2\v!option#3}\v!yes
+   \doifundefined{#1:#2:#3}{\letvalue{#1:#2:#3}\v!description}%
+   \setvalidparameterkeys[#1\v!description:#3][\correspondencedescriptionkeys]%
    \getparameters
      [#2#3]
      [\c!location=\v!left,
@@ -582,7 +576,6 @@
       \c!before=\blank,
       \c!after=\blank,
       \c!width=\v!broad,
-      \c!distance=\zeropoint,
       \c!headstyle=,
       \c!headcolor=,
       \c!distance=\zeropoint]}
@@ -592,6 +585,7 @@
    \doifelsecorrespondencestylevalue{#2}{#3}\c!before
      {\correspondencestylevalue{#2}{#3}\c!before}
       \endgraf
+   \scratchdimen\zeropoint
    \setbox\scratchbox\hbox{\doattributes{#2#3}\c!headstyle\c!headcolor{\labeltext{#1:#3}}}%
    \doifelse{\correspondencestylevalue{#2}{#3}\c!width}\v!broad
      {\ifdim\wd\scratchbox>\zeropoint
@@ -602,36 +596,311 @@
            \scratchdimen\dimexpr\wd\scratchbox+\correspondencestylevalue{#2}{#3}\c!distance\relax
          \fi}
         {\scratchdimen\dimexpr\correspondencestylevalue{#2}{#3}\c!width+\correspondencestylevalue{#2}{#3}\c!distance\relax}}%
-   \executeifdefined{\v!correspondence\v!description\correspondencestylevalue{#2}{#3}\c!location}\gobblethreearguments{#1}{#2}{#3}%
+   \executeifdefined{@@description@@\correspondencestylevalue{#2}{#3}\c!location}\gobblethreearguments{#1}{#2}{#3}%
    \doifelsecorrespondencestylevalue{#2}{#3}\c!after
      {\endgraf\correspondencestylevalue{#2}{#3}\c!after}
       \endgraf
    \egroup}
 
-\setvalue{\v!correspondence\v!description\v!left}#1#2#3%
+\setvalue{@@description@@\v!left}#1#2#3%
   {\EveryPar{\hangindent\scratchdimen\hangafter\zerocount}%
    \setbox\scratchbox\hbox\!!to\scratchdimen{\box\scratchbox\hss}%
    \noindent\llap{\box\scratchbox}\directsetup{#1:#3}}
 
-\setvalue{\v!correspondence\v!description\v!right}#1#2#3%
+\setvalue{@@description@@\v!right}#1#2#3%
   {\EveryPar{\hangindent-\scratchdimen\hangafter\zerocount}%
    \setbox\scratchbox\hbox\!!to\scratchdimen{\hss\box\scratchbox}%
    \setbox\scratchbox\hbox\!!to\!!zeropoint {\hskip\dimexpr\hsize-\scratchdimen\relax\box\scratchbox\hss}%
    \noindent\rlap{\box\scratchbox}\directsetup{#1:#3}}
 
-\setvalue{\v!correspondence\v!description\v!top}#1#2#3%
+\setvalue{@@description@@\v!top}#1#2#3%
   {\box\scratchbox\par
    \nobreak
    \doifcorrespondencestylevalue{#2}{#3}\c!inbetween{\correspondencestylevalue{#2}{#3}\c!inbetween}%
    \nobreak
    \directsetup{#1:#3}}
 
-\setvalue{\v!correspondence\v!description\v!text}#1#2#3%
+\setvalue{@@description@@\v!text}#1#2#3%
   {\noindent\box\scratchbox\directsetup{#1:#3}}
 
 \def\doflushcorrespondencedescription[#1][#2]%
   {\def\dodoflushcorrespondencedescription##1%
      {\doif{\correspondencestylevalue{#2}\v!option{##1}}\v!yes{\dosetcorrespondencedescription[#1][#2][##1]}}%
    \processcommacommand[\csname#1!list!descriptions\endcsname]\dodoflushcorrespondencedescription}
+
+%D Commands to define named elements for header, footer etc. and use them,
+%D clone them or delete their content.
+
+\def\definecorrespondenceelement  [#1]#2[#3]#4[#5]#6{\setvalue{#1:#3:#5}{#6}}
+\def\resetcorrespondenceelement     [#1]#2[#3]#4[#5]{\resetvalue{#1:#3:#5}}
+\def\copycorrespondenceelement[#1]#2[#3]#4[#5]#6[#7]{\copycsname#1:#3:#5\endcsname\csname#1:#3:#7\endcsname}
+\def\correspondenceelement          [#1]#2[#3]#4[#5]{\csname#1:#3:#5\endcsname}
+
+%D A simple test for the existence of Hans new key checker.
+
+\ifx\enablecheckparameters\undefined
+  \let\setvalidparameterkeys\gobbleparameters
+  \let\addvalidparameterkeys\gobbleparameters
+  \def\getcheckedparameters[#1]{\getparameters}
+\fi
+
+\beginLUATEX
+
+%D Lua table with all macro files and their current version, it is used
+%D to build the revision table in the manual. The Lua alternative is easier
+%D to maintain (same folder as the other files) and allows me to store more
+%D information as I can do with the TeX solution.
+
+\startluacode
+
+thirddata                = thirddata                or { }
+thirddata.correspondence = thirddata.correspondence or { }
+
+thirddata.correspondence.files = {
+    {
+        name        = "t-correspondence.tex",
+        path        = "tex/context/third/letter/base/",
+        type        = "base",
+        version     = "2009.03.18",
+        description = "Core module"
+    } ,
+    {
+        name        = "t-letter.tex",
+        path        = "tex/context/third/letter/base/",
+        type        = "base",
+        version     = "2009.02.13",
+        description = "Letter Module"
+
+    } ,
+    {
+        name        = "t-resume.tex",
+        path        = "tex/context/third/letter/base/",
+        type        = "base",
+        version     = "2009.02.12",
+        description = "Résumé Module"
+    } ,
+    {
+        name        = "default.nli",
+        path        = "tex/context/third/letter/interface/",
+        type        = "interface",
+        version     = "2009.03.13",
+        description = "Default letter interface"
+
+    } ,
+    {
+        name        = "pragma.nli",
+        path        = "tex/context/third/letter/interface/",
+        type        = "interface",
+        version     = "2009.02.12",
+        description = "m-letter.tex Interface"
+    } ,
+    {
+        name        = "knuth.nli",
+        path        = "tex/context/third/letter/interface/",
+        type        = "interface",
+        version     = "2009.01.23",
+        description = "letter.tex Interface"
+    } ,
+    {
+        name        = "default.nri",
+        path        = "tex/context/third/letter/interface/",
+        type        = "interface",
+        version     = "2009.02.14",
+        description = "Default resume interface"
+    } ,
+    {
+        name        = "label.nle",
+        path        = "tex/context/third/letter/extension/",
+        type        = "extension",
+        version     = "2009.02.13",
+        description = "Text labels"
+    } ,
+    {
+        name        = "corres.nle",
+        path        = "tex/context/third/letter/extension/",
+        type        = "extension",
+        version     = "2009.02.13",
+        description = "XML-Database"
+    } ,
+    {
+        name        = "pragma.nle",
+        path        = "tex/context/third/letter/extension/",
+        type        = "extension",
+        version     = "2008.01.23",
+        description = "Examples from m-letter.tex"
+    } ,
+    {
+        name        = "optimize.nle",
+        path        = "tex/context/third/letter/extension/",
+        type        = "extension",
+        version     = "2008.12.03",
+        description = "Page optimation"
+    } ,
+    {
+        name        = "addrentry.nle",
+        path        = "tex/context/third/letter/extension/",
+        type        = "extension",
+        version     = "2008.12.26",
+        description = "\tex{addrenetry} support"
+    } ,
+    {
+        name        = "dina.nls",
+        path        = "tex/context/third/letter/style/",
+        type        = "style",
+        version     = "2007.02.11",
+        description = "German style DIN 676 A"
+    } ,
+    {
+        name        = "dinb.nls",
+        path        = "tex/context/third/letter/style/",
+        type        = "style",
+        version     = "2009.02.14",
+        description = "German style DIN 676 B"
+    } ,
+    {
+        name        = "pragma.nls",
+        path        = "tex/context/third/letter/style/",
+        type        = "style",
+        version     = "2009.02.12",
+        description = "m-letter.tex style"
+    } ,
+    {
+        name        = "knuth.nls",
+        path        = "tex/context/third/letter/style/",
+        type        = "style",
+        version     = "2009.02.13",
+        description = "letter.tex style"
+    } ,
+    {
+        name        = "dutch.nls",
+        path        = "tex/context/third/letter/style/",
+        type        = "style",
+        version     = "2008.12.28",
+        description = "Dutch letter style"
+    } ,
+    {
+        name        = "french.nls",
+        path        = "tex/context/third/letter/style/",
+        type        = "style",
+        version     = "2008.08.07",
+        description = "French letter style"
+    } ,
+    {
+        name        = "english.nls",
+        path        = "tex/context/third/letter/style/",
+        type        = "style",
+        version     = "2008.03.13",
+        description = "English letter style"
+    } ,
+    {
+        name        = "default.nls",
+        path        = "tex/context/third/letter/style/",
+        type        = "style",
+        version     = "2009.02.14",
+        description = "Basic style"
+    } ,
+    {
+        name        = "blockstyle.nls",
+        path        = "tex/context/third/letter/style/",
+        type        = "style",
+        version     = "2008.11.29",
+        description = "Default block values"
+    } ,
+    {
+        name        = "fullblock.nls",
+        path        = "tex/context/third/letter/style/",
+        type        = "style",
+        version     = "2008.12.16",
+        description = "Full-block"
+    } ,
+    {
+        name        = "semiblock.nls",
+        path        = "tex/context/third/letter/style/",
+        type        = "style",
+        version     = "2008.12.16",
+        description = "Semiblock"
+    } ,
+    {
+        name        = "modified.nls",
+        path        = "tex/context/third/letter/style/",
+        type        = "style",
+        version     = "2008.12.16",
+        description = "Modified block"
+    } ,
+    {
+        name        = "hanging.nls",
+        path        = "tex/context/third/letter/style/",
+        type        = "style",
+        version     = "2008.12.25",
+        description = "Hanging intended"
+    } ,
+    {
+        name        = "memo.nls",
+        path        = "tex/context/third/letter/style/",
+        type        = "style",
+        version     = "2008.11.29",
+        description = "Memo style"
+    } ,
+    {
+        name        = "simplified.nls",
+        path        = "tex/context/third/letter/style/",
+        type        = "style",
+        version     = "2008.12.16",
+        description = "Simplified style"
+    } ,
+    {
+        name        = "swiss.nls",
+        path        = "tex/context/third/letter/style/",
+        type        = "style",
+        version     = "2009.02.14",
+        description = "Swiss style"
+    } ,
+    {
+        name        = "swissleft.nls",
+        path        = "tex/context/third/letter/style/",
+        type        = "style",
+        version     = "2009.02.14",
+        description = "Swiss left style"
+    } ,
+    {
+        name        = "default.nrs",
+        path        = "tex/context/third/letter/style/",
+        type        = "style",
+        version     = "2009.02.10",
+        description = "Default resume style"
+    } ,
+    {
+        name        = "modern.nrs",
+        path        = "tex/context/third/letter/style/",
+        type        = "style",
+        version     = "2009.03.13",
+        description = "modercv basic style"
+    } ,
+    {
+        name        = "classic.nrs",
+        path        = "tex/context/third/letter/style/",
+        type        = "style",
+        version     = "2009.02.11",
+        description = "modercv classic style"
+    } ,
+    {
+        name        = "casual.nrs",
+        path        = "tex/context/third/letter/style/",
+        type        = "style",
+        version     = "2009.02.11",
+        description = "modercv casual style"
+    } ,
+    {
+        name        = "user.ori",
+        path        = "tex/context/third/letter/style/",
+        type        = "style",
+        version     = "2008.07.08",
+        description = "Example for user settings"
+    } ,
+}
+
+\stopluacode
+
+\endLUATEX
 
 \protect \endinput

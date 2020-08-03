@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-resume,
-%D        version=2008.12.21,
+%D        version=2008.12.23,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Resumes,
 %D         author=Wolfgang Schuster,
@@ -14,12 +14,6 @@
 \unprotect
 
 \usemodule[correspondence]
-
-%D I use a few extra constants and variables in my module.
-
-\startinterface all
-  \setinterfacevariable {resume} {resume}
-\stopinterface
 
 \def\????rd{@@@@rd} % ResumeData
 \def\????rs{@@@@rs} % ResumeStyle
@@ -52,13 +46,13 @@
 %D \macros
 %D   {useresumeextension,useresumestyle,useresumeinterface}
 
-\def\resume!suffix!style    {nrs}
-\def\resume!suffix!extension{nre}
-\def\resume!suffix!interface{nri}
+\definefileconstant {resumestyle}     {nrs}
+\definefileconstant {resumeextension} {nre}
+\definefileconstant {resumeinterface} {nri}
 
-\definecorrespondencefile[\v!resume\v!interface][\resume!suffix!interface]
-\definecorrespondencefile[\v!resume\v!extension][\resume!suffix!extension]
-\definecorrespondencefile[\v!resume\v!style    ][\resume!suffix!style    ]
+\definecorrespondencefile[\v!resume][\v!interface][\f!resumeinterface]
+\definecorrespondencefile[\v!resume][\v!extension][\f!resumeextension]
+\definecorrespondencefile[\v!resume][\v!style    ][\f!resumestyle    ]
 
 %D \macros
 %D   {resumestylevalue,resumevalue}

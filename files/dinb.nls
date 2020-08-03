@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=dinb,
-%D        version=2008.05.01,
+%D        version=2008.12.23,
 %D          title=\CONTEXT\ Letter Style,
 %D       subtitle=DIN 676 B,
 %D         author=Wolfgang Schuster,
@@ -74,18 +74,21 @@
    \c!symbol={\blackrule[\c!width=\plusfour\c!mm,\c!height=.4\points]}]
 
 \setupletterstyle
-  [\v!head]
+  [\v!head,\v!nexthead,\v!lefthead,\v!righthead]
   [\c!hoffset=\backspace,
    \c!voffset=16.9mm,
    \c!width=\textwidth,
    \c!height=28.1mm]
 
 \setupletterstyle
-  [\v!foot]
-  [\c!width=\textwidth,
-   \c!height=10mm,
-   \c!hoffset=\backspace,
-   \c!voffset=\dimexpr\paperheight-\letterstylevalue\v!foot\c!height-5mm\relax]
+  [\v!foot,\v!nextfoot,\v!leftfoot,\v!rightfoot]
+  [\v!layer]
+  [\c!voffset=20mm] % unknown value!
+
+\setupletterstyle
+  [\v!foot,\v!nextfoot,\v!leftfoot,\v!rightfoot]
+  [\v!frame]
+  [\c!height=10mm] % unknown value!
 
 \setupletterstyle
   [\v!address]

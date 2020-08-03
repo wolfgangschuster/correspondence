@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-correspondence,
-%D        version=2008.12.21,
+%D        version=2008.12.23,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Correspondence,
 %D         author=Wolfgang Schuster,
@@ -35,6 +35,8 @@
   \setinterfaceconstant {leftfoot}        {leftfoot}
   \setinterfaceconstant {rightfoot}       {rightfoot}
   \setinterfaceconstant {content}         {content}
+  \setinterfaceconstant {backaddress}     {backaddress}
+  \setinterfaceconstant {optimize}        {optimize}
 \stopinterface
 
 \startinterface all
@@ -64,6 +66,20 @@
   \setinterfacevariable {style}       {style}
   \setinterfacevariable {extension}   {extension}
   \setinterfacevariable {interface}   {interface}
+  \setinterfacevariable {resume}      {resume}
+  \setinterfacevariable {letter}      {letter}
+  \setinterfacevariable {backaddress} {backaddress}
+  \setinterfacevariable {reference}   {reference}
+  \setinterfacevariable {location}    {location}
+  \setinterfacevariable {address}     {address}
+  \setinterfacevariable {opening}     {opening}
+  \setinterfacevariable {closing}     {closing}
+  \setinterfacevariable {letternext}  {letternext}
+  \setinterfacevariable {lettermain}  {lettermain}
+  \setinterfacevariable {special}     {special}
+  \setinterfacevariable {notation}    {notation}
+  \setinterfacevariable {inside}      {inside}
+  \setinterfacevariable {optimize}    {optimize}
 \stopinterface
 
 \startinterface all
@@ -75,6 +91,14 @@
   \setinterfaceelement {define}    {define}
   \setinterfaceelement {flush}     {flush}
 \stopinterface
+
+\definemessageconstant {correspondence}
+
+\startmessages all library: correspondence
+        title: correspondence
+            1: loading -- -- --
+            2: -- -- -- not found
+\stopmessages
 
 %D Value list
 
@@ -226,13 +250,15 @@
 
 %D External files
 
-\def\definecorrespondencefile[#1][#2]%
-  {\setvalue{\e!use#1}[##1]{\usecorrespondencefile[#2][##1]}}
+\def\definecorrespondencefile[#1][#2][#3]%
+  {\setvalue{\e!use#1#2}[##1]{\usecorrespondencefile[#1][#2][#3][##1]}}
 
-\def\usecorrespondencefile[#1][#2]%
+\def\usecorrespondencefile[#1][#2][#3][#4]%
   {\def\dousecorrespondencefile##1%
-     {\readfile{##1.#1}\donothing\donothing}%
-   \processcommacommand[#2]\dousecorrespondencefile}
+     {\readfile{##1.#3}
+        {\showmessage\m!correspondence{1}{#1,#2,##1.#3}}
+        {\showmessage\m!correspondence{2}{#1,#2,##1.#3}}}%
+   \processcommacommand[#4]\dousecorrespondencefile}
 
 %D Layers
 
@@ -301,6 +327,35 @@
        \v!next=>\chardef\headerfooter\plusthree,
        \v!left=>\chardef\headerfooter\plusfour,
       \v!right=>\chardef\headerfooter\plusfive]}
+
+\def\dodosetheaderfooterlayer#1{\csname @@headfoot@@#1\endcsname}
+
+\setvalue{@@headfoot@@\v!start    }{\!!doneatrue            }
+\setvalue{@@headfoot@@\v!stop     }{\!!doneafalse           }
+\setvalue{@@headfoot@@\v!first    }{\!!doneatrue            }
+\setvalue{@@headfoot@@\v!next     }{\!!donebtrue\!!donectrue}
+\setvalue{@@headfoot@@\v!left     }{\!!donebtrue            }
+\setvalue{@@headfoot@@\v!right    }{\!!donectrue            }
+\setvalue{@@headfoot@@\v!leftpage }{\!!donebtrue            }
+\setvalue{@@headfoot@@\v!rightpage}{\!!donectrue            }
+\setvalue{@@headfoot@@\v!page     }{\!!donedtrue            }
+\setvalue{@@headfoot@@\v!subpage  }{\!!donedfalse           }
+
+\def\dosetheaderfooterlayer[#1][#2][#3]%
+  {\!!doneafalse
+   \!!donebfalse
+   \!!donecfalse
+   \!!donedfalse
+   \processcommacommand[\csname#2#3\c!state\endcsname]\dodosetheaderfooterlayer
+   \doifnotvalue{#2#3\v!layer\c!state}\v!stop{\setuplayer[#1:#3][\c!state=\v!start]}%
+   \ifnum\subpagenumber=\plusone
+     \if!!donea\dosetcorrespondencelayer[#1][#2][#3]\fi
+   \else
+     \ifodd\if!!doned\pagenumber\else\subpagenumber\fi
+       \if!!donec\dosetcorrespondencelayer[#1][#2][#3]\fi
+     \else
+       \if!!doneb\dosetcorrespondencelayer[#1][#2][#3]\fi
+   \fi\fi}
 
 %D Sections
 

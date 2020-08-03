@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-letter,
-%D        version=2008.12.16,
+%D        version=2008.12.23,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Framework for Letters,
 %D         author=Wolfgang Schuster,
@@ -20,35 +20,11 @@
 
 \usemodule[correspondence]
 
-%D I use a few extra constants and variables in my module.
-
-\startinterface all
-  \setinterfaceconstant {backaddress}     {backaddress}
-  \setinterfaceconstant {optimize}        {optimize}
-\stopinterface
-
-\startinterface all
-  \setinterfacevariable {letter}      {letter}
-  \setinterfacevariable {backaddress} {backaddress}
-  \setinterfacevariable {reference}   {reference}
-  \setinterfacevariable {location}    {location}
-  \setinterfacevariable {address}     {address}
-  \setinterfacevariable {opening}     {opening}
-  \setinterfacevariable {closing}     {closing}
-  \setinterfacevariable {letternext}  {letternext}
-  \setinterfacevariable {lettermain}  {lettermain}
-  \setinterfacevariable {special}     {special}
-  \setinterfacevariable {notation}    {notation}
-  \setinterfacevariable {inside}      {inside}
-  \setinterfacevariable {optimize}    {optimize}
-\stopinterface
-
 %D Before we start the real module let us introduce two namespaces
 %D for the style and content setup commands.
 
 \def\????ld{@@@@ld} % LetterData
 \def\????ls{@@@@ls} % LetterStyle
-\def\????lv{@@@@lv} % LetterValue
 
 \startmodule[letter]
 
@@ -111,9 +87,9 @@
 %D want to create such a file, this has the advantage to use the same name
 %D for a collection of macros.
 
-\def\letter!suffix!style    {nls}
-\def\letter!suffix!extension{nle}
-\def\letter!suffix!interface{nli}
+\definefileconstant {letterstyle}     {nls}
+\definefileconstant {letterextension} {nle}
+\definefileconstant {letterinterface} {nli}
 
 %D Let us begin now to talk about the different types of files.
 %D 
@@ -168,7 +144,7 @@
 %D
 %D \showsetup{useletterinterface}
 
-\definecorrespondencefile[\v!letter\v!interface][\letter!suffix!interface]
+\definecorrespondencefile[\v!letter][\v!interface][\f!letterinterface]
 
 %D \subsubject{letter extension}
 %D 
@@ -190,7 +166,7 @@
 %D 
 %D \showsetup{useletterextension}
 
-\definecorrespondencefile[\v!letter\v!extension][\letter!suffix!extension]
+\definecorrespondencefile[\v!letter][\v!extension][\f!letterextension]
 
 %D \subsubject{letter styles}
 %D 
@@ -209,7 +185,7 @@
 %D 
 %D \showsetup{useletterstyle}
 
-\definecorrespondencefile[\v!letter\v!style][\letter!suffix!style]
+\definecorrespondencefile[\v!letter][\v!style][\f!letterstyle]
 
 %D \macros
 %D   {letterstylevalue,lettervalue}
@@ -277,7 +253,7 @@
 
   \startlocalsetups[\v!letter:\v!place:\v!firsthead]
 
-    \ifnum\subpagenumber=\plusone\relax\dosetletterlayer[\v!head]\fi
+    \dosetheaderfooterlayer[\v!letter][\????ls][\v!head]
 
   \stoplocalsetups
 
@@ -285,7 +261,7 @@
 
   \startlocalsetups[\v!letter:\v!place:\v!nexthead]
 
-    \ifnum\subpagenumber>\plusone\relax\dosetletterlayer[\v!nexthead]\fi
+    \dosetheaderfooterlayer[\v!letter][\????ls][\v!nexthead]
 
   \stoplocalsetups
 
@@ -293,9 +269,7 @@
 
   \startlocalsetups[\v!letter:\v!place:\v!lefthead]
 
-    \ifnum\subpagenumber>\plusone
-      \ifodd\subpagenumber\else\dosetletterlayer[\v!lefthead]\fi
-    \fi
+    \dosetheaderfooterlayer[\v!letter][\????ls][\v!lefthead]
 
   \stoplocalsetups
 
@@ -303,9 +277,7 @@
 
   \startlocalsetups[\v!letter:\v!place:\v!righthead]
 
-    \ifnum\subpagenumber>\plusone
-      \ifodd\subpagenumber\relax\dosetletterlayer[\v!righthead]\fi
-    \fi
+    \dosetheaderfooterlayer[\v!letter][\????ls][\v!righthead]
 
   \stoplocalsetups
 
@@ -367,9 +339,9 @@
 
   % First page
 
-  \startlocalsetups[\v!letter:\v!place:\v!foot]
+  \startlocalsetups[\v!letter:\v!place:\v!firstfoot]
 
-    \ifnum\subpagenumber=\plusone\relax\dosetletterlayer[\v!foot]\fi
+    \dosetheaderfooterlayer[\v!letter][\????ls][\v!foot]
 
   \stoplocalsetups
 
@@ -377,7 +349,7 @@
 
   \startlocalsetups[\v!letter:\v!place:\v!nextfoot]
 
-    \ifnum\subpagenumber>\plusone\relax\dosetletterlayer[\v!nextfoot]\fi
+    \dosetheaderfooterlayer[\v!letter][\????ls][\v!nextfoot]
 
   \stoplocalsetups
 
@@ -385,9 +357,7 @@
 
   \startlocalsetups[\v!letter:\v!place:\v!leftfoot]
 
-    \ifnum\subpagenumber>\plusone
-      \ifodd\subpagenumber\else\dosetletterlayer[\v!leftfoot]\fi
-    \fi
+    \dosetheaderfooterlayer[\v!letter][\????ls][\v!leftfoot]
 
   \stoplocalsetups
 
@@ -395,9 +365,7 @@
 
   \startlocalsetups[\v!letter:\v!place:\v!rightfoot]
 
-    \ifnum\subpagenumber>\plusone
-      \ifodd\subpagenumber\relax\dosetletterlayer[\v!rightfoot]\fi
-    \fi
+    \dosetheaderfooterlayer[\v!letter][\????ls][\v!rightfoot]
 
   \stoplocalsetups
 

@@ -20,7 +20,6 @@
 
 \startinterface all
   \setinterfaceconstant {opening}      {opening}
-  \setinterfaceconstant {content}      {content}
   \setinterfaceconstant {closing}      {closing}
   \setinterfaceconstant {signature}    {signature}
   \setinterfaceconstant {dispatch}     {dispatch}
@@ -424,7 +423,7 @@
    \doif\@@@@lsoptionaddressee\v!yes{\directsetup{\v!letter:\v!place:\v!addressee}}}
 
 \startsetups[\v!letter:\v!address]
-\offinterlineskip\vskip-\lineheight
+\offinterlineskip\endgraf
 \executeifdefined{\v!letter:\v!address:\@@@@lsaddressalternative}{\getvalue{\v!letter:\v!address:\v!a}}%
 \stopsetups
 

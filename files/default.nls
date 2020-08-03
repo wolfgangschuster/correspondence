@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2008.12.16,
+%D        version=2008.12.23,
 %D          title=\CONTEXT\ Letter Style,
 %D       subtitle=Blockstyle initalization,
 %D         author=Wolfgang Schuster,
@@ -19,18 +19,18 @@
 
 \setupletterstyle
   [\v!firstpage,\v!secondpage]
-  [\c!topspace=.08417508418\paperheight,
+  [\c!topspace=\dimexpr\paperheight/297*25\relax,
    \c!top=\!!zeropoint,
    \c!topdistance=\!!zeropoint,
-   \c!header=.06734006734\paperheight,
+   \c!header=\dimexpr\paperheight/297*20\relax,
    \c!headerdistance=\!!zeropoint,
-   \c!height=.84175084175\paperheight,
+   \c!height=\dimexpr\paperheight/297*250\relax,
    \c!footerdistance=\!!zeropoint,
-   \c!footer=.06734006734\paperheight,
+   \c!footer=\dimexpr\paperheight/297*20\relax,
    \c!bottomdistance=\!!zeropoint,
    \c!bottom=\!!zeropoint,
-   \c!backspace=.11904761905\paperwidth,
-   \c!width=.71428571429\paperwidth,
+   \c!backspace=\dimexpr\paperwidth/210*25\relax,
+   \c!width=\dimexpr\paperwidth/210*150\relax,
    \c!bottomspace=\!!zeropoint]
 
 \setupletter
@@ -45,10 +45,33 @@
    \c!addressee=\v!yes]
 
 \setupletterstyle
-  [\v!nexthead,\v!nextfoot]
-  [\c!state=\v!start,
+  [\v!head,\v!nexthead,\v!lefthead,\v!righthead]
+  [\c!hoffset=\backspace,
+   \c!voffset=\topspace,
+   \c!width=\textwidth]
+
+\setupletterstyle
+  [\v!foot,\v!nextfoot,\v!leftfoot,\v!rightfoot]
+  [\c!preset=\v!left\v!bottom,
    \c!hoffset=\backspace,
-   \c!voffset=\topspace]
+   \c!voffset=\bottomspace,
+   \c!width=\textwidth]
+
+\setupletterstyle
+  [\v!head,\v!foot]
+  [\c!state=\v!start]
+
+\setupletterstyle
+  [\v!nexthead,\v!nextfoot]
+  [\c!state=\v!next]
+
+\setupletterstyle
+  [\v!lefthead,\v!leftfoot]
+  [\c!state=\v!left]
+
+\setupletterstyle
+  [\v!righthead,\v!rightfoot]
+  [\c!state=\v!right]
 
 \setupletterstyle
   [\v!reference]
@@ -63,6 +86,10 @@
    \c!separator=\textcomma\space]
 
 \setupletterstyle
+  [\v!address]
+  [\c!strut=\v!no]
+
+\setupletterstyle
   [\v!dispatch,\v!addressee]
   [\c!align=\v!right,
    \c!width=\hsize,
@@ -74,12 +101,12 @@
 \setupletterstyle
   [\v!dispatch]
   [\c!location=\v!bottom,
-   \c!height=\dimexpr(\vsize/9)*3\relax]
+   \c!height=\dimexpr\vsize/33*9\relax]
 
 \setupletterstyle
   [\v!addressee]
   [\c!location=\v!top,
-   \c!height=\dimexpr(\vsize/9)*6\relax]
+   \c!height=\dimexpr\vsize/33*24\relax]
 
 \setupletterstyle
   [\v!closing]

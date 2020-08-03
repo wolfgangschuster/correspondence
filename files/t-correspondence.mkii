@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-correspondence,
-%D        version=2010.02.28,
+%D        version=2010.04.04,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Correspondence,
 %D         author=Wolfgang Schuster,
@@ -432,12 +432,18 @@
 
 \def\definecorrespondenceelement{\dotripleargument\dodefinecorrespondenceelement }
 \def\resetcorrespondenceelement {\dotripleargument\doresetcorrespondenceelement  }
-\def\copycorrespondenceelement  {\doquadrupleargument\docopycorrespondenceelement}
+\def\copycorrespondenceelement  {\doquintupleempty\docopycorrespondenceelement   }
 \def\correspondenceelement      {\dotripleargument\docorrespondenceelement       }
 
 \def\dodefinecorrespondenceelement[#1][#2][#3]#4{\setvalue{#1:#2:#3}{#4}}
 \def\doresetcorrespondenceelement   [#1][#2][#3]{\resetvalue{#1:#2:#3}}
-\def\docopycorrespondenceelement[#1][#2][#3][#4]{\copycsname#1:#2:#3\endcsname\csname#1:#2:#4\endcsname}
+
+\def\docopycorrespondenceelement[#1][#2][#3][#4][#5]%
+  {\iffifthargument
+     \copycsname#1:#2:#3\endcsname\csname#1:#4:#5\endcsname
+   \else
+     \copycsname#1:#2:#3\endcsname\csname#1:#2:#4\endcsname
+   \fi}
 
 \def\docorrespondenceelement[#1][#2][#3]%
   {\edef\currentcorrespondenceelement{#2}%

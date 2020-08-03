@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2010.02.28,
+%D        version=2010.04.04,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -189,7 +189,7 @@
 
 \stopsetups
 
-%D Alternative e, nearly the same as a but you could control the width of the
+%D Alternative e, nearly the same as a but you can control the width of the
 %D fields with the width key for \tex{setupletter}.
 
 \long\def\doformatreferenceliste#1%
@@ -249,6 +249,7 @@
 %D \tex{setupletter}.
 
 \newtoks\letter!local!commands
+\newtoks\letter!local!setups
 
 \chardef\letterenvironmentmode\zerocount
 
@@ -262,12 +263,14 @@
 \long\def\dostartcontentletter[#1][#2]#3\stopletter
   {\ifsecondargument
      \getparameters[\????ld][#1]%
+     \letter!local!setups{#1}%
      \doifundefinedelse{\????ld\????ld#2}
        {\setvalue{\????ld\c!toaddress}{#2}}
        {\setvalue{\????ld\c!toaddress}{\getvalue{\????ld\????ld#2}}}%
    \else\iffirstargument
      \doifassignmentelse{#1}
-       {\getparameters[\????ld][#1]}
+       {\getparameters[\????ld][#1]%
+        \letter!local!setups{#1}}
        {\doifundefinedelse{\????ld\????ld#1}
           {\setvalue{\????ld\c!toaddress}{#1}}
           {\setvalue{\????ld\c!toaddress}{\getvalue{\????ld\????ld#1}}}}%
@@ -284,17 +287,28 @@
       \endgroup}
    \ifsecondargument
      \getparameters[\????ld][#1]%
+     \letter!local!setups{#1}%
      \doifundefinedelse{\????ld\????ld#2}
        {\setvalue{\????ld\c!toaddress}{#2}}
        {\setvalue{\????ld\c!toaddress}{\getvalue{\????ld\????ld#2}}}%
    \else\iffirstargument
      \doifassignmentelse{#1}
-       {\getparameters[\????ld][#1]}
+       {\getparameters[\????ld][#1]%
+        \letter!local!setups{#1}}
        {\doifundefinedelse{\????ld\????ld#1}
           {\setvalue{\????ld\c!toaddress}{#1}}
           {\setvalue{\????ld\c!toaddress}{\getvalue{\????ld\????ld#1}}}}%
    \fi\fi
    \dostartbuffer[lettercontent][startletter][stopletter]}
+
+\def\processlettersetups#1#2%
+  {\ifcsname\????ld:#1:\v!setups\endcsname
+     \appendtocommalist{#1}\letter!list!descriptions
+   \fi}
+
+\letvalueempty{\????ld:\c!postscript:\v!setups}
+\letvalueempty{\????ld:\c!copy      :\v!setups}
+\letvalueempty{\????ld:\c!enclosure :\v!setups}
 
 \def\processlettervalues
   {\globalletempty\letter!list!descriptions
@@ -305,6 +319,7 @@
    \def\cc     ##1{\doglobal\appendtoks\setvalue{\????ld\c!copy      }{##1}\to\letter!local!commands\doglobal\appendtocommalist\c!copy      \letter!list!descriptions}%
    \def\encl   ##1{\doglobal\appendtoks\setvalue{\????ld\c!enclosure }{##1}\to\letter!local!commands\doglobal\appendtocommalist\c!enclosure \letter!list!descriptions}%
    \setbox\scratchbox\vbox{\getbuffer[lettercontent]}%
+   \doifmode{mkiv}{\processassignmentcommand[\dotoks\letter!local!setups]\processlettersetups}% only available in mkiv
    \flushtoks\letter!local!commands}
 
 \def\gobblelettervalues
@@ -362,9 +377,9 @@
               \scratchdimen\dimexpr\letterstylevalue\v!head\c!rulewidth-\wd\scratchbox\relax}
              {\scratchdimen\letterstylevalue\v!head\c!rulewidth}%
            \vskip-.5\lineheight\blackrule
-             [width=\scratchdimen,
-              height=\letterstylevalue\v!head\c!rulethickness,
-              color=\letterstylevalue\v!head\c!rulecolor]%
+             [\c!width=\scratchdimen,
+              \c!height=\letterstylevalue\v!head\c!rulethickness,
+              \c!color=\letterstylevalue\v!head\c!rulecolor]%
          \fi
          \dostopattributes
          \\
@@ -381,9 +396,9 @@
              \scratchdimen\letterstylevalue\v!head\c!rulewidth
            \fi
            \vskip-.5\lineheight\blackrule
-             [width=\scratchdimen,
-              height=\letterstylevalue\v!head\c!rulethickness,
-              color=\letterstylevalue\v!head\c!rulecolor]%
+             [\c!width=\scratchdimen,
+              \c!height=\letterstylevalue\v!head\c!rulethickness,
+              \c!color=\letterstylevalue\v!head\c!rulecolor]%
          \fi
          \dostopattributes}%
       \doiflettervalue\c!fromlogo{\llap{\lettervalue\c!fromlogo}}}}%
@@ -401,9 +416,9 @@
              \scratchdimen\letterstylevalue\v!head\c!rulewidth
            \fi
            \vskip-.5\lineheight\blackrule
-             [width=\scratchdimen,
-              height=\letterstylevalue\v!head\c!rulethickness,
-              color=\letterstylevalue\v!head\c!rulecolor]%
+             [\c!width=\scratchdimen,
+              \c!height=\letterstylevalue\v!head\c!rulethickness,
+              \c!color=\letterstylevalue\v!head\c!rulecolor]%
          \fi
          \dostopattributes
          \\
@@ -420,9 +435,9 @@
              \scratchdimen\letterstylevalue\v!head\c!rulewidth
            \fi
            \vskip-.5\lineheight\blackrule
-             [width=\scratchdimen,
-              height=\letterstylevalue\v!head\c!rulethickness,
-              color=\letterstylevalue\v!head\c!rulecolor]%
+             [\c!width=\scratchdimen,
+              \c!height=\letterstylevalue\v!head\c!rulethickness,
+              \c!color=\letterstylevalue\v!head\c!rulecolor]%
          \fi
          \dostopattributes}}}
 
@@ -443,9 +458,9 @@
                {\scratchdimen\letterstylevalue\v!head\c!rulewidth}%
            \fi
            \vskip-.5\lineheight\blackrule
-             [width=\scratchdimen,
-              height=\letterstylevalue\v!head\c!rulethickness,
-              color=\letterstylevalue\v!head\c!rulecolor]%
+             [\c!width=\scratchdimen,
+              \c!height=\letterstylevalue\v!head\c!rulethickness,
+              \c!color=\letterstylevalue\v!head\c!rulecolor]%
          \fi
          \dostopattributes
          \\
@@ -462,15 +477,15 @@
              \scratchdimen\letterstylevalue\v!head\c!rulewidth
            \fi
            \vskip-.5\lineheight\blackrule
-             [width=\scratchdimen,
-              height=\letterstylevalue\v!head\c!rulethickness,
-              color=\letterstylevalue\v!head\c!rulecolor]%
+             [\c!width=\scratchdimen,
+              \c!height=\letterstylevalue\v!head\c!rulethickness,
+              \c!color=\letterstylevalue\v!head\c!rulecolor]%
          \fi
          \dostopattributes}}}
 
 \startsetups[\v!letter:\v!head]
 \def\\{\letterstylevalue\v!head\c!separator}
-\executeifdefined{\v!letter:\v!head:\@@@@lsheadalternative}{\letterelement[\v!head][\v!a]}
+\executeifdefined{\v!letter:\v!head:\@@@@lsheadalternative}{\getvalue{\v!letter:\v!head:\v!a}}
 \stopsetups
 
 \startsetups[\v!letter:\v!foot]
@@ -525,14 +540,14 @@
 %D If you hace problem to put all information in the limited space you could
 %D try to reduce the font size or reduce the interlinespace in the field.
 
-\presetlocalframed[\????ls\v!dispatch]
+\presetlocalframed[\????ls\v!dispatch ]
 \presetlocalframed[\????ls\v!addressee]
 
 \startsetups[\v!letter:\v!place:\v!dispatch]
 
   \localframed
     [\????ls\v!dispatch]
-    {\doadaptleftskip {\letterstylevalue\v!dispatch\c!leftmargin}%
+    {\doadaptleftskip {\letterstylevalue\v!dispatch\c!leftmargin }%
      \doadaptrightskip{\letterstylevalue\v!dispatch\c!rightmargin}%
      \doattributes{\????ls\v!dispatch}\c!style\c!color{\directsetup{\v!letter:\v!address:\v!dispatch}}}
 
@@ -542,7 +557,7 @@
 
   \localframed
     [\????ls\v!addressee]
-    {\doadaptleftskip {\letterstylevalue\v!addressee\c!leftmargin}%
+    {\doadaptleftskip {\letterstylevalue\v!addressee\c!leftmargin }%
      \doadaptrightskip{\letterstylevalue\v!addressee\c!rightmargin}%
      \doattributes{\????ls\v!addressee}\c!style\c!color{\directsetup{\v!letter:\v!address:\v!content}}}
 
@@ -554,7 +569,7 @@
 
 \startsetups[\v!letter:\v!address]
 \offinterlineskip\endgraf
-\executeifdefined{\v!letter:\v!address:\@@@@lsaddressalternative}{\letterelement[\v!address][\v!a]}%
+\executeifdefined{\v!letter:\v!address:\@@@@lsaddressalternative}{\getvalue{\v!letter:\v!address:\v!a}}
 \stopsetups
 
 \startsetups[\v!letter:\v!address:\v!dispatch]
@@ -575,7 +590,7 @@
 %D a not defined alternative the definition a is choosen.
 
 \startsetups[\v!letter:\v!reference]
-\executeifdefined{\v!letter:\v!reference:\@@@@lsreferencealternative}{\letterelement[\v!reference][\v!a]}
+\executeifdefined{\v!letter:\v!reference:\@@@@lsreferencealternative}{\getvalue{\v!letter:\v!reference:\v!a}}
 \stopsetups
 
 \resetletterelement[\v!location][\v!a]
@@ -586,7 +601,7 @@
    \lettervalue\c!date}
 
 \startsetups[\v!letter:\v!location]
-\executeifdefined{\v!letter:\v!location:\@@@@lslocationalternative}{\letterelement[\v!location][\v!a]}
+\executeifdefined{\v!letter:\v!location:\@@@@lslocationalternative}{\getvalue{\v!letter:\v!location:\v!a}}
 \stopsetups
 
 \startsetups[\v!letter:\v!title]
@@ -613,7 +628,7 @@
    \letterelement[\v!opening][\v!a]}
 
 \startsetups[\v!letter:\v!opening]
-\executeifdefined{\v!letter:\v!opening:\@@@@lsopeningalternative}{\letterelement[\v!opening][\v!a]}
+\executeifdefined{\v!letter:\v!opening:\@@@@lsopeningalternative}{\getvalue{\v!letter:\v!opening:\v!a}}
 \stopsetups
 
 \startsetups[\v!letter:\v!content]
@@ -647,7 +662,7 @@
 
 \startsetups[\v!letter:\v!closing]
 \def\\{\letterstylevalue\v!closing\c!separator}
-\executeifdefined{\v!letter:\v!closing:\@@@@lsclosingalternative}{\letterelement[\v!closing][\v!a]}
+\executeifdefined{\v!letter:\v!closing:\@@@@lsclosingalternative}{\getvalue{\v!letter:\v!closing:\v!a}}
 \stopsetups
 
 \startsetups[\v!letter:\v!appendices]
@@ -689,7 +704,7 @@
 
 \startsetups[\v!letter:\v!backaddress]
 \def\\{\letterstylevalue\c!backaddress\c!separator}
-\executeifdefined{\v!letter:\v!backaddress:\@@@@lsbackaddressalternative}{\letterelement[\v!backaddress][\v!no]}
+\executeifdefined{\v!letter:\v!backaddress:\@@@@lsbackaddressalternative}{\getvalue{\v!letter:\v!backaddress:\v!no}}
 \stopsetups
 
 %D To prevent a pagebreak between the last line of the text and

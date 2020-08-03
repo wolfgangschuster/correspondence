@@ -94,7 +94,7 @@
 
 %%%% Layout
 
-%% Einnstellungen für die Musterbriefe
+%% Einstellungen für die Musterbriefe
 
 \setupletterstyle
   [option]
@@ -196,23 +196,24 @@
 \defineoverlay[coverfigure][\overlayfigure{980559_60280625}]
 
 \def\TitlePage
-  {%\setupbackgrounds[page][background={coverfigure,color},backgroundcolor=twhite]% später
+  {\bgroup
    \setupbackgrounds[page][background=color,backgroundcolor=lettercolor]
    \startstandardmakeup[align=middle]
    \vfill
-   \definedfont[SansBold sa 4]\setupinterlinespace\getvariable{correspondence}{title}\par
-   \blank[2*medium]
-   \definedfont[Sans sa 2]\setupinterlinespace Version: \getvariable{correspondence}{version}\par
+   {\definedfont[SansBold sa 4]\setupinterlinespace\getvariable{correspondence}{title}\par}
+   \blank[2*line]
+   {\definedfont[Sans sa 2]\setupinterlinespace Version: \getvariable{correspondence}{version}\par}
    \vfill\vfill\vfill
    \stopstandardmakeup
-   \setupbackgrounds[page][background=]}
+   \egroup}
 
 \def\LastPage
   {\page[yes,left]
+   \bgroup
    \setupbackgrounds[page][background=color,backgroundcolor=lettercolor]
    \startstandardmakeup % warum nicht
    \stopstandardmakeup  % \page[empty]?
-   \setupbackgrounds[page][background=]}
+   \egroup}
 
 \def\CommandList
   {\chapter{Command definitions}
@@ -253,10 +254,6 @@
   \def\doexamplecontent[#1][#2]{\framed[width=6cm,height=8cm]{}}
 
 \fi
-
-%% Parameter-Check
-
-% \idefined\enablecheckparameters \enablecheckparameters \fi
 
 
 \stopenvironment

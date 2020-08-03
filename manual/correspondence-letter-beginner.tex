@@ -4,8 +4,6 @@
 
 \chapter{Beginners guide}
 
-%This chapter will help you to write your own letter without studying first the complete manual, only the most important information are given to get a result with the default styles.
-
 The most important in the module for the users is the interface to write the letter text and to set the values for one or more letters.
 
 You will learn how to write a letter with the module step by step, beginning with just a few lines of text, following with opening and closing sentences and at the end after you know how to set every kind of information you will finally learn how to change the position of the reference line and how to change the texts for the labels and to customise their style and color.
@@ -40,11 +38,11 @@ Thus, I came to the conclusion ...
 \stoptext
 \stoptyping
 
-As you could see from the first line the letter module has to be loaded before it could used because it is none of the functions \CONTEXT\ provides by default, to make the examples in the following sections a little bit shorter I will no longer add \type {\usemodule}, \type {\starttext} and \type {\stoptext} but you shouldn't forgot to add all of them in your files.
+As you could see from the first line the letter module has to be loaded before it could used because it is none of the functions \CONTEXT\ provides by default, to make the examples in the following sections a little bit shorter I will no longer add \type{\usemodule}, \type{\starttext} and \type{\stoptext} but you shouldn't forgot to add all of them in your files.
 
 The content for your letter is written between the letter environment, it doesn't matter if you use blank lines before and after the letter text.
 
-If you take a closer look at the result on the left side you could see the paragraphs are separated by blank lines, this could be changed with the \type {\setupletterstyle} command but let us keep this for later.
+If you take a closer look at the result on the left side you could see the paragraphs are separated by blank lines, this could be changed with the \type{\setupletterstyle} command but let us keep this for later.
 
 You're not restricted to only one letter in file, it is possible to write as many as you like in a file and you could use this to write serial letters but a easier method to do this is described later in the manual.
 
@@ -70,9 +68,9 @@ You're not restricted to only one letter in file, it is possible to write as man
 
 You saw in the last example how to write a simple text but shouldn't it be possible to give a few opening and also closing words for the letter, because the reader should know for whom the content is.
 
-To achieve this the module provides the two variables {\em opening} and {\em closing}. To feed them with text you could either use the optional argument for \type {\startletter} as done in the current or you could set them before the content of the letter with the two commands \type {\setupletter} and \type {\setlettervalue}.
+To achieve this the module provides the two variables {\em opening} and {\em closing}. To feed them with text you could either use the optional arguments for \type{\startletter} as done in the current example or you could set them before the start of the letter with the two commands \type{\setupletter} and \type{\setlettervalue}.
 
-Let us begin with first alternative and set them as argument with \type {\startletter}:
+Let us begin with first alternative and set them as argument with \type{\startletter}:
 
 \starttyping
 \startletter
@@ -82,7 +80,7 @@ Thus, I came to the conclusion ...
 \stopletter
 \stoptyping
 
-If you don't like this method you could set the two value before the letter environment with the \type {\setupletter} command, the text in your file should now look like:
+If you don't like this method you could set the two value before the letter environment with the \type{\setupletter} command, the text in your file should now look like:
 
 \starttyping
 \setupletter
@@ -94,19 +92,7 @@ Thus, I came to the conclusion ...
 \stopletter
 \stoptyping
 
-\startframedtext[width=\textwidth,framecolor=red,align=flushleft,corner=00]\index{\tex{setlettervalue}}
-The definition of the \type{\setuplettervalue} has changed in the module version from 2009.07.03,
-only braces are allowed to set values, brackets are optional and used to set the labeltext for
-the value in the current mainlanguage, the setup for both variants is:
-
-\starttyping
-\setlettervalue{key}{value}
-\setlettervalue{key}[labeltext]{value}
-\stoptyping
-\stopframedtext
-
-If you are more interested in a KOMA-Script like solution to set with every command only one value their is as last alternative the \type {\setlettervalue} command, it comes in two different versions where the keyword is either written in braces or in bracket but the content itself is written between braces.
-
+If you are more interested in a KOMA-Script like solution to set with every command only one value there is as last alternative the \type{\setlettervalue} command, both keyword and content are written between braces.
 The first version with braces for two values has the following look.
 
 \starttyping
@@ -114,18 +100,11 @@ The first version with braces for two values has the following look.
 \setlettervalue{closing}{Greetings from the Author}
 \stoptyping
 
-The nearly no difference to the second version and both give the same result and you could the one which you prefer.
-
-\starttyping
-\setlettervalue[opening]{Dear Reader,}
-\setlettervalue[closing]{Greetings from the Author}
-\stoptyping
-
 The values itself had to be given before the letter environment because values in the letter text are ignored and will never be shown in the output.
 
-You have also to be careful with the content for the values because commas are interpreted as end of the value if you write it as argument for \type {\startletter} or with \type {\setupletter} and the text has to be protected with braces in this case but you don't need them is their is no comma in you text.
+You have also to be careful with the content for the values because commas are interpreted as end of the value if you write it as argument for \type{\startletter} or with \type{\setupletter} and the text has to be protected with braces in this case but you don't need them when there is no comma in the argument.
 
-This could not happen if you set the values with the \type {\setlettervalue} command because the content is delimited by the braces and commas are just normal text.
+This could not happen if you set the values with the \type{\setlettervalue} command because the content is delimited by the braces and commas are just normal text.
 
 \page[left]
 
@@ -161,7 +140,7 @@ Thus, I came to the conclusion ...
 \stopletter
 \stoptyping
 
-The text for the subject is written as argument for {\em subject} as argument for \type {\startletter}, as you already guess you could have set it also with \type {\setupletter} or \type {\setlettervalue} and this is also possible and true for the values in the following sections.
+The text for the subject is written as argument for {\em subject} as argument for \type{\startletter}, as you already guess you could have set it also with \type{\setupletter} or \type{\setlettervalue} and this is also possible and true for the values in the following sections.
 
 Besides the {\em subject} you have also the option to set a {\em title} for the letter, the is no big difference between them but the title is normally written before the subject and has and use a slightly bigger size or is emphasized in another way.
 
@@ -202,7 +181,7 @@ Thus, I came to the conclusion ...
 \stopletter
 \stoptyping
 
-The author prefer to set the values for the addressee not with \type {\startletter} but with \type {\setupletter} but this is just a matter of style and you could select what fits best to your own working style.
+The author prefer to set the values for the addressee not with \type{\startletter} but with \type{\setupletter} but this is just a matter of style and you could select what fits best to your own working style.
 
 \startbuffer[interface:sender]
 
@@ -224,7 +203,7 @@ The author prefer to set the values for the addressee not with \type {\startlett
 
 It is not often enough to have just the addressee information on the letter, you're looking also for way to put the {\em name} and {\em address} for the sender into the header.
 
-If you have wondered why the author hasn't just used {\em name} and {\em address} as keys for the addressee values you will now find the solution. To make the system consistent to set the values for addressee and the sender both needed key names to prevent confusions which value should use the the simpler and which one a more verbose one both got e prefix to the key to differentiate them, so got addressee information the prefix {\em to} and sender information the prefix {\em from}.%\footnote{The real answer is the author took the names for the new user interface from KOMA-Script and this is where most of the commands have their name from.}
+If you have wondered why the author hasn't just used {\em name} and {\em address} as keys for the addressee values you will now find the solution. To make the system consistent to set the values for addressee and the sender both needed key names to prevent confusions which value should use the the simpler and which one a more verbose one both got e prefix to the key to differentiate them, so got addressee information the prefix {\em to} and sender information the prefix {\em from}.
 
 The additional input for the example on the left page to the one from the previous examples is:
 
@@ -273,7 +252,7 @@ Our old example from the last section was now extended by a reference line betwe
   [list={name,phone,fax,date}]
 \stoptyping
 
-The first \type {\setupletter} set the content for the four fields {\em name}, {\em phone}, {\em fax} and {\em date}. Although the values are set none of them will appear in the output but we have to declare the fields for the reference line first, this is done in the second \type {\setupletter} command with the key {\em list}, the entries will appear in the in the same order as you write them in the list, if one or more of the keys in the list have no values they will still appear in the output but no content is shown.
+The first \type{\setupletter} set the content for the four fields {\em name}, {\em phone}, {\em fax} and {\em date}. Although the values are set none of them will appear in the output but we have to declare the fields for the reference line first, this is done in the second \type{\setupletter} command with the key {\em list}, the entries will appear in the in the same order as you write them in the list, if one or more of the keys in the list have no values they will still appear in the output but no content is shown.
 
 If you change the content for the {\em list} key in your file the module will show by default the date of the current date at the right side of the reference line, this will normally always happen and you could say the result in the examples of the two preceding sections.
 

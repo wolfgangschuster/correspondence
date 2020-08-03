@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-correspondence,
-%D        version=2010.02.28,
+%D        version=2010.04.04,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Correspondence,
 %D         author=Wolfgang Schuster,
@@ -36,16 +36,6 @@
 \setupmodule[\c!contextversion=2009.09.21]
 
 %D Check ConTeXt version
-
-\ifx\forcequitjob\undefined % copied from core-job, needed for older installations
-
-  \def\forcequitjob#1%
-    {\writestatus\m!systems{forcing quit: #1}%
-     \batchmode
-     \dorecurse\textlevel{\stoptext}
-     \normalend}
-
-\fi
 
 \doifolderversionelse\contextversion{\currentmoduleparameter\c!contextversion}
   {\showmessage\m!correspondence{5}{\currentmoduleparameter\c!contextversion}\forcequitjob\v!correspondence}
@@ -475,15 +465,21 @@
 
 \def\definecorrespondenceelement{\dotripleargument\dodefinecorrespondenceelement }
 \def\resetcorrespondenceelement {\dotripleargument\doresetcorrespondenceelement  }
-\def\copycorrespondenceelement  {\doquadrupleargument\docopycorrespondenceelement}
+\def\copycorrespondenceelement  {\doquintupleempty\docopycorrespondenceelement   }
 \def\correspondenceelement      {\dotripleargument\docorrespondenceelement       }
 
 \def\dodefinecorrespondenceelement[#1][#2][#3]#4{\setvalue{#1:#2:#3}{#4}}
 \def\doresetcorrespondenceelement   [#1][#2][#3]{\resetvalue{#1:#2:#3}}
-\def\docopycorrespondenceelement[#1][#2][#3][#4]{\copycsname#1:#2:#3\endcsname\csname#1:#2:#4\endcsname}
+
+\def\docopycorrespondenceelement[#1][#2][#3][#4][#5]%
+  {\iffifthargument
+     \copycsname#1:#2:#3\endcsname\csname#1:#4:#5\endcsname
+   \else
+     \copycsname#1:#2:#3\endcsname\csname#1:#2:#4\endcsname
+   \fi}
 
 \def\docorrespondenceelement[#1][#2][#3]%
-  {\edef\currentcorrespondenceelement{#2}%
+  {\ifdefined\currentcorrespondenceelement\else\edef\currentcorrespondenceelement{#2}\fi
    \csname#1:#2:#3\endcsname}
 
 \def\registercorrespondencefile#1%
@@ -505,7 +501,7 @@ correspondence.files = {
         name        = "t-correspondence.tex",
         path        = "tex/context/third/letter/base/",
         type        = "base",
-        version     = "2010.02.28",
+        version     = "2010.04.04",
         description = "Core module"
     } ,
     {
@@ -527,7 +523,7 @@ correspondence.files = {
         name        = "default.nli",
         path        = "tex/context/third/letter/interface/",
         type        = "interface",
-        version     = "2010.02.28",
+        version     = "2010.04.04",
         description = "Default letter interface"
 
     } ,
@@ -598,14 +594,14 @@ correspondence.files = {
         name        = "dina.nls",
         path        = "tex/context/third/letter/style/",
         type        = "style",
-        version     = "2007.02.11",
+        version     = "2010.03.02",
         description = "German style DIN 676 A"
     } ,
     {
         name        = "dinb.nls",
         path        = "tex/context/third/letter/style/",
         type        = "style",
-        version     = "2009.10.07",
+        version     = "2010.03.02",
         description = "German style DIN 676 B"
     } ,
     {
@@ -647,7 +643,7 @@ correspondence.files = {
         name        = "default.nls",
         path        = "tex/context/third/letter/style/",
         type        = "style",
-        version     = "2010.02.28",
+        version     = "2010.03.02",
         description = "Basic style"
     } ,
     {
@@ -724,14 +720,14 @@ correspondence.files = {
         name        = "classic.nrs",
         path        = "tex/context/third/letter/style/",
         type        = "style",
-        version     = "2009.03.31",
+        version     = "2010.03.02",
         description = "modercv classic style"
     } ,
     {
         name        = "casual.nrs",
         path        = "tex/context/third/letter/style/",
         type        = "style",
-        version     = "2009.03.31",
+        version     = "2010.03.02",
         description = "modercv casual style"
     } ,
     {

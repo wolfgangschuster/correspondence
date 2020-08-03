@@ -1,13 +1,12 @@
 \startenvironment correspondence-environment
 
-%%%% Anleitung für das Correspondenz-Modul
+%%%% Manual for the ConTeXt correspondence module
 
-% Um die Anleitung Erstellen zu können muss LuaTeX benutzt werden,
-% um das gleiche Aussehen wie in der fertigen PDF-Version zu erhalten
-% müssen die Lucida- und Delicious-Schriften installiert sein.
+% To produce a pdf of this manual you have to run it with LuaTeX,
+% to get the same layout as the version shipped with the module
+% the lucida and delicious fonts are required.
 
-
-%%%% Variablen für das Dokument
+%%%% Variables
 
 \setvariables
   [correspondence]
@@ -15,11 +14,7 @@
    version=\ctxlua{tex.sprint(tex.ctxcatcodes,thirddata.correspondence.files[1]["version"])}]
 
 
-%%%% Farbe
-
-\setupcolor[hex]
-
-\setupcolors[state=start]
+%%%% Colors
 
 \definecolor[lettercolor]  [h=BBD0B4]
 \definecolor[fakerulecolor][darkgray]
@@ -27,7 +22,7 @@
 \definecolor[twhite][r=1,g=1,b=1,t=.75,a=1]
 
 
-%%%% Bilder
+%%%% Images
 
 \setupexternalfigures[directory=images]
 
@@ -43,9 +38,8 @@
    style=]
 
 
-%%%% Zusätzliche Module
+%%%% Additional modules
 
-\usemodule[simplefonts]
 \usemodule[visual]
 \usemodule[abr-01]
 \usemodule[letter]
@@ -61,36 +55,28 @@
    framecolor=lettercolor]
 
 
-%%%% Schriften
+%%%% Fonts
 
 \startmode[wolf]
 
-\setupsimplefonts[size=10pt,expansion=quality,protrusion=quality]
+\setupbodyfont[lucida,10pt]
 
-\setmainfont[Lucida Bright][regularfont={*}]
-\setsansfont[Lucida Sans][regularfont={*}]
-\setmonofont[Lucida Sans Typewriter][features=none]
-
-\definesimplefonttypeface[examplefont][Delicious][regularfont={* Roman}]
+\definetypeface[examplefont][rm][specserif][Delicious][default]
 
 \stopmode
 
 \startnotmode[wolf]
 
-\setupsimplefonts[size=10pt,expansion=quality,protrusion=quality]
+\setupbodyfont[pagella,10pt]
 
-\setmainfont[TeX Gyre Pagella]
-\setsansfont[Latin Modern Sans]
-\setmonofont[Latin Modern Mono][features=none]
-
-\definesimplefonttypeface[examplefont][Latin Modern Sans]
+\definetypeface[examplefont][rm][specserif][Latin Modern Sans][default]
 
 \stopnotmode
 
 
 %%%% Layout
 
-%% Einstellungen für die Musterbriefe
+%% Setup for the letter examples
 
 \setupletterstyle
   [option]
@@ -106,8 +92,8 @@
 
 \setupletterstyle
   [enclosure,copy,postscript]
-  [before=\nowhitespace,
-   after=\nowhitespace]
+  [before={\blank[nowhite]},
+   after={\blank[nowhite]}]
 
 \setupletterstyle
   [closing]
@@ -120,14 +106,13 @@
    before={\page[left]},
    backgroundcolor=gray]
 
-%% Absatzeinstellungen
+%% Whitespace
 
 \setupwhitespace[line]
 
-%\setupalign[stretch,hanging,hz]
 \setupalign[right,broad] % gives better results with \cs in the text
 
-%% Überschriften
+%% Headers
 
 \definestructureresetset[default][0,0][1]
 
@@ -154,14 +139,14 @@
   [subsection,subsubject]
   [style=\tfa]
 
-%% Inhaltsverzeichnis
+%% Content
 
 \setupcombinedlist
   [content]
   [interaction=all,
    color=black]
 
-%% Seitennummerierung
+%% Pagenumbering
 
 \definestructureconversionset [pagenumber] [] [numbers]
 
@@ -171,7 +156,7 @@
   [alternative=doublesided,
    location=footer]
 
-%% Kopf- und Fußzeilen
+%% Head/Foot
 
 \setupheadertexts[{\getmarking[chapter]}]
 
@@ -208,7 +193,7 @@
   {\page[yes,left]
    \bgroup
    \setupbackgrounds[page][background=color,backgroundcolor=lettercolor]
-   \startstandardmakeup % warum nicht
+   \startstandardmakeup % why not
    \stopstandardmakeup  % \page[empty]?
    \egroup}
 
@@ -216,7 +201,7 @@
   {\chapter{Command definitions}
    \placesetup}
 
-%% Beispiele für die Briefelemente
+%% Examples for the letter elements
 
 \defineframedtext
   [element]
@@ -232,7 +217,7 @@
    corner=round,
    framecolor=lettercolor]
 
-%% Test-Modus
+%% Test mode
 
 \startmode[test]
 
@@ -241,8 +226,8 @@
 
 \stopmode
 
-%% Notwendig for TeX Live um das Dokument auch bei einem fehlenden
-%% examplecontent Modul erstellen zu können.
+%% The examplecontent module is not included in the manual sources
+%% and will remain private therefore dummy defintions are necessary.
 
 \ifx\startexamplecontent\undefined
 

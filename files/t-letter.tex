@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-letter,
-%D        version=2009.10.10,
+%D        version=2010.08.27,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Framework for Letters,
 %D         author=Wolfgang Schuster,
@@ -58,6 +58,13 @@
 \setvalue{\v!letter:\????ls:\v!secondpage}{\v!layout}
 
 \definecorrespondencesetup[\v!letter\v!style][\v!letter][\????ls]
+
+\def\setupletterlayout     [#1]{\setupletterstyle[#1]}
+\def\setupletterlayer      [#1]{\setupletterstyle[#1]}
+\def\setupletterframe      [#1]{\setupletterstyle[#1]}
+\def\setuplettersection    [#1]{\setupletterstyle[#1][\v!layer]}
+\def\setupletterdescription[#1]{\setupletterstyle[#1][\v!frame]}
+\def\setupletteroptions    [#1]{\setupletterstyle[#1]}
 
 %D \macros
 %D   {setupletter}

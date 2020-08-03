@@ -7,7 +7,7 @@
 \section{Values}
 
 When you write a letter you have to set some values for the reference line like the date
-and other ones like the name and address of the addressee for the address block, these can
+and other ones like the name and address of the addressee for the address block. This can
 be done with the two commands \type{\setlettervalue} and \type{\setupletter}.
 
 \setup[setlettervalue]\flushatnextpar{\index{\tex{setlettervalue}}}
@@ -15,18 +15,18 @@ be done with the two commands \type{\setlettervalue} and \type{\setupletter}.
 \setup[setupletter:value]\flushatnextpar{\index{\tex{setupletter}}}
 
 The first command \type{\setlettervalue} takes two commands like \type{\setvalue} or
-\type{\setvariable} and could be used like:
+\type{\setvariable}.
 
 \starttyping
 \setlettervalue{firstname} {Mike}
 \setlettervalue{familyname}{Johnson}
 \stoptyping
 
-There is also a optional argument between the name and the content of the value
+There is also an optional argument between the name and the content of the value,
 which is explained in the next section.
 
-With the second command \type{\setupletter} you can set multiple values separated
-by commas, it's similar to \type{\setvariables}, the above setting will look then:
+Using the second command \type{\setupletter} you can set multiple values separated
+by commas. It’s similar to \type{\setvariables}. The previous example will look like:
 
 \starttyping
 \setupletter
@@ -35,7 +35,7 @@ by commas, it's similar to \type{\setvariables}, the above setting will look the
 \stoptyping
 
 As you can seen in the following command overview for \type{\setupletter} the command has
-two arguments while we used in the last example only one, the two argument form is used
+two arguments while we only used one in the last example. The two argument form is used
 to change the layout for the values in the reference (and others) line like:
 
 \starttyping
@@ -45,7 +45,7 @@ to change the layout for the values in the reference (and others) line like:
    titlecolor=gray]
 \stoptyping
 
-The complete list of argument are:
+The complete list of arguments is:
 
 \setup[setupletter:setup]\flushatnextpar{\index{\tex{setupletter}}}
 
@@ -58,12 +58,12 @@ The complete list of argument are:
 
 \section{Labels}
 
-When you take a look at the examples in the reference section you can see all of them
-have a label above or on the left or the content but this did only happen because the
+When you take a look at the reference section of the examples you can see all of them
+having a label above or on the left or the content. But this did only happen because the
 module provides preset texts for them.
 
-When you try to use a non defined label like e.g. {\em skype} you the content of the value
-as seen below but no label above.
+Trying to use a nondefined label like e.g. {\em skype} you will see the content of the value
+as below but no label above.
 
 The following code
 
@@ -89,23 +89,23 @@ result in this reference line:
 
 \stop
 
-The module use ConTeXt’s labeltext mechanism to define text for various languages
+The module uses \ConTeXt’s label text mechanism to define text for various languages
 which can be found in the file \filename{default.nle}. To define your own text use
-the \type{\setuplabeltext} command, to prevent problems with other macros the names
+the \type{\setuplabeltext} command. To prevent problems with other macros the names
 of the labels are prefixed with {\em letter:}.\footnote{The {\em memo} style makes
-a exception to this concept and use {\em memo:} as prefix for the label names.}
+an exception to this concept and uses {\em memo:} as prefix for the label names.}
 
 \setup[setuplabeltext]\flushatnextpar{\index{\tex{setuplabeltext}}}
 
-To add now a label for our currently used {\em skype} value put the following
-line in your document and change the language tag to the mainlanguage you use
+To add a label for our currently used {\em skype} value put the following
+line in your document and change the language tag to the main language you use
 in your document.
 
 \starttyping
 \setuplabeltext[en][letter:skype=Skype]
 \stoptyping
 
-The reference looks now like:
+The reference line now looks like:
 
 \start
 
@@ -124,7 +124,7 @@ The reference looks now like:
 
 When you use \type{\setlettervalue} to set the content of the values the optional
 argument can be used instead of \type{\setuplabeltext} to define a text for the label
-in the current mainlanguage, a empty argument results in a empty labeltext.
+in the current main language. An empty argument results in an empty label text.
 
 The two step setting for the value {\em skype} can the be done with this setting.
 

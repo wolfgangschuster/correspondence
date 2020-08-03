@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-correspondence,
-%D        version=2009.04.26,
+%D        version=2009.04.27,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Correspondence,
 %D         author=Wolfgang Schuster,
@@ -16,6 +16,7 @@
 % 1: letter|resume / interface|style|extension / filename
 % 2: letter|resume / interface|style|extension / filename
 % 3: ‹number› / ‹number›
+% 4: ‹file› / ‹version›
 
 \definemessageconstant {correspondence}
 
@@ -482,24 +483,23 @@
 \def\registercorrespondencefile#1%
   {\doifundefined{@@@@#1@@@@}
     {\letgvalue{@@@@#1@@@@}\empty
-     \ctxlua{thirddata.correspondence.checkfile("#1")}}}
+     \modulecode{correspondence.checkfile("#1")}}}
 
 %D Lua table with all macro files and their current version, it is used
 %D to build the revision table in the manual. The Lua alternative is easier
 %D to maintain (same folder as the other files) and allows me to store more
 %D information as I can do with the TeX solution.
 
-\startluacode
+\startmodulecode
 
-thirddata                = thirddata                or { }
-thirddata.correspondence = thirddata.correspondence or { }
+correspondence = correspondence or { }
 
-thirddata.correspondence.files = {
+correspondence.files = {
     {
         name        = "t-correspondence.tex",
         path        = "tex/context/third/letter/base/",
         type        = "base",
-        version     = "2009.04.26",
+        version     = "2009.04.27",
         description = "Core module"
     } ,
     {
@@ -744,22 +744,22 @@ thirddata.correspondence.files = {
     } ,
 }
 
-for k,v in pairs(thirddata.correspondence.files) do
-    local file = thirddata.correspondence.files[k]["name"]
-    thirddata.correspondence[file] = { }
-    thirddata.correspondence[file]["name"]    = file
-    thirddata.correspondence[file]["version"] = thirddata.correspondence.files[k]["version"]
+for k,v in global.pairs(correspondence.files) do
+    local file = correspondence.files[k]["name"]
+    correspondence[file] = { }
+    correspondence[file]["name"]    = file
+    correspondence[file]["version"] = correspondence.files[k]["version"]
 end
 
-function thirddata.correspondence.checkfile(filename)
-    if thirddata.correspondence[filename] ~= nil then
-        local name    = thirddata.correspondence[filename]["name"]
-        local version = thirddata.correspondence[filename]["version"]
+function correspondence.checkfile(filename)
+    if correspondence[filename] ~= nil then
+        local name    = correspondence[filename]["name"]
+        local version = correspondence[filename]["version"]
         tex.sprint(tex.prtcatcodes,string.format("\\doglobal\\appendtoks\\showmessage\\m!correspondence{4}{%s,%s}\\to\\everynotabene",name,version))
     end
 end
 
-\stopluacode
+\stopmodulecode
 
 \registercorrespondencefile{t-correspondence.tex}
 

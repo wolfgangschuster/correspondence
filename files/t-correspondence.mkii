@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-correspondence,
-%D        version=2009.04.26,
+%D        version=2009.04.27,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Correspondence,
 %D         author=Wolfgang Schuster,
@@ -24,7 +24,7 @@
                  foldmark: foldmark
                 extension: extension
                 interface: interface
-          backgroundimage: backgroundimage}
+          backgroundimage: backgroundimage
                whitespace: whitespace
                  nexthead: nexthead
                  lefthead: lefthead
@@ -170,13 +170,14 @@
                       use: use
                    define: define
                     flush: flush
-\stopinterface
+\stopelements
 
 % Placeholders for the messages:
 %
 % 1: letter|resume / interface|style|extension / filename
 % 2: letter|resume / interface|style|extension / filename
 % 3: ‹number› / ‹number›
+% 4: ‹file› / ‹version›
 
 \definemessageconstant {correspondence}
 
@@ -185,6 +186,7 @@
             1: loading -- -- --
             2: -- -- -- not found
             3: correspage set -- processed (size --)
+            4: --: --
 \stopmessages
 
 %D Page numbering

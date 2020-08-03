@@ -39,7 +39,7 @@
 \appendtoks\def\\{ }\to\simplifiedcommands
 
 \setupinteraction
-  [state=stop,
+  [state=start,
    title={Correspondence with ConTeXt},
    author={Wolfgang Schuster},
    color=black,
@@ -75,7 +75,9 @@
 \setsansfont[Lucida Sans]
 \setmonofont[Lucida Sans Typewriter]
 
-\definefontfamily[delicious][Delicious]
+\setupbodyfontenvironment[default][em=italic]
+
+\definefontfamily[examplefont][Delicious]
 
 \stopmode
 
@@ -89,7 +91,7 @@
 \setsansfont[Latin Modern Sans]
 \setmonofont[Latin Modern Mono]
 
-\definefontfamily[modern][Latin Modern Sans]
+\definefontfamily[examplefont][Latin Modern Sans]
 
 \stopnotmode
 
@@ -98,13 +100,10 @@
 
 %% Einnstellungen für die Musterbriefe
 
-\doifmodeelse{wolf}
-  {\setupletterstyle[option][bodyfont=delicious]}
-  {\setupletterstyle[option][bodyfont=modern]}
-
 \setupletterstyle
   [option]
-  [whitespace=line,
+  [bodyfont=examplefont,
+   whitespace=line,
    marking=no,
    before={\page[left]},
    backgroundcolor=gray]
@@ -122,13 +121,10 @@
   [closing]
   [after={\blank[2*line]}]
 
-\doifmodeelse{wolf}
-  {\setupresumestyle[option][bodyfont=delicious]}
-  {\setupresumestyle[option][bodyfont=modern]}
-
 \setupresumestyle
   [option]
-  [whitespace=none,
+  [bodyfont=examplefont,
+   whitespace=none,
    before={\page[left]},
    backgroundcolor=gray]
 
@@ -137,20 +133,18 @@
 \setupwhitespace[line]
 
 \setupalign[stretch,hanging,hz]
+%\setupalign[stretch,hanging]
 %\setupalign[right,broad]
 
 %% Überschriften
 
-%\definestructureresetset[default][0,1,4][0]
-
-%\setupheads
-%  [reset=default,
-%   sectionsegments=1:100]
+\definestructureresetset[default][0,0][1]
 
 \setuphead
   [part]
   [placehead=yes,
    header=empty,
+   sectionresetset=default,
    alternative=middle,
    style=\tfd]
 
@@ -158,14 +152,12 @@
   [chapter]
   [header=empty,
    style=\tfc,
-   %sectionsegments=2:100,
-   ]
+   sectionsegments=2:100]
 
 \setuphead
   [section,subject]
   [style=\tfb,
-   %sectionsegments=2:100,
-   ]
+   sectionsegments=2:100]
 
 \setuphead
   [subsection,subsubject]

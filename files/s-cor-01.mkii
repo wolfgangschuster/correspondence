@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-01,
-%D      version=2012.02.19,
+%D      version=2012.05.25,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Letters,
 %D       author=Wolfgang Schuster,
@@ -594,10 +594,6 @@
 \placecorrespondence[\v!letter]
 \stopsetups
 
-% Files
-
-\useletterstyle[default,\currentmoduleparameter\c!style]
-
 % Extras
 
 \appendtoks
@@ -904,6 +900,10 @@
 \setuplettertext[\s!fr][\v!pagenumber=]
 \setuplettertext[\s!it][\v!pagenumber=]
 \setuplettertext[\s!es][\v!pagenumber=]
+
+% Files
+
+\useletterstyle[default,\currentmoduleparameter\c!style]
 
 \stopmodule
 

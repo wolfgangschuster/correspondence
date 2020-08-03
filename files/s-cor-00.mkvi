@@ -649,7 +649,12 @@
 
 % Heading
 
-\installsimpleframedcommandhandler \????correspondencehead {correspondencehead} \????correspondencehead
+\installframedcommandhandler \????correspondencehead {correspondencehead} \????correspondencehead
+
+\appendtoks
+  \definelist   [\currentcorrespondencehead]% \definelist   [\????correspondenceheadlist   \currentcorrespondencehead]
+  \definemarking[\currentcorrespondencehead]% \definemarking[\????correspondenceheadmarking\currentcorrespondencehead]
+\to \everydefinecorrespondencehead
 
 \newtoks\t_correspondence_headings
 
@@ -736,6 +741,9 @@
       \c!color=\correspondenceheadparameter\c!color]
      [\c!align=\correspondenceheadparameter\c!align]
      {\correspondenceheadparameter\c!title}}
+
+\setvalue{\????correspondenceheadalternative\v!frame}%
+  {}
 
 \setupcorrespondencehead
   [   \c!spacebefore=\v!line,

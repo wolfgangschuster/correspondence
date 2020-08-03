@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-02,
-%D      version=2012.02.06,
+%D      version=2012.05.25,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Memos,
 %D       author=Wolfgang Schuster,
@@ -333,10 +333,6 @@
 \correspondence_place[\v!memo]
 \stopsetups
 
-% Files
-
-\usememostyle[default,\currentmoduleparameter\c!style]
-
 % Extras
 
 \appendtoks
@@ -402,6 +398,10 @@
 \setupmemotext[\s!fr][\v!subject=Concernant\thinspace: ]
 \setupmemotext[\s!it][\v!subject=Oggetto: ]
 \setupmemotext[\s!es][\v!subject=Asunto: ]
+
+% Files
+
+\usememostyle[default,\currentmoduleparameter\c!style]
 
 \stopmodule
 

@@ -300,8 +300,9 @@
 
 % Layers
 
-\installsimplecommandhandler       \????correspondencelayer {correspondencelayer} \????correspondencelayer
-\installsimpleframedcommandhandler \????correspondenceframe {correspondenceframe} \????correspondenceframe
+\installsimplecommandhandler       \????correspondencelayer            {correspondencelayer}            \????correspondencelayer
+\installsimpleframedcommandhandler \????correspondenceframe            {correspondenceframe}            \????correspondenceframe
+\installcommandhandler             \????correspondencelayeralternative {correspondencelayeralternative} \????correspondencelayeralternative
 
 \unexpanded\def\correspondence_layer_define[#environment][#element]%
   {\def\currentcorrespondencelayer{#environment:#element}%
@@ -406,7 +407,8 @@
 
 % Sections
 
-\installsimplecommandhandler \????correspondencesection {correspondencesection} \????correspondencesection
+\installsimplecommandhandler \????correspondencesection            {correspondencesection}            \????correspondencesection
+\installcommandhandler       \????correspondencesectionalternative {correspondencesectionalternative} \????correspondencesectionalternative
 
 \unexpanded\def\correspondence_section_define[#environment][#element]%
   {\def\currentcorrespondencesection{#environment:#element}%
@@ -463,7 +465,8 @@
 
 % Descriptions
 
-\installsimplecommandhandler \????correspondencedescription {correspondencedescription} \????correspondencedescription
+\installsimplecommandhandler \????correspondencedescription            {correspondencedescription}            \????correspondencedescription
+\installcommandhandler       \????correspondencedescriptionalternative {correspondencedescriptionalternative} \????correspondencedescriptionalternative
 
 \let\m_correspondence_description_format\empty
 \let\m_correspondence_description_items \empty
@@ -556,7 +559,8 @@
 
 % Paragraphs
 
-\installsimplecommandhandler \????correspondenceparagraph {correspondenceparagraph} \????correspondenceparagraph
+\installsimplecommandhandler \????correspondenceparagraph            {correspondenceparagraph}            \????correspondenceparagraph
+\installcommandhandler       \????correspondenceparagraphalternative {correspondenceparagraphalternative} \????correspondenceparagraphalternative
 
 \newtoks\t_correspondence_paragraphs
 
@@ -772,7 +776,8 @@
 
 % Heading
 
-\installframedcommandhandler \????correspondencehead {correspondencehead} \????correspondencehead
+\installframedcommandhandler \????correspondencehead            {correspondencehead}            \????correspondencehead
+\installcommandhandler       \????correspondenceheadalternative {correspondenceheadalternative} \????correspondenceheadalternative
 
 \appendtoks
   \definelist   [\currentcorrespondencehead]% \definelist   [\????correspondenceheadlist   \currentcorrespondencehead]
@@ -876,6 +881,20 @@
             \c!style=\v!bold]
 
 % Elements
+
+\unexpanded\def\correspondence_element_define[#environment][#type][#element][#name]%
+  {\edef\m_correspondence_element_type{#type}%
+   \ifx\m_correspondence_element_type\v!section
+     \expandafter\correspondence_element_define_section
+   \else
+     \expandafter\correspondence_element_define_layer
+   \fi}
+
+\def\correspondence_element_define_section[#environment][#type][#element][#name]#content%
+  {\definecorrespondencesectionalternative[#environment:#element:#name][\c!renderingsetup=\????correspondencesectionrenderings:\v!command]}
+
+\def\correspondence_element_define_layer[#environment][#type][#element][#name]#content%
+  {\definecorrespondencelayeralternative  [#environment:#element:#name][\c!renderingsetup=\????correspondencelayerrenderings:\v!command]}
 
 \unexpanded\def\correspondence_element_define[#environment][#type][#element][#name]#content%
   {\setvalue{\????correspondenceelement:#environment:#type:#element:#name}{#content}}

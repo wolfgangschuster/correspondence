@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-00,
-%D      version=2012.09.21,
+%D      version=2012.12.13,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Correspondence,
 %D       author=Wolfgang Schuster,
@@ -121,6 +121,7 @@
   \setinterfacevariable {modified}        {modified}
   \setinterfacevariable {blockstyle}      {blockstyle}
   \setinterfacevariable {knuth}           {knuth}
+  \setinterfacevariable {generic}         {generic}
   % memo
   \setinterfacevariable {memo}            {memo}
   \setinterfacevariable {memomain}        {memomain}
@@ -150,6 +151,7 @@
 
 \installnamespace {correspondence}
 \installnamespace {correspondencebuffer}
+\installnamespace {correspondenceoverlay}
 \installnamespace {correspondencelayer}
 \installnamespace {correspondencelayerrenderings}
 \installnamespace {correspondencelayeralternative}
@@ -243,41 +245,50 @@
 \newtoks\t_correspondence_before
 \newtoks\t_correspondence_after
 
-\unexpanded\def\correspondence_place[#environment]%
-  {\begingroup
-   \edef\currentcorrespondence{#environment}%
-   \let \currentcorrespondenceoption\currentcorrespondence
-   \ctxlua{thirddata.correspondence.place("\currentcorrespondence", {
-        bodyfont        = "\correspondenceoptionparameter\c!bodyfont",
-        whitespace      = "\correspondenceoptionparameter\c!whitespace",
-        interlinespace  = "\correspondenceoptionparameter\c!interlinespace",
-        language        = "\correspondenceoptionparameter\c!language",
-        backgroundcolor = "\correspondenceoptionparameter\c!backgroundcolor",
-    } )}%
-   \endgroup}
-
 % \unexpanded\def\correspondence_place[#environment]%
 %   {\begingroup
 %    \edef\currentcorrespondence{#environment}%
 %    \let \currentcorrespondenceoption\currentcorrespondence
-%    \the\t_correspondence_before
-%    \page
-%    \setuplayout[\c!method=\v!correspondence]%
-%    \setupheader[\c!state=\v!stop]%
-%    \setupfooter[\c!state=\v!stop]%
-%    \doifsomething{\correspondenceoptionparameter\c!bodyfont  }{\setupbodyfont  [\correspondenceoptionparameter\c!bodyfont  ]}%
-%    \doifsomething{\correspondenceoptionparameter\c!whitespace}{\setupwhitespace[\correspondenceoptionparameter\c!whitespace]}%
-%    \doifsomething{\correspondenceoptionparameter\c!language  }{\mainlanguage   [\correspondenceoptionparameter\c!language  ]}%
-%    \setupbackgrounds[\v!paper][\c!background=\v!color,\c!backgroundcolor=\correspondenceoptionparameter\c!backgroundcolor]%
-%    \setupbackgrounds[\v!page ][\c!background={\????correspondenceoverlay\c!backgroundimage,\????correspondenceoverlay\c!background,\????correspondenceoverlay\v!layer}]%
-%    \setuppagenumbering [\c!alternative=\v!singlesided,location=]%
-%    \setupsubpagenumber [\c!way=\v!text,\c!state=\v!start]%
-%    \processcommacommand[\correspondence_elements_access\currentcorrespondence\v!section]{\correspondence_section_place\currentcorrespondence}%
-%    \page
-%    \resetsubpagenumber
-%    \setuplayout[\v!reset]%
-%    \the\t_correspondence_after
+%    \ctxlua{thirddata.correspondence.place("\currentcorrespondence", {
+%         bodyfont        = "\correspondenceoptionparameter\c!bodyfont",
+%         whitespace      = "\correspondenceoptionparameter\c!whitespace",
+%         interlinespace  = "\correspondenceoptionparameter\c!interlinespace",
+%         language        = "\correspondenceoptionparameter\c!language",
+%         backgroundcolor = "\correspondenceoptionparameter\c!backgroundcolor",
+%     } )}%
 %    \endgroup}
+
+\unexpanded\def\correspondence_place[#environment]%
+  {\begingroup
+   \edef\currentcorrespondence{#environment}%
+   \let \currentcorrespondenceoption\currentcorrespondence
+   \the\t_correspondence_before
+   \page
+   \setuplayout[\c!method=\v!correspondence]%
+   \setupheader[\c!state=\v!stop]%
+   \setupfooter[\c!state=\v!stop]%
+   \edef\p_correspondence_bodyfont       {\correspondenceoptionparameter\c!bodyfont       }%
+   \edef\p_correspondence_whitespace     {\correspondenceoptionparameter\c!whitespace     }%
+   \edef\p_correspondence_interlinespace {\correspondenceoptionparameter\c!interlinespace }%
+   \edef\p_correspondence_language       {\correspondenceoptionparameter\c!language       }%
+   \edef\p_correspondence_backgroundcolor{\correspondenceoptionparameter\c!backgroundcolor}%
+   \ifx\p_correspondence_bodyfont       \empty \else \setupbodyfont      [\p_correspondence_bodyfont      ]\fi
+   \ifx\p_correspondence_whitespace     \empty \else \setupwhitespace    [\p_correspondence_whitespace    ]\fi
+   \ifx\p_correspondence_interlinespace \empty \else \setupinterlinespace[\p_correspondence_interlinespace]\fi
+   \ifx\p_correspondence_language       \empty \else \mainlanguage       [\p_correspondence_language      ]\fi
+   \ifx\p_correspondence_backgroundcolor\empty \else
+     \setupbackgrounds[\v!paper][\c!background=\v!color,\c!backgroundcolor=\p_correspondence_backgroundcolor]%
+   \fi
+   \setupbackgrounds[\v!page ][\c!background={\????correspondenceoverlay\c!backgroundimage,\????correspondenceoverlay\c!background,\????correspondenceoverlay\v!layer}]%
+   \setuppagenumbering[\c!alternative=\v!singlesided,\c!location=]%
+   \setupsubpagenumber[\c!way=\v!text,\c!state=\v!start]%
+   \resetsubpagenumber
+   \normalexpanded{\processcommalist[\correspondence_elements_access\currentcorrespondence\v!section]}{\correspondence_section_place\currentcorrespondence}%
+   \page
+   \resetsubpagenumber
+   \setuplayout[\v!reset]%
+   \the\t_correspondence_after
+   \endgroup}
 
 %D Besides the normal letter environment there are three different ways to flush
 %D the content of a letter after the text was set with a buffer etc.
@@ -308,24 +319,13 @@
   {\def\currentcorrespondencelayer{#environment:#element}%
    \let\currentcorrespondenceframe\currentcorrespondencelayer
    \checkcorrespondencelayerparent
-   \checkcorrespondenceframeparent
-   \definelayer  [\currentcorrespondencelayer][\c!width=\overlaywidth,\c!height=\overlayheight]%
-   \defineoverlay[\currentcorrespondencelayer][\correspondence_layer_place{#environment}{#element}]}
+   \checkcorrespondenceframeparent}
 
 \unexpanded\def\correspondence_layer_setup[#environment][#elements][#parameters]%
   {\def\correspondence_layer_command#element%
      {\edef\currentcorrespondencelayer{#environment:#element}%
-      \setupcurrentcorrespondencelayer[#parameters]%
-      \the\everysetupcorrespondencelayer}%
+      \setupcurrentcorrespondencelayer[#parameters]}%
    \processcommacommand[#elements]\correspondence_layer_command}
-
-\appendtoks
-  \setuplayer
-    [\currentcorrespondencelayer]
-    [     \c!x=\correspondencelayerparameter\c!x,
-          \c!y=\correspondencelayerparameter\c!y,
-     \c!preset=\correspondencelayerparameter\c!preset]%
-\to \everysetupcorrespondencelayer
 
 \unexpanded\def\correspondence_frame_setup[#environment][#elements][#parameters]%
   {\def\correspondence_frame_command#element%
@@ -333,6 +333,7 @@
       \setupcurrentcorrespondenceframe[#parameters]}%
    \processcommacommand[#elements]\correspondence_frame_command}
 
+\setvalue{\????correspondencelayerstate         }{\!!doneafalse \!!donebfalse \!!donecfalse}
 \setvalue{\????correspondencelayerstate\v!start }{\!!doneatrue  \!!donebfalse \!!donecfalse}
 \setvalue{\????correspondencelayerstate\v!stop  }{\!!doneafalse \!!donebfalse \!!donecfalse}
 \setvalue{\????correspondencelayerstate\v!next  }{\!!doneafalse \!!donebtrue  \!!donectrue }
@@ -342,40 +343,29 @@
 \setvalue{\????correspondencelayerstate\v!even  }{\!!doneafalse \!!donebfalse \!!donectrue }
 \setvalue{\????correspondencelayerstate\v!odd   }{\!!doneafalse \!!donebtrue  \!!donecfalse}
 
-\unexpanded\def\correspondence_layer_place#environment#element%
-  {\correspondence_parameters{#environment}{#element}\v!layer
-   \expandcheckedcsname\????correspondencelayerstate{\correspondencelayerparameter\c!state}\v!stop
-   \ifnum\c_correspondence_page=\plusone
-     \if!!donea\correspondence_layer_direct{#environment}{#element}\fi
-   \else\ifodd\c_correspondence_page
-     \if!!doneb\correspondence_layer_direct{#environment}{#element}\fi
-   \else
-     \if!!donec\correspondence_layer_direct{#environment}{#element}\fi
-   \fi\fi
-   \tightlayer[\currentcorrespondencelayer]}
+\definelayer  [\????correspondenceoverlay\v!layer][\c!width=\overlaywidth,\c!height=\overlayheight  ]
+\defineoverlay[\????correspondenceoverlay\v!layer][\correspondence_layer_place\currentcorrespondence]
 
-% Can be faster with a single layer for all elements.
-%
-% \definelayer  [\????correspondenceoverlay\v!layer][\c!width=\overlaywidth,\c!height=\overlayheight  ]
-% \defineoverlay[\????correspondenceoverlay\v!layer][\correspondence_layer_place\currentcorrespondence]
-%
-% \unexpanded\def\correspondence_layer_place#environment%
-%   {\def\correspondence_layer_state#element%
-%      {\correspondence_parameters{#environment}{#element}\v!layer
-%       \expandcheckedcsname\????correspondencelayerstate{\correspondencelayerparameter\c!state}\v!stop
-%       \ifnum\c_correspondence_page=\plusone
-%         \if!!donea\correspondence_layer_direct{#environment}{#element}\fi
-%       \else\ifodd\c_correspondence_page
-%         \if!!doneb\correspondence_layer_direct{#environment}{#element}\fi
-%       \else
-%         \if!!donec\correspondence_layer_direct{#environment}{#element}\fi
-%       \fi\fi}%
-%    \processcommacommand[\correspondence_elements_access{#environment}\v!layer]\correspondence_layer_state
-%    \tightlayer[\????correspondenceoverlay\v!layer]}
+\unexpanded\def\correspondence_layer_place#environment%
+  {\def\correspondence_layer_state#element%
+     {\correspondence_parameters{#environment}{#element}\v!layer
+      \expandcheckedcsname\????correspondencelayerstate{\correspondencelayerparameter\c!state}\v!stop
+      \ifnum\c_correspondence_page=\plusone
+        \if!!donea\correspondence_layer_direct\fi
+      \else\ifodd\c_correspondence_page
+        \if!!doneb\correspondence_layer_direct\fi
+      \else
+        \if!!donec\correspondence_layer_direct\fi
+      \fi\fi}%
+   \processcommacommand[\correspondence_elements_access\currentcorrespondence\v!layer]\correspondence_layer_state
+   \tightlayer[\????correspondenceoverlay\v!layer]}
 
-\unexpanded\def\correspondence_layer_direct#environment#element%
+\unexpanded\def\correspondence_layer_direct
   {\setlayer
-     [\currentcorrespondencelayer]
+     [\????correspondenceoverlay\v!layer]
+     [     \c!x=\correspondencelayerparameter\c!x,
+           \c!y=\correspondencelayerparameter\c!y,
+      \c!preset=\correspondencelayerparameter\c!preset]
      {\inheritedcorrespondenceframeframed
         {\doifsomething{\correspondencelayerparameter\c!bodyfont      }{\switchtobodyfont   [\correspondencelayerparameter\c!bodyfont      ]}%
          \doifsomething{\correspondencelayerparameter\c!interlinespace}{\setupinterlinespace[\correspondencelayerparameter\c!interlinespace]}%
@@ -384,13 +374,41 @@
          \doadaptrightskip{\correspondencelayerparameter\c!rightmargin}%
          \doifsymboldefinedelse{\correspondencelayerparameter\c!symbol}%
            {\symbol[\correspondencelayerparameter\c!symbol]}
-           {\correspondence_element_place[#environment][\v!layer][#element][\correspondencelayerparameter\c!alternative]}}}}
+           {\correspondence_layer_alternative_place}}}}
 
 \unexpanded\def\correspondence_layer_check[#environment][#element]%
   {\def\currentcorrespondencelayer{#environment:#element}%
    \ifcsname\currentcorrespondencelayerhash\s!parent\endcsname \else
      \showmessage\m!correspondence{2}{#element,#environment}%
    \fi}
+
+\unexpanded\def\correspondence_layer_alternative_define[#environment][#self][#parent][#parameters]%
+  {\iffourthargument
+     \definecorrespondencelayeralternative[#environment:#self][#environment:#parent][#parameters]%
+   \else
+     \definecorrespondencelayeralternative[#environment:#self][#parent]%
+   \fi}
+
+\unexpanded\def\correspondence_layer_alternative_setup[#environment][#name][#parameters]%
+  {\setupcorrespondencelayeralternative[#environment:#name][#parameters]}
+
+\unexpanded\def\correspondence_layer_alternative_place
+  {\edef\p_correspondence_layer_alternative{\correspondencelayerparameter\c!alternative}%
+   \ifcsname\namedcorrespondencelayeralternativehash{\currentcorrespondencelayer:\p_correspondence_layer_alternative}\s!parent\endcsname
+     \edef\currentcorrespondencelayeralternative{\currentcorrespondencelayer:\p_correspondence_layer_alternative}%
+   \else\ifcsname\namedcorrespondencelayeralternativehash{\currentcorrespondenceenvironment:\p_correspondence_layer_alternative}\s!parent\endcsname
+     \edef\currentcorrespondencelayeralternative{\currentcorrespondenceenvironment:\p_correspondence_layer_alternative}%
+   \else
+     \let\currentcorrespondencelayeralternative\p_correspondence_layer_alternative
+   \fi\fi
+   \edef\p_correspondence_layer_renderingsetup{\correspondencelayeralternativeparameter\c!renderingsetup}%
+   \autosetups\p_correspondence_layer_renderingsetup}
+
+\definecorrespondencelayeralternative[\v!setups][\c!renderingsetup=\????correspondencelayerrenderings:\v!setups]
+
+\startsetups[\????correspondencelayerrenderings:\v!setups]
+  \autosetups{\currentcorrespondenceenvironment:\v!layer:\currentcorrespondenceelement}
+\stopsetups
 
 \setupcorrespondencelayer
   [      \c!state=\v!start,
@@ -420,7 +438,7 @@
       \setupcurrentcorrespondencesection[#parameters]}%
    \processcommacommand[#elements]\correspondence_section_command}
 
-\unexpanded\def\correspondence_section_place[#environment][#element]%
+\unexpanded\def\correspondence_section_place#environment#element%
   {\begingroup
    \correspondence_parameters{#environment}{#element}\v!section
    \ifcsname\currentcorrespondencesectionhash\s!parent\endcsname
@@ -431,13 +449,41 @@
      \doifsomething{\correspondencesectionparameter\c!align    }{\setupalign    [\correspondencesectionparameter\c!align    ]}%
      \doifsomething{\correspondencesectionparameter\c!indenting}{\setupindenting[\correspondencesectionparameter\c!indenting]}%
      \usecorrespondencesectionstyleandcolor\c!style\c!color
-     \correspondence_element_place[#environment][\v!section][#element][\correspondencesectionparameter\c!alternative]%
+     \correspondence_section_alternative_place
      \correspondencesectionparameter\c!after
      \doifsomethingelse{\correspondencesectionparameter\c!spaceafter }{\blank[\correspondencesectionparameter\c!spaceafter ]}\endgraf
    \else
      \showmessage\m!correspondence{2}{#element,#environment}%
    \fi
    \endgroup}
+
+\unexpanded\def\correspondence_section_alternative_define[#environment][#self][#parent][#parameters]%
+  {\iffourthargument
+     \definecorrespondencesectionalternative[#environment:#self][#environment:#parent][#parameters]%
+   \else
+     \definecorrespondencesectionalternative[#environment:#self][#parent]%
+   \fi}
+
+\unexpanded\def\correspondence_section_alternative_setup[#environment][#name][#parameters]%
+  {\setupcorrespondencesectionalternative[#environment:#name][#parameters]}
+
+\unexpanded\def\correspondence_section_alternative_place
+  {\edef\p_correspondence_section_alternative{\correspondencesectionparameter\c!alternative}%
+   \ifcsname\namedcorrespondencesectionalternativehash{\currentcorrespondencesection:\p_correspondence_section_alternative}\s!parent\endcsname
+     \edef\currentcorrespondencesectionalternative{\currentcorrespondencelayer:\p_correspondence_section_alternative}%
+   \else\ifcsname\namedcorrespondencesectionalternativehash{\currentcorrespondenceenvironment:\p_correspondence_section_alternative}\s!parent\endcsname
+     \edef\currentcorrespondencesectionalternative{\currentcorrespondenceenvironment:\p_correspondence_section_alternative}%
+   \else
+     \let\currentcorrespondencesectionalternative\p_correspondence_section_alternative
+   \fi\fi
+   \edef\p_correspondence_section_renderingsetup{\correspondencesectionalternativeparameter\c!renderingsetup}%
+   \autosetups\p_correspondence_section_renderingsetup}
+
+\definecorrespondencesectionalternative[\v!setups][\c!renderingsetup=\????correspondencesectionrenderings:\v!setups]
+
+\startsetups[\????correspondencesectionrenderings:\v!setups]
+  \autosetups{\currentcorrespondenceenvironment:\v!section:\currentcorrespondenceelement}
+\stopsetups
 
 \setupcorrespondencesection
   [   \c!spacebefore=\v!line,
@@ -455,12 +501,12 @@
    \setupcurrentcorrespondenceoption}%
 
 \defineoverlay
-  [correspondence:backgroundimage]
+  [\????correspondenceoverlay\c!backgroundimage]
   [\doifsomething{\correspondenceoptionparameter\c!backgroundimage}
      {\overlayfigure{\correspondenceoptionparameter\c!backgroundimage}}]
 
 \defineoverlay
-  [correspondence:background]
+  [\????correspondenceoverlay\c!background]
   [\correspondenceoptionparameter\c!background]
 
 % Descriptions
@@ -506,6 +552,28 @@
      \showmessage\m!correspondence{3}{#element,#environment}%
    \fi
    \endgroup}
+
+% \unexpanded\def\correspondence_description_alternative_define[#environment][#self][#parent][#parameters]%
+%   {\iffourthargument
+%      \definecorrespondencedescriptionalternative[#environment:#self][#environment:#parent][#parameters]%
+%    \else
+%      \definecorrespondencedescriptionalternative[#environment:#self][#parent]%
+%    \fi}
+%
+% \unexpanded\def\correspondence_description_alternative_setup[#environment][#name][#parameters]%
+%   {\setupcorrespondencedescriptionalternative[#environment:#name][#parameters]}
+%
+% \unexpanded\def\correspondence_description_alternative_place
+%   {\edef\p_correspondence_description_alternative{\correspondencedescriptionparameter\c!alternative}%
+%    \ifcsname\namedcorrespondencedescriptionalternativehash{\currentcorrespondencedescription:\p_correspondence_description_alternative}\s!parent\endcsname
+%      \edef\currentcorrespondencedescriptionalternative{\currentcorrespondencedescription:\p_correspondence_description_alternative}%
+%    \else\ifcsname\namedcorrespondencedescriptionalternativehash{\currentcorrespondenceenvironment:\p_correspondence_description_alternative}\s!parent\endcsname
+%      \edef\currentcorrespondencedescriptionalternative{\currentcorrespondenceenvironment:\p_correspondence_description_alternative}%
+%    \else
+%      \let\currentcorrespondencedescriptionalternative\p_correspondence_description_alternative
+%    \fi\fi
+%    \edef\p_correspondence_description_renderingsetup{\correspondencedescriptionalternativeparameter\c!renderingsetup}%
+%    \autosetups\p_correspondence_description_renderingsetup}
 
 \setvalue{\????correspondencedescriptionlocation\v!left}%
   {\doadaptleftskip\scratchdimen
@@ -602,64 +670,56 @@
        {\texsetup\p_correspondence_paragraph_setups}%
    \fi
    \doifsomethingelse{\correspondenceparagraphparameter\c!spacebefore}{\blank[\correspondenceparagraphparameter\c!spacebefore]}\endgraf
-   \expandcheckedcsname\????correspondenceparagraphalternative{\correspondenceparagraphparameter\c!alternative}\s!default
+   \correspondence_paragraph_alternative_place
    \doifsomethingelse{\correspondenceparagraphparameter\c!spaceafter }{\blank[\correspondenceparagraphparameter\c!spaceafter ]}\endgraf
    \endgroup}
 
-% \unexpanded\def\correspondence_paragraph_lefttext
-%   {\edef\p_correspondence_paragraph_lefttext{\correspondenceparagraphparameter\c!lefttext}%
-%    \ifx\p_correspondence_paragraph_lefttext\empty \else
-%      \margindata
-%        [\v!inleft]
-%        [\c!style=\correspondenceparagraphparameter\c!leftstyle,
-%         \c!color=\correspondenceparagraphparameter\c!leftcolor]
-%        [\c!align=\correspondenceparagraphparameter\c!leftalign]
-%        {\correspondenceparagraphparameter\c!lefttext}%
-%    \fi}
-%
-% \unexpanded\def\correspondence_paragraph_righttext
-%   {\edef\p_correspondence_paragraph_righttext{\correspondenceparagraphparameter\c!righttext}%
-%    \ifx\p_correspondence_paragraph_righttext\empty \else
-%      \margindata
-%        [\v!inright]
-%        [\c!style=\correspondenceparagraphparameter\c!rightstyle,
-%         \c!color=\correspondenceparagraphparameter\c!rightcolor]
-%        [\c!align=\correspondenceparagraphparameter\c!rightalign]
-%        {\correspondenceparagraphparameter\c!righttext}%
-%    \fi}
+\unexpanded\def\correspondence_paragraph_alternative_define[#environment][#self][#parent][#parameters]%
+  {\iffourthargument
+     \definecorrespondenceparagraphalternative[#environment:#self][#environment:#parent][#parameters]%
+   \else
+     \definecorrespondenceparagraphalternative[#environment:#self][#parent]%
+   \fi}
+
+\unexpanded\def\correspondence_paragraph_alternative_setup[#environment][#name][#parameters]%
+  {\setupcorrespondenceparagraphalternative[#environment:#name][#parameters]}
+
+\unexpanded\def\correspondence_paragraph_alternative_place
+  {\edef\p_correspondence_paragraph_alternative{\correspondenceparagraphparameter\c!alternative}%
+   \ifcsname\namedcorrespondenceparagraphalternativehash{\currentcorrespondenceparagraph:\p_correspondence_paragraph_alternative}\s!parent\endcsname
+     \edef\currentcorrespondenceparagraphalternative{\currentcorrespondenceparagraph:\p_correspondence_paragraph_alternative}%
+   \else\ifcsname\namedcorrespondenceparagraphalternativehash{\currentcorrespondenceenvironment:\p_correspondence_paragraph_alternative}\s!parent\endcsname
+     \edef\currentcorrespondenceparagraphalternative{\currentcorrespondenceenvironment:\p_correspondence_paragraph_alternative}%
+   \else
+     \let\currentcorrespondenceparagraphalternative\p_correspondence_paragraph_alternative
+   \fi\fi
+   \edef\p_correspondence_paragraph_renderingsetup{\correspondenceparagraphalternativeparameter\c!renderingsetup}%
+   \autosetups\p_correspondence_paragraph_renderingsetup}
+
+\definecorrespondenceparagraphalternative[\s!default][\c!renderingsetup=\????correspondenceparagraphrenderings:\s!default]
+\definecorrespondenceparagraphalternative[\v!top    ][\c!renderingsetup=\????correspondenceparagraphrenderings:\v!top    ]
+\definecorrespondenceparagraphalternative[\v!margin ][\c!renderingsetup=\????correspondenceparagraphrenderings:\v!margin ]
+\definecorrespondenceparagraphalternative[\v!columns][\c!renderingsetup=\????correspondenceparagraphrenderings:\v!columns]
+
+\startsetups[\????correspondenceparagraphrenderings:\s!default]
+  \getbufferdata[\????correspondenceparagraphbuffer\currentcorrespondenceparagraph]
+\stopsetups
 
 \unexpanded\def\correspondence_paragraph_text
   {\edef\p_correspondence_paragraph_text{\correspondenceparagraphparameter\c!text}%
    \ifx\p_correspondence_paragraph_text\empty \else
-    %\correspondence_paragraph_lefttext  % margin texts are only placed when there is normal text,
-    %\correspondence_paragraph_righttext % for margin only texts one can use “left”, “right” or “both”
      \begingroup
        \usecorrespondenceparagraphstyleandcolor\c!textstyle\c!textcolor
        \correspondenceparagraphparameter\c!text
        \endgraf
      \endgroup
+     \doifsomethingelse{\correspondenceparagraphparameter\c!spaceinbetween}{\blank[\correspondenceparagraphparameter\c!spaceinbetween]}{\dosomebreak\nobreak}%
    \fi}
 
-\setvalue{\????correspondenceparagraphalternative\s!default}%
-  {\getbufferdata[\????correspondenceparagraphbuffer\currentcorrespondenceparagraph]}
-
-% \setvalue{\????correspondenceparagraphalternative\v!left}%
-%   {\correspondence_paragraph_lefttext
-%    \getbufferdata[\????correspondenceparagraphbuffer\currentcorrespondenceparagraph]}
-%
-% \setvalue{\????correspondenceparagraphalternative\v!right}%
-%   {\correspondence_paragraph_righttext
-%    \getbufferdata[\????correspondenceparagraphbuffer\currentcorrespondenceparagraph]}
-%
-% \setvalue{\????correspondenceparagraphalternative\v!both}%
-%   {\correspondence_paragraph_lefttext
-%    \correspondence_paragraph_righttext
-%    \getbufferdata[\????correspondenceparagraphbuffer\currentcorrespondenceparagraph]}
-
-\setvalue{\????correspondenceparagraphalternative\v!top}%
-  {\correspondence_paragraph_text
-   \doifsomethingelse{\correspondenceparagraphparameter\c!spaceinbetween}{\blank[\correspondenceparagraphparameter\c!spaceinbetween]}{\dosomebreak\nobreak}%
-   \getbufferdata[\????correspondenceparagraphbuffer\currentcorrespondenceparagraph]}
+\startsetups[\????correspondenceparagraphrenderings:\v!top]
+  \correspondence_paragraph_text
+  \getbufferdata[\????correspondenceparagraphbuffer\currentcorrespondenceparagraph]
+\stopsetups
 
 \unexpanded\def\correspondence_paragraph_leftmargin
   {\edef\p_correspondence_paragraph_lefttext{\correspondenceparagraphparameter\c!lefttext}%
@@ -683,51 +743,11 @@
        {\p_correspondence_paragraph_righttext}%
    \fi}
 
-\setvalue{\????correspondenceparagraphalternative\v!margin}%
-  {\correspondence_paragraph_leftmargin
-   \correspondence_paragraph_rightmargin
-   \getbufferdata[\????correspondenceparagraphbuffer\currentcorrespondenceparagraph]}
-
-% \unexpanded\def\correspondence_paragraph_leftcolumn
-%   {\ifzeropt\p_correspondence_paragraph_leftwidth \else
-%      \vtop\bgroup
-%        \hsize\p_correspondence_paragraph_leftwidth
-%        \usecorrespondenceparagraphstyleandcolor\c!leftstyle\c!leftcolor
-%        \begstrut\correspondenceparagraphparameter\c!lefttext\endstrut
-%      \egroup
-%      \hskip\p_correspondence_paragraph_leftmargin
-%    \fi}
-%
-% \unexpanded\def\correspondence_paragraph_middlecolumn
-%   {\vtop\bgroup
-%      \hsize\dimexpr\hsize
-%        \ifzeropt\p_correspondence_paragraph_leftwidth \relax \else - \dimexpr\p_correspondence_paragraph_leftwidth  + \p_correspondence_paragraph_rightwidth  \relax \fi
-%        \ifzeropt\p_correspondence_paragraph_leftmargin\relax \else - \dimexpr\p_correspondence_paragraph_leftmargin + \p_correspondence_paragraph_rightmargin \relax \fi
-%      \relax
-%      \usecorrespondenceparagraphstyleandcolor\c!style\c!color
-%      \getbufferdata[\????correspondenceparagraphbuffer\currentcorrespondenceparagraph]% 
-%    \egroup}
-%
-% \unexpanded\def\correspondence_paragraph_rightcolumn
-%   {\ifzeropt\p_correspondence_paragraph_rightwidth \else
-%      \hskip\p_correspondence_paragraph_rightmargin
-%      \vtop\bgroup
-%        \hsize\p_correspondence_paragraph_rightwidth
-%        \usecorrespondenceparagraphstyleandcolor\c!rightstyle\c!rightcolor
-%        \begstrut\correspondenceparagraphparameter\c!righttext\endstrut
-%      \egroup
-%    \fi}
-%
-% \setvalue{\????correspondenceparagraphalternative\v!columns}% 
-%   {\edef\p_correspondence_paragraph_leftwidth  {\correspondenceparagraphparameter\c!leftwidth  }% 
-%    \edef\p_correspondence_paragraph_rightwidth {\correspondenceparagraphparameter\c!rightwidth }% 
-%    \edef\p_correspondence_paragraph_leftmargin {\correspondenceparagraphparameter\c!leftmargin }% 
-%    \edef\p_correspondence_paragraph_rightmargin{\correspondenceparagraphparameter\c!rightmargin}% 
-%    \dontleavehmode\hbox to \hsize\bgroup
-%      \correspondence_paragraph_leftcolumn
-%      \correspondence_paragraph_middlecolumn
-%      \correspondence_paragraph_rightcolumn
-%    \hss\egroup}
+\startsetups[\????correspondenceparagraphrenderings:\v!margin]
+  \correspondence_paragraph_leftmargin
+  \correspondence_paragraph_rightmargin
+  \getbufferdata[\????correspondenceparagraphbuffer\currentcorrespondenceparagraph]
+\stopsetups
 
 \unexpanded\def\correspondence_paragraph_leftcolumn
   {\edef\p_correspondence_paragraph_leftwidth {\correspondenceparagraphparameter\c!leftwidth }%
@@ -757,11 +777,12 @@
      \doadaptrightskip{\dimexpr\p_correspondence_paragraph_rightwidth+\p_correspondence_paragraph_rightmargin\relax}%
    \fi}
 
-\setvalue{\????correspondenceparagraphalternative\v!columns}%
-  {\dontleavehmode
-   \correspondence_paragraph_leftcolumn
-   \correspondence_paragraph_rightcolumn
-   \getbufferdata[\????correspondenceparagraphbuffer\currentcorrespondenceparagraph]}
+\startsetups[\????correspondenceparagraphrenderings:\v!columns]
+  \dontleavehmode
+  \correspondence_paragraph_leftcolumn
+  \correspondence_paragraph_rightcolumn
+  \getbufferdata[\????correspondenceparagraphbuffer\currentcorrespondenceparagraph]
+\stopsetups
 
 \setupcorrespondenceparagraph
   [\c!spacebefore=\v!line,
@@ -813,14 +834,14 @@
 
 \unexpanded\def\correspondence_head_cmd_argument#title%
   {\setcorrespondenceheadparameter\c!title{#title}%
-   \correspondence_head_cmd_place
+   \correspondence_head_alternative_place
    \endgroup}
 
 \unexpanded\def\correspondence_head_cmd_parameters[#parameters]%
   {\iffirstargument
      \setupcurrentcorrespondencehead[#parameters]%
    \fi
-   \correspondence_head_cmd_place
+   \correspondence_head_alternative_place
    \endgroup}
 
 \unexpanded\def\correspondence_head_beg[#environment][#element]%
@@ -832,46 +853,66 @@
   {\iffirstargument
      \setupcurrentcorrespondencehead[#parameters]%
    \fi
-   \correspondence_head_cmd_place
+   \correspondence_head_alternative_place
    \endgroup}
 
 \unexpanded\def\correspondence_head_end[#environment][#element]%
   {}
 
-\unexpanded\def\correspondence_head_cmd_place
-  {\doifsomethingelse{\correspondenceheadparameter\c!title}\donetrue\donefalse
-   \ifdone
-     \expandcheckedcsname\????correspondenceheadalternative{\correspondenceheadparameter\c!alternative}\s!default
+\unexpanded\def\correspondence_head_alternative_define[#environment][#self][#parent][#parameters]%
+  {\iffourthargument
+     \definecorrespondenceheadalternative[#environment:#self][#environment:#parent][#parameters]%
+   \else
+     \definecorrespondenceheadalternative[#environment:#self][#parent]%
    \fi}
 
-\setvalue{\????correspondenceheadalternative\s!default}%
-  {\doifsomething{\correspondenceheadparameter\c!spacebefore}{\blank[\correspondenceheadparameter\c!spacebefore]}%
-   \vbox\bgroup
-     \doifsomething{\correspondenceheadparameter\c!align}{\setupalign[\correspondenceheadparameter\c!align]}%
-     \usecorrespondenceheadstyleandcolor\c!style\c!color
-     \correspondenceheadparameter\c!title
-   \egroup
-   \doifsomething{\correspondenceheadparameter\c!spaceafter }{\blank[\correspondenceheadparameter\c!spaceafter ]}}
+\unexpanded\def\correspondence_head_alternative_setup[#environment][#name][#parameters]%
+  {\setupcorrespondenceheadalternative[#environment:#name][#parameters]}
 
-\setvalue{\????correspondenceheadalternative\v!margin}%
-  {\doifsomething{\correspondenceheadparameter\c!spacebefore}{\blank[\correspondenceheadparameter\c!spacebefore]}%
-   \noindent\hskip-\dimexpr\leftmarginwidth+\leftmargindistance\relax
-   \hbox\bgroup
-     \usecorrespondenceheadstyleandcolor\c!style\c!color
-     \correspondenceheadparameter\c!title
-   \egroup
-   \doifsomething{\correspondenceheadparameter\c!spaceafter }{\blank[\correspondenceheadparameter\c!spaceafter ]}}
+\unexpanded\def\correspondence_head_alternative_place
+  {\edef\p_correspondence_head_alternative{\correspondenceheadparameter\c!alternative}%
+   \ifcsname\namedcorrespondenceheadalternativehash{\currentcorrespondencehead:\p_correspondence_head_alternative}\s!parent\endcsname
+     \edef\currentcorrespondenceheadalternative{\currentcorrespondencehead:\p_correspondence_head_alternative}%
+   \else\ifcsname\namedcorrespondenceheadalternativehash{\currentcorrespondenceenvironment:\p_correspondence_head_alternative}\s!parent\endcsname
+     \edef\currentcorrespondenceheadalternative{\currentcorrespondenceenvironment:\p_correspondence_head_alternative}%
+   \else
+     \let\currentcorrespondenceheadalternative\p_correspondence_head_alternative
+   \fi\fi
+   \edef\p_correspondence_section_renderingsetup{\correspondenceheadalternativeparameter\c!renderingsetup}%
+   \autosetups\p_correspondence_section_renderingsetup}
 
-\setvalue{\????correspondenceheadalternative\v!inmargin}%
-  {\margindata
-     [\v!inleft]
-     [\c!style=\correspondenceheadparameter\c!style,
-      \c!color=\correspondenceheadparameter\c!color]
-     [\c!align=\correspondenceheadparameter\c!align]
-     {\correspondenceheadparameter\c!title}}
+\definecorrespondenceheadalternative[\s!default ][\c!renderingsetup=\????correspondenceheadrenderings:\s!default ]
+\definecorrespondenceheadalternative[\v!margin  ][\c!renderingsetup=\????correspondenceheadrenderings:\v!margin  ]
+\definecorrespondenceheadalternative[\v!inmargin][\c!renderingsetup=\????correspondenceheadrenderings:\v!inmargin]
 
-\setvalue{\????correspondenceheadalternative\v!frame}%
-  {}
+\startsetups[\????correspondenceheadrenderings:\s!default]
+  \doifsomething{\correspondenceheadparameter\c!spacebefore}{\blank[\correspondenceheadparameter\c!spacebefore]}
+  \vbox\bgroup
+    \doifsomething{\correspondenceheadparameter\c!align}{\setupalign[\correspondenceheadparameter\c!align]}
+    \usecorrespondenceheadstyleandcolor\c!style\c!color
+    \correspondenceheadparameter\c!title
+  \egroup
+  \doifsomething{\correspondenceheadparameter\c!spaceafter }{\blank[\correspondenceheadparameter\c!spaceafter ]}
+\stopsetups
+
+\startsetups[\????correspondenceheadrenderings:\v!margin]
+  \doifsomething{\correspondenceheadparameter\c!spacebefore}{\blank[\correspondenceheadparameter\c!spacebefore]}
+  \noindent\hskip-\dimexpr\leftmarginwidth+\leftmargindistance\relax
+  \hbox\bgroup
+    \usecorrespondenceheadstyleandcolor\c!style\c!color
+    \correspondenceheadparameter\c!title
+  \egroup
+  \doifsomething{\correspondenceheadparameter\c!spaceafter }{\blank[\correspondenceheadparameter\c!spaceafter ]}
+\stopsetups
+
+\startsetups[\????correspondenceheadrenderings:\v!inmargin]
+  \margindata
+    [inleft]
+    [\c!style=\correspondenceheadparameter\c!style,
+     \c!color=\correspondenceheadparameter\c!color]
+    [\c!align=\correspondenceheadparameter\c!align]
+    {\correspondenceheadparameter\c!title}
+\stopsetups
 
 \setupcorrespondencehead
   [   \c!spacebefore=\v!line,
@@ -888,20 +929,26 @@
      \expandafter\correspondence_element_define_section
    \else
      \expandafter\correspondence_element_define_layer
-   \fi}
+   \fi[#environment][#type][#element][#name]}
 
 \def\correspondence_element_define_section[#environment][#type][#element][#name]#content%
-  {\definecorrespondencesectionalternative[#environment:#element:#name][\c!renderingsetup=\????correspondencesectionrenderings:\v!command]}
+  {\definecorrespondencesectionalternative[#environment:#element:#name][\c!renderingsetup=\????correspondencesectionrenderings:\v!command]%
+   \setvalue{\????correspondenceelement:#environment:#type:#element:#name}{#content}}
 
 \def\correspondence_element_define_layer[#environment][#type][#element][#name]#content%
-  {\definecorrespondencelayeralternative  [#environment:#element:#name][\c!renderingsetup=\????correspondencelayerrenderings:\v!command]}
+  {\definecorrespondencelayeralternative[#environment:#element:#name][\c!renderingsetup=\????correspondencelayerrenderings:\v!command]%
+   \setvalue{\????correspondenceelement:#environment:#type:#element:#name}{#content}}
 
-\unexpanded\def\correspondence_element_define[#environment][#type][#element][#name]#content%
-  {\setvalue{\????correspondenceelement:#environment:#type:#element:#name}{#content}}
+\startsetups[\????correspondencesectionrenderings:\v!command]
+  \correspondence_element_place[\currentcorrespondenceenvironment][\v!section][\currentcorrespondenceelement][\correspondencelayerparameter\c!alternative]
+\stopsetups
+
+\startsetups[\????correspondencelayerrenderings:\v!command]
+  \correspondence_element_place[\currentcorrespondenceenvironment][\v!layer][\currentcorrespondenceelement][\correspondencelayerparameter\c!alternative]
+\stopsetups
 
 \unexpanded\def\correspondence_element_place[#environment][#type][#element][#name]%
-  {%\correspondence_parameters{#environment}{#element}{#type}%
-   \expandcheckedcsname{\????correspondenceelement:#environment:#type:#element:}{#name}\s!default}
+  {\expandcheckedcsname{\????correspondenceelement:#environment:#type:#element:}{#name}\s!default}
 
 % Files
 

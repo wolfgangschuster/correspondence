@@ -25,6 +25,7 @@ local v_correspondence = variables.correspondence
 local v_letter         = variables.letter
 local v_memo           = variables.memo
 local v_resume         = variables.resume
+local v_frames         = variables.frames
 local v_stop           = variables.stop
 local v_layer          = variables.layer
 local v_section        = variables.section
@@ -67,6 +68,7 @@ local patterns = {
     [v_letter]   = { "letter-imp-%s.mkiv", "letter-imp-%s.tex", "letter-%s.mkiv", "letter-%s.tex" },
     [v_memo]     = {   "memo-imp-%s.mkiv",   "memo-imp-%s.tex",   "memo-%s.mkiv",   "memo-%s.tex" },
     [v_resume]   = { "resume-imp-%s.mkiv", "resume-imp-%s.tex", "resume-%s.mkiv", "resume-%s.tex" },
+    [v_frames]   = { "frames-imp-%s.mkiv", "frames-imp-%s.tex", "frames-%s.mkiv", "frames-%s.tex" },
 }
 
 local function action(name,foundname)
@@ -94,6 +96,7 @@ end
 function correspondence.place(environment,settings)
     local bodyfont         = settings.bodyfont
     local whitespace       = settings.whitespace
+    local interlinespace   = settings.interlinespace
     local language         = settings.language
     local backgroundcolor  = settings.backgroundcolor
     context.unprotect()
@@ -111,6 +114,10 @@ function correspondence.place(environment,settings)
     -- can be moved to the section elements because it’s only usefull for the content
     if whitespace ~= "" then
         context.setupwhitespace{whitespace}
+    end
+    -- feature
+    if interlinespace ~= "" then
+        context.setupinterlinespace{interlinespace}
     end
     -- I prefer to set this with \setup…options
     if language ~= "" then
@@ -134,6 +141,7 @@ function correspondence.place(environment,settings)
     -- letters are always singlesided because the layout controlled by the module
     context.setuppagenumbering{ alternative = v_singlesided, location = "" }
     context.setupsubpagenumber{ way = v_text, state = v_start }
+    context.resetsubpagenumber()
     -- sections
 	for _, element in next, correspondence.data[concat({environment,v_section},":")] or { } do
     	context.correspondence_section_place({environment},{element})

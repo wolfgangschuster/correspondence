@@ -508,10 +508,14 @@ The code results in the following result.
 \starttyping
 \setupletterstyle
   [reference]
-  [alternative=b]
+  [alternative=e]
 \stoptyping
 
 \start
+
+\getbuffer[reference]
+
+\setupletter[date][width=.25\hsize]
 
 \startelement
 \letterelement[reference][e]
@@ -629,7 +633,7 @@ You choose in the same way as the other alternatives.
 
 \start\setuptyping[bodyfont=small]
 \starttyping
-\defineletterelement[reference][customized]%
+\defineletterelement[reference][customized]
   {\setupTABLE          [height=18mm,frame=off,offset=0pt]%
    \setupTABLE[c][1,2]  [width=50.8mm]%
    \setupTABLE[c][3,4,5][width=25.4mm]%
@@ -666,7 +670,7 @@ You choose in the same way as the other alternatives.
 \page[right]
 
 \starttyping
-\defineletterelement[reference][customized]%
+\defineletterelement[reference][customized]
   {\bTABLE[frame=off,offset=0pt,width=.25\hsize]
      \bTR
        \bTD \labeltext{letter:name}  \eTD

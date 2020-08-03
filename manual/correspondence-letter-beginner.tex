@@ -94,6 +94,17 @@ Thus, I came to the conclusion ...
 \stopletter
 \stoptyping
 
+\startframedtext[width=\textwidth,framecolor=red,align=flushleft,corner=00]
+The definition of the \type{\setuplettervalue} has changed in the module version from 2009.07.03,
+only braces are allowed to set values, brackets are optional and used to set the labeltext for
+the value in the current mainlanguage, the setup for both variants is:
+
+\starttyping
+\setlettervalue{key}{value}
+\setlettervalue{key}[labeltext]{value}
+\stoptyping
+\stopframedtext
+
 If you are more interested in a KOMA-Script like solution to set with every command only one value their is as last alternative the \type {\setlettervalue} command, it comes in two different versions where the keyword is either written in braces or in bracket but the content itself is written between braces.
 
 The first version with braces for two values has the following look.

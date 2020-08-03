@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=label,
-%D        version=2009.06.29,
+%D        version=2009.07.03,
 %D          title=\CONTEXT\ Letter Extension,
 %D       subject=Labels,
 %D         author=Wolfgang Schuster,
@@ -235,7 +235,7 @@
 
 \setuplabeltext[\s!en][\v!letter:\c!zip=Zip]
 \setuplabeltext[\s!nl][\v!letter:\c!zip=]
-\setuplabeltext[\s!de][\v!letter:\c!zip=Postleitzahl] % PLZ?
+\setuplabeltext[\s!de][\v!letter:\c!zip=PLZ]
 \setuplabeltext[\s!fr][\v!letter:\c!zip=]
 \setuplabeltext[\s!it][\v!letter:\c!zip=]
 \setuplabeltext[\s!es][\v!letter:\c!zip=]
@@ -257,24 +257,6 @@
 \setuplabeltext[\s!fr][\v!letter:\c!street=]
 \setuplabeltext[\s!it][\v!letter:\c!street=]
 \setuplabeltext[\s!es][\v!letter:\c!street=]
-
-%D Label: birthday
-
-\setuplabeltext[\s!en][\v!letter:\c!birthday=Birthday]
-\setuplabeltext[\s!nl][\v!letter:\c!birthday=]
-\setuplabeltext[\s!de][\v!letter:\c!birthday=Geburtstag]
-\setuplabeltext[\s!fr][\v!letter:\c!birthday=]
-\setuplabeltext[\s!it][\v!letter:\c!birthday=]
-\setuplabeltext[\s!es][\v!letter:\c!birthday=]
-
-%D Label: skype % for Henning Hraban Ramm
-
-\setuplabeltext[\s!en][\v!letter:\c!skype=Skype]
-\setuplabeltext[\s!nl][\v!letter:\c!skype=Skype]
-\setuplabeltext[\s!de][\v!letter:\c!skype=Skype]
-\setuplabeltext[\s!fr][\v!letter:\c!skype=Skype]
-\setuplabeltext[\s!it][\v!letter:\c!skype=Skype]
-\setuplabeltext[\s!es][\v!letter:\c!skype=Skype]
 
 %D \subject{Memo}
 

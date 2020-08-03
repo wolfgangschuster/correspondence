@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-correspondence,
-%D        version=2009.05.10,
+%D        version=2009.07.03,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Correspondence,
 %D         author=Wolfgang Schuster,
@@ -136,7 +136,7 @@
   {\def\dododosetupcorrespondencelayer##1%
      {\def\dodododosetupcorrespondencelayer####1%
         {\ifcsname dosetupcorrespondencelayer####1\endcsname
-           \@EA\@EA\csname dosetupcorrespondencelayer####1\endcsname
+           \@EAEA\csname dosetupcorrespondencelayer####1\endcsname
          \else
            \@EA\dosetupcorrespondencelayeroption
          \fi[#1][#2][##1][#5]}%
@@ -159,66 +159,54 @@
   {\dodoubleargument\dodefinecorrespondencevalue}
 
 \def\dodefinecorrespondencevalue[#1][#2]%
-  {\setvalue{\e!setup#1\e!endsetup}{\dotripleempty\docorrespondencesetup[#2]}%
-   \@EA\definecomplexorsimple\csname\e!set#1\e!value\endcsname
-   \setvalue{\e!complex\e!set#1\e!value}[##1]##2{\setvalue{#2##1}{##2}}%
-   \setvalue{\e!simple \e!set#1\e!value}##1##2{\setvalue{#2##1}{##2}}}
+  {\setvalue{\e!setup#1\e!endsetup}{\dotripleempty\docorrespondencesetupvalue[#2]}%
+   \setvalue{\e!set#1\e!value}##1{\doquadrupleempty\docorrespondencesetvalue[#1][#2][##1]}}
 
-\def\docorrespondencesetup[#1][#2][#3]%
+\def\docorrespondencesetupvalue[#1][#2][#3]%
   {\doifelsenothing{#3}
      {\getparameters[#1][#2]}
-     {\def\dodocorrespondencesetup##1%
+     {\def\dodocorrespondencesetupvalue##1%
         {\getparameters[#1##1][#3]}%
-      \processcommalist[#2]\dodocorrespondencesetup}}
+      \processcommalist[#2]\dodocorrespondencesetupvalue}}
+
+\def\docorrespondencesetvalue[#1][#2][#3][#4]#5%
+  {\iffourthargument
+     \setuplabeltext[\currentmainlanguage][#1:#3=#4]%
+   \fi
+   \setvalue{#2#3}{#5}}
 
 %D Tests
 
 \long\def\doifcorrespondencevalue#1#2%
-  {\ifcsname#1#2\endcsname
-     \edef\!!stringa{\csname#1#2\endcsname}%
-     \ifx\!!stringa\empty
-       \@EAEAEA\gobbleoneargument
-     \else
-       \@EAEAEA\firstofoneargument
-     \fi
-   \else
+  {\edef\!!stringa{\csname#1#2\endcsname}%
+   \ifx\!!stringa\empty
      \@EA\gobbleoneargument
+   \else
+     \@EA\firstofoneargument
    \fi}
 
 \long\def\doifelsecorrespondencevalue#1#2%
-  {\ifcsname#1#2\endcsname
-     \edef\!!stringa{\csname#1#2\endcsname}%
-     \ifx\!!stringa\empty
-       \@EAEAEA\secondoftwoarguments
-     \else
-       \@EAEAEA\firstoftwoarguments
-     \fi
-   \else
+  {\edef\!!stringa{\csname#1#2\endcsname}%
+   \ifx\!!stringa\empty
      \@EA\secondoftwoarguments
+   \else
+     \@EA\firstoftwoarguments
    \fi}
 
 \long\def\doifcorrespondencestylevalue#1#2#3%
-  {\ifcsname#1#2#3\endcsname
-     \edef\!!stringa{\csname#1#2#3\endcsname}%
-     \ifx\!!stringa\empty
-       \@EAEAEA\gobbleoneargument
-     \else
-       \@EAEAEA\firstofoneargument
-     \fi
+  {\edef\!!stringa{\csname#1#2#3\endcsname}%
+   \ifx\!!stringa\empty
+     \@EA\gobbleoneargument
    \else
      \@EA\firstofoneargument
    \fi}
 
 \long\def\doifelsecorrespondencestylevalue#1#2#3%
-  {\ifcsname#1#2#3\endcsname
-     \edef\!!stringa{\csname#1#2#3\endcsname}%
-     \ifx\!!stringa\empty
-       \@EAEAEA\secondoftwoarguments
-     \else
-       \@EAEAEA\firstoftwoarguments
-     \fi
-   \else
+  {\edef\!!stringa{\csname#1#2#3\endcsname}%
+   \ifx\!!stringa\empty
      \@EA\secondoftwoarguments
+   \else
+     \@EA\firstoftwoarguments
    \fi}
 
 \def\correspondencestylevalue#1#2#3%
@@ -501,14 +489,14 @@ correspondence.files = {
         name        = "t-correspondence.tex",
         path        = "tex/context/third/letter/base/",
         type        = "base",
-        version     = "2009.06.29",
+        version     = "2009.07.03",
         description = "Core module"
     } ,
     {
         name        = "t-letter.tex",
         path        = "tex/context/third/letter/base/",
         type        = "base",
-        version     = "2009.02.13",
+        version     = "2009.06.29",
         description = "Letter Module"
 
     } ,
@@ -545,21 +533,21 @@ correspondence.files = {
         name        = "default.nri",
         path        = "tex/context/third/letter/interface/",
         type        = "interface",
-        version     = "2009.06.28",
+        version     = "2009.06.30",
         description = "Default resume interface"
     } ,
     {
         name        = "moderncv.nri",
         path        = "tex/context/third/letter/interface/",
         type        = "interface",
-        version     = "2009.03.31",
+        version     = "2009.06.30",
         description = "moderncv resume interface"
     } ,
     {
         name        = "label.nle",
         path        = "tex/context/third/letter/extension/",
         type        = "extension",
-        version     = "2009.06.29",
+        version     = "2009.07.03",
         description = "Text labels"
     } ,
     {
@@ -715,13 +703,6 @@ correspondence.files = {
         type        = "style",
         version     = "2009.02.10",
         description = "Default resume style"
-    } ,
-    {
-        name        = "modern.nrs",
-        path        = "tex/context/third/letter/style/",
-        type        = "style",
-        version     = "2009.04.10",
-        description = "modercv basic style"
     } ,
     {
         name        = "classic.nrs",

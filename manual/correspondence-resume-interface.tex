@@ -1,6 +1,6 @@
-\startcomponent lm-resume-interface
+\startcomponent correspondence-resume-interface
 
-\environment lm-environment
+\environment correspondence-environment
 
 \chapter{Interface}
 
@@ -19,11 +19,11 @@ and with the same elements and styles. The difference between the \LaTeX{} and t
 \ConTeXt-version is that you don't need a \type{\maketitle} command to place the
 header for each style and it is placed by default.
 
-\startframedtext[width=\textwidth,framecolor=red,align=middle,corner=00]
-The current implementation of the moderncv interface is written as resume style and
-not as interface, this means you load it with \type{\useresumestyle} or as argument
-for \type{\usemodule} with the style key.
-\stopframedtext
+%\startframedtext[width=\textwidth,framecolor=red,align=middle,corner=00]
+%The current implementation of the moderncv interface is written as resume style and
+%not as interface, this means you load it with \type{\useresumestyle} or as argument
+%for \type{\usemodule} with the style key.
+%\stopframedtext
 
 The available elements for the interface are described below.
 
@@ -53,7 +53,7 @@ results in
 
 \start
 
-\useresumestyle[modern]
+\useresumeinterface[moderncv]
 
 \startelement
 \cvline{supervisors}{Supervisors}
@@ -88,7 +88,7 @@ result in the following output
 
 \start
 
-\useresumestyle[modern]
+\useresumeinterface[moderncv]
 
 \startelement
 \cvlistitem{Item 1}
@@ -123,7 +123,7 @@ You can see this in the output from the example above.
 
 \start
 
-\useresumestyle[modern]
+\useresumeinterface[moderncv]
 
 \startelement
 \cvlistdoubleitem[$\circ$]{Item 1}{Item 3}
@@ -158,7 +158,7 @@ This results in the time period in the left margin and the information in the te
 
 \start
 
-\useresumestyle[modern]
+\useresumeinterface[moderncv]
 
 \startelement
 \cventry{year--year}{Degree}{Institution}{City}{\it Grade}{Description}
@@ -191,7 +191,7 @@ results in:
 
 \start
 
-\useresumestyle[modern]
+\useresumeinterface[moderncv]
 
 \startelement
 \cvlanguage{language 1}{Skill level}{Comment}
@@ -225,7 +225,7 @@ This produce the following output.
 
 \start
 
-\useresumestyle[modern]
+\useresumeinterface[moderncv]
 
 \startelement
 \cvcomputer{category 1}{XXX, YYY, ZZZ}{category 3}{XXX, YYY, ZZZ}

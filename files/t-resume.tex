@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-resume,
-%D        version=2009.02.12,
+%D        version=2009.06.30,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Resumes,
 %D         author=Wolfgang Schuster,
@@ -41,12 +41,18 @@
 \definecorrespondencevalue[\v!resume][\????rd]
 
 %D \macros
-%D   {doifresumevalue,doifelseresumevalue,doifresumestylevalue,doifelseresumestylevalue}
+%D   {doifresumevalue,doifelseresumevalue,doifresumestylevalue,doifelseresumestylevalue,
+%D    defineresumeelement,resetresumeelement,copyresumeelement,resumeelement}
 
 \def\doifresumevalue         {\doifcorrespondencevalue         \????rd}
 \def\doifelseresumevalue     {\doifelsecorrespondencevalue     \????rd}
 \def\doifresumestylevalue    {\doifcorrespondencestylevalue    \????rs}
 \def\doifelseresumestylevalue{\doifelsecorrespondencestylevalue\????rs}
+
+\def\defineresumeelement{\definecorrespondenceelement[\v!resume]}
+\def\resetresumeelement {\resetcorrespondenceelement [\v!resume]}
+\def\copyresumeelement  {\copycorrespondenceelement  [\v!resume]}
+\def\resumeelement      {\correspondenceelement      [\v!resume]}
 
 %D \macros
 %D   {useresumeextension,useresumestyle,useresumeinterface}
@@ -151,6 +157,24 @@
 
 \stopsetups
 
+%D Free layers to position logos etc.
+
+\dodefineresumelayer[\v!resumemain]
+
+\startsetups[\v!resume:\v!place:\v!resumemain]
+
+  \dosetresumelayer[\v!resumemain]
+
+\stopsetups
+
+\dodefineresumelayer[\v!resumenext]
+
+\startsetups[\v!resume:\v!place:\v!resumenext]
+
+  \dosetresumelayer[\v!resumenext]
+
+\stopsetups
+
 %D Title
 
 \dodefineresumesection[\v!title]
@@ -198,7 +222,7 @@
 
   \startlocalsetups[\v!resume:\v!place:\v!topmark]
 
-    \dosetresumelayer[\v!topmark]
+    \dosetheaderfooterlayer[\v!resume][\????rs][\v!topmark]
 
   \stoplocalsetups
 
@@ -206,7 +230,7 @@
 
   \startlocalsetups[\v!resume:\v!place:\v!botmark]
 
-    \dosetresumelayer[\v!botmark]
+    \dosetheaderfooterlayer[\v!resume][\????rs][\v!botmark]
 
   \stoplocalsetups
 
@@ -214,7 +238,7 @@
 
   \startlocalsetups[\v!resume:\v!place:\v!cutmark]
 	
-    \dosetresumelayer[\v!cutmark]
+    \dosetheaderfooterlayer[\v!resume][\????rs][\v!cutmark]
 
   \stoplocalsetups
 
@@ -222,14 +246,18 @@
 
   \startlocalsetups[\v!resume:\v!place:\v!usermark]
 
-    \dosetresumelayer[\v!usermark]
+    \dosetheaderfooterlayer[\v!resume][\????rs][\v!usermark]
 
   \stoplocalsetups
 
-  \doif\@@@@rsoptiontopmark \v!yes{\directsetup{\v!resume:\v!place:\v!topmark }}
-  \doif\@@@@rsoptionbotmark \v!yes{\directsetup{\v!resume:\v!place:\v!botmark }}
-  \doif\@@@@rsoptioncutmark \v!yes{\directsetup{\v!resume:\v!place:\v!cutmark }}
-  \doif\@@@@rsoptionusermark\v!yes{\directsetup{\v!resume:\v!place:\v!usermark}}
+  \ifx\@@@@rsoptionmarking\v!yes
+
+    \doif\@@@@rsoptiontopmark \v!yes{\directsetup{\v!resume:\v!place:\v!topmark }}
+    \doif\@@@@rsoptionbotmark \v!yes{\directsetup{\v!resume:\v!place:\v!botmark }}
+    \doif\@@@@rsoptioncutmark \v!yes{\directsetup{\v!resume:\v!place:\v!cutmark }}
+    \doif\@@@@rsoptionusermark\v!yes{\directsetup{\v!resume:\v!place:\v!usermark}}
+
+  \fi
 
 \stopsetups
 
@@ -246,6 +274,7 @@
 
 \def\resume!list!backgrounds
   {\v!resume:\c!backgroundimage,\v!resume:\c!background,%
+   \v!resume:\v!resumenext,\v!resume:\v!resumemain,
    \v!resume:\v!head,\v!resume:\v!foot,\v!resume:\v!nexthead,%
    \v!resume:\v!nextfoot,\v!resume:\v!topmark,\v!resume:\v!botmark,%
    \v!resume:\v!cutmark,\v!resume:\v!usermark}
@@ -266,6 +295,9 @@
     [\c!alternative=\@@@@rsoptionalternative,
      \c!location=] % use the header and footer option instead
 
+  \setupheader[\c!state=\v!stop] % no header or footer lines from ConTeXt,
+  \setupfooter[\c!state=\v!stop] % both elements are placed with layers
+
   \setupbackgrounds
     [\v!paper]
     [\c!background=\v!color,
@@ -273,7 +305,7 @@
 
   \setupbackgrounds
     [\v!page]
-    [\c!setups={\v!resume:\v!place:\v!head,\v!resume:\v!place:\v!foot},
+    [\c!setups={\v!resume:\v!place:\v!head,\v!resume:\v!place:\v!foot,\v!resume:\v!place:\v!foldmark},
      \c!background=\resume!list!backgrounds]
 
   \doifresumestylevalue\v!option\c!bodyfont  {\setupbodyfont  [\@@@@rsoptionbodyfont  ]}
@@ -304,30 +336,16 @@
   \directsetup{\v!resume:\v!initialize} % Settings at the begin
   \directsetup{\v!resume:\v!optimize  } % Interface dependend
   \directsetup{\v!resume:\v!layout    } % Page layout
-  \directsetup{\v!resume:\v!reset     } % Reset layers
   \directsetup{\v!resume:\v!layer     } % Place layers
   \directsetup{\v!resume:\v!sequence  } % Place content
   \directsetup{\v!resume:\v!finish    } % Settings at the end
 
 \stopsetups
 
-%D Reset the layer content.
-
-\def\resume!list!resetlayers
-  {\v!topmark,\v!botmark,\v!cutmark,\v!usermark}
-
-\def\dodoresetresumelayer#1%
-  {\resetlayer[\v!resume:#1]}
-
-\startsetups[\v!resume:\v!reset]
-
-  \processcommacommand[\resume!list!resetlayers]\dodoresetresumelayer
-
-\stopsetups
-
 \startsetups[\v!resume:\v!layer]
 
-  \doif\@@@@rsoptionmarking \v!yes{\directsetup{\v!resume:\v!place:\v!foldmark}}
+  \doif\@@@@rsoptionresumemain\v!yes{\directsetup{\v!resume:\v!place:\v!resumemain}}
+  \doif\@@@@rsoptionresumenext\v!yes{\directsetup{\v!resume:\v!place:\v!resumenext}}
 
 \stopsetups
 

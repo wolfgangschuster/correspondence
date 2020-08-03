@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2009.06.28,
+%D        version=2009.06.30,
 %D          title=\CONTEXT\ Resume Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -88,8 +88,49 @@
 \executeifdefined{\v!resume:\v!nextfoot:\@@@@rsnextfootalternative}\donothing
 \stopsetups
 
-\setupresumestyle
-  [\v!option]
-  [\c!color=blue]
+\defineresumeelement[\v!head][\v!a]
+  {}
+
+\startsetups[\v!resume:\v!head:\v!a]
+
+  \definelayer[resume:head:background]
+
+  \setlayer
+    [resume:head:background]
+    [\c!preset=\v!right\v!bottom,
+     \c!hoffset=1cm,
+     \c!voffset=5mm]
+    {\color[white]{Resume}} % variable
+
+  \setupresumestyle
+    [\v!head]
+    [\c!hoffset=\zeropoint,
+     \c!voffset=\zeropoint,
+     \c!width=\paperwidth,
+     \c!background={color,resume:head:background},
+     \c!backgroundcolor=gray]
+
+\stopsetups
+
+\defineresumeelement[\v!head][\v!b]
+  {}
+
+\startsetups[\v!resume:\v!head:\v!b]
+
+  \setupresumestyle
+    [\v!head]
+    [\c!hoffset=\zeropoint,
+     \c!voffset=\zeropoint,
+     \c!width=\paperwidth,
+     \c!background={color,resume:head:background},
+     \c!backgroundcolor=gray]
+
+\stopsetups
+
+\startsetups[\v!resume:\v!optimize]
+
+  \directsetup{\v!resume:\v!head:\@@@@rsheadalternative}
+
+\stopsetups
 
 \protect \endinput

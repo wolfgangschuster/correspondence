@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-letter,
-%D        version=2009.03.04,
+%D        version=2009.06.29,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Framework for Letters,
 %D         author=Wolfgang Schuster,
@@ -618,6 +618,9 @@
     [\c!alternative=\@@@@lsoptionalternative,
      \c!location=] % use the header and footer option instead
 
+  \setupheader[\c!state=\v!stop] % no header or footer lines from ConTeXt,
+  \setupfooter[\c!state=\v!stop] % both elements are placed with layers
+
   \setupbackgrounds
     [\v!paper]
     [\c!background=\v!color,
@@ -691,8 +694,6 @@
 %D \subject{Default values}
 %D 
 %D Default settings for the option values of the letter.
-
-\setvalue{\v!letter:\????ls:\v!option}{\v!option}
 
 \setupletterstyle
   [\v!option]

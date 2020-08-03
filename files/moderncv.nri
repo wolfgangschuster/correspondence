@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=moderncv,
-%D        version=2009.03.31,
+%D        version=2009.06.30,
 %D          title=\CONTEXT\ Resume Interface,
 %D       subtitle=moderncv Interface,
 %D         author=Wolfgang Schuster,
@@ -11,7 +11,49 @@
 
 \unprotect
 
+%D The moderncv interface enables color by default
+
 \setupcolors[\c!state=\v!start]
+
+%D Resume environment, taken from the default interface
+
+\def\startresume
+  {\bgroup\dosingleempty\dostartresume}
+
+\long\def\dostartresume[#1]#2\stopresume
+  {\iffirstargument
+     \getparameters[\????rd][#1]%
+   \fi
+   \setbuffer[resumecontent]#2\endbuffer
+   \directsetup{\v!resume:\v!place}\egroup}
+
+\def\startresumecontent
+  {\dostartbuffer[resumecontent][startresumecontent][stopresumecontent]}
+
+\setupresume
+  [\c!content={\getbuffer[resumecontent]}]
+
+\startsetups[\v!resume:\v!content]
+\resumevalue\c!content
+\stopsetups
+
+\startsetups[\v!resume:\v!head]
+\executeifdefined{\v!resume:\v!head:\@@@@rsheadalternative}\donothing
+\stopsetups
+
+\startsetups[\v!resume:\v!foot]
+\executeifdefined{\v!resume:\v!foot:\@@@@rsfootalternative}\donothing
+\stopsetups
+
+\startsetups[\v!resume:\v!nexthead]
+\executeifdefined{\v!resume:\v!nexthead:\@@@@rsnextheadalternative}\donothing
+\stopsetups
+
+\startsetups[\v!resume:\v!nextfoot]
+\executeifdefined{\v!resume:\v!nextfoot:\@@@@rsnextfootalternative}\donothing
+\stopsetups
+
+%D Rewrite of the LaTeX package
 
 \definemeasure[quotewidth]                   [.65\textwidth]
 \definemeasure[separatorcolumnwidth]         [.025\textwidth]
@@ -147,6 +189,10 @@
 \setupresumestyle
   [\v!nexthead,\v!nextfoot]
   [\c!state=\v!next]
+
+\setupresumestyle
+  [\v!option]
+  [\c!color=blue]
 
 \useresumestyle[classic]
 

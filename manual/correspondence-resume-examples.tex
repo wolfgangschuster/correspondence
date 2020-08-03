@@ -8,18 +8,18 @@
 
 \startbuffer[resume:short]
 
-\setresumevalue[image]     {\blackrule[width=25mm,height=25mm]}
-\setresumevalue[firstname] {John}
-\setresumevalue[familyname]{Doe}
-\setresumevalue[title]     {Resum\'e title (optional)}
-\setresumevalue[quote]     {Some quote (optional)}
-\setresumevalue[street]    {street and number}
-\setresumevalue[town]      {postcode city}
-\setresumevalue[mobile]    {mobile (optional)}
-\setresumevalue[phone]     {phone (optional)}
-\setresumevalue[fax]       {fax (optional)}
-\setresumevalue[email]     {email (optional)}
-\setresumevalue[info]      {additional information (optional)}
+\setresumevalue{image}     {\blackrule[width=25mm,height=25mm]}
+\setresumevalue{firstname} {John}
+\setresumevalue{familyname}{Doe}
+\setresumevalue{title}     {Resum\'e title (optional)}
+\setresumevalue{quote}     {Some quote (optional)}
+\setresumevalue{street}    {street and number}
+\setresumevalue{town}      {postcode city}
+\setresumevalue{mobile}    {mobile (optional)}
+\setresumevalue{phone}     {phone (optional)}
+\setresumevalue{fax}       {fax (optional)}
+\setresumevalue{email}     {email (optional)}
+\setresumevalue{info}      {additional information (optional)}
 
 \startresume
 
@@ -61,18 +61,18 @@
 
 \setupresumestyle[option][backgroundcolor=white,before=]
 
-\setresumevalue[image]     {\blackrule[width=25mm,height=25mm]}
-\setresumevalue[firstname] {John}
-\setresumevalue[familyname]{Doe}
-\setresumevalue[title]     {Resum\'e title (optional)}
-\setresumevalue[quote]     {Some quote (optional)}
-\setresumevalue[street]    {street and number}
-\setresumevalue[town]      {postcode city}
-\setresumevalue[mobile]    {mobile (optional)}
-\setresumevalue[phone]     {phone (optional)}
-\setresumevalue[fax]       {fax (optional)}
-\setresumevalue[email]     {email (optional)}
-\setresumevalue[info]      {additional information (optional)}
+\setresumevalue{image}     {\blackrule[width=25mm,height=25mm]}
+\setresumevalue{firstname} {John}
+\setresumevalue{familyname}{Doe}
+\setresumevalue{title}     {Resum\'e title (optional)}
+\setresumevalue{quote}     {Some quote (optional)}
+\setresumevalue{street}    {street and number}
+\setresumevalue{town}      {postcode city}
+\setresumevalue{mobile}    {mobile (optional)}
+\setresumevalue{phone}     {phone (optional)}
+\setresumevalue{fax}       {fax (optional)}
+\setresumevalue{email}     {email (optional)}
+\setresumevalue{info}      {additional information (optional)}
 
 \startresume
 
@@ -144,7 +144,8 @@
 
 \start
 
-\useresumestyle[classic]
+\useresumeinterface[moderncv]
+\useresumestyle    [classic]
 
 \getbuffer[resume:short]
 
@@ -152,7 +153,8 @@
 
 \startexamplecontent[resume:classic]
 
-\useresumestyle[classic]
+\useresumeinterface[moderncv]
+\useresumestyle    [classic]
 
 \getbuffer[resume:long]
 
@@ -174,7 +176,8 @@
 
 \start
 
-\useresumestyle[casual]
+\useresumeinterface[moderncv]
+\useresumestyle    [casual]
 
 \getbuffer[resume:short]
 
@@ -182,7 +185,8 @@
 
 \startexamplecontent[resume:casual]
 
-\useresumestyle[casual]
+\useresumeinterface[moderncv]
+\useresumestyle    [casual]
 
 \getbuffer[resume:long]
 

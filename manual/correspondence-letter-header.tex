@@ -4,17 +4,24 @@
 
 \startbuffer[firsthead]
 \switchtobodyfont[6pt]
-\setlettervalue[fromname]   {Max Mustermann}
-\setlettervalue[fromaddress]{Musterweg 12\\12345 Musterstadt}
-\setlettervalue[fromphone]  {1234/567890}
-\setlettervalue[fromfax]    {1234/567891}
-\setlettervalue[fromemail]  {max.mustermann@muster.com}
-\setlettervalue[fromurl]    {max.mustermann.com}
+\setlettervalue{fromname}   {Max Mustermann}
+\setlettervalue{fromaddress}{Musterweg 12\\12345 Musterstadt}
+\setlettervalue{fromphone}  {1234/567890}
+\setlettervalue{fromfax}    {1234/567891}
+\setlettervalue{fromemail}  {max.mustermann@muster.com}
+\setlettervalue{fromurl}    {max.mustermann.com}
 \stopbuffer
 
 \chapter{Header and Footer}
 
 \section{Header}
+
+\starttyping
+\setupletterstyle
+  [head]
+  [alternative=left|middle|right,
+   fromrule=top|bottom|no]
+\stoptyping
 
 \placefigure
   [fixed]

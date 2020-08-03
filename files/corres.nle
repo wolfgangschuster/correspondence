@@ -1,22 +1,23 @@
 %D \module
 %D   [       file=corres,
-%D        version=2008.07.05,
+%D        version=2008.10.27,
 %D          title=\CONTEXT\ Letter Extension,
 %D       subtitle=XML Handling,
 %D         author=Wolfgang Schuster,
 %D           date=\currentdate,
-%D      copyright=Public Domain]
+%D      copyright=Wolfgang Schuster,
+%D          email=schuster.wolfgang@googlemail.com,
+%D        license=Public Domain]
 
 \unprotect
 
-\startconstants            all
-
-                   prefix: prefix
-                   suffix: suffix
-                 initials: initials
-               formalname: formalname
-             informalname: informalname
-\stopconstants
+\startinterface all
+  \setinterfaceconstant {prefix}       {prefix}
+  \setinterfaceconstant {suffix}       {suffix}
+  \setinterfaceconstant {initials}     {initials}
+  \setinterfaceconstant {formalname}   {formalname}
+  \setinterfaceconstant {informalname} {informalname}
+\stopinterface
 
 \usemodule[corres]
 

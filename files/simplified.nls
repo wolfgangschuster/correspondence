@@ -5,7 +5,9 @@
 %D       subtitle=Simplified style,
 %D         author=Wolfgang Schuster,
 %D           date=\currentdate,
-%D      copyright=Public Domain]
+%D      copyright=Wolfgang Schuster,
+%D          email=schuster.wolfgang@googlemail.com,
+%D        license=Public Domain]
 
 \unprotect
 
@@ -51,9 +53,12 @@
    \c!righttext=\setups{letter:header:simplified}]
 
 \setupletterstyle
+  [\v!closing]
+  [\c!alternative=\v!simplified]
+
+\setupletterstyle
   [\v!option]
   [\c!whitespace=\v!line,
-   %\c!closing=\v!no, % not possible at the moment because it disables the signature
    \c!opening=\v!no]
 
 \protect \endinput

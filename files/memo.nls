@@ -5,7 +5,9 @@
 %D       subtitle=Memo style,
 %D         author=Wolfgang Schuster,
 %D           date=\currentdate,
-%D      copyright=Public Domain]
+%D      copyright=Wolfgang Schuster,
+%D          email=schuster.wolfgang@googlemail.com,
+%D        license=Public Domain]
 
 \unprotect
 

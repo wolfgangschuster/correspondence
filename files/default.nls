@@ -1,11 +1,13 @@
 %D \module
 %D   [       file=default,
-%D        version=2008.07.08,
+%D        version=2008.10.27,
 %D          title=\CONTEXT\ Letter Style,
 %D       subtitle=Blockstyle initalization,
 %D         author=Wolfgang Schuster,
 %D           date=\currentdate,
-%D      copyright=Public Domain]
+%D      copyright=Wolfgang Schuster,
+%D          email=schuster.wolfgang@googlemail.com,
+%D        license=Public Domain]
 
 \unprotect
 
@@ -30,5 +32,56 @@
    \c!backspace=.11904761905\paperwidth,
    \c!width=.71428571429\paperwidth,
    \c!bottomspace=\!!zeropoint]
+
+\setupletter
+  [\c!alternative=\v!a,
+   \c!list=\v!date,
+   \c!date=\currentdate,
+   \c!width=\zeropoint]
+
+\setupletterstyle
+  [\v!option]
+  [\c!dispatch=\v!yes,
+   \c!addressee=\v!yes]
+
+\setupletterstyle
+  [\v!nexthead,\v!nextfoot]
+  [\c!state=\v!next]
+
+\setupletterstyle
+  [\v!reference]
+  [\v!option]
+  [%\c!list=\lettervalue\c!list, % not yet
+   \c!alternative=\lettervalue\c!alternative]
+
+\setupletterstyle
+  [\v!backaddress]
+  [\v!option]
+  [\c!alternative=\v!no,
+   \c!separator=\textcomma\space]
+
+\setupletterstyle
+  [\v!dispatch,\v!addressee]
+  [\c!align=\v!right,
+   \c!width=\hsize,
+   \c!leftmargin=\zeropoint,
+   \c!rightmargin=\zeropoint,
+   \c!offset=\zeropoint,
+   \c!frame=\v!off]
+
+\setupletterstyle
+  [\v!dispatch]
+  [\c!location=\v!bottom,
+   \c!height=\dimexpr(\vsize/9)*3\relax]
+
+\setupletterstyle
+  [\v!addressee]
+  [\c!location=\v!top,
+   \c!height=\dimexpr(\vsize/9)*6\relax]
+
+\setupletterstyle
+  [\v!closing]
+  [\c!after={\blank[\v!line]},
+   \c!inbetween={\blank[\v!endgraf,\v!nobreak,2*\v!line]}]
 
 \protect \endinput

@@ -5,9 +5,13 @@
 %D       subtitle=DIN 676 B,
 %D         author=Wolfgang Schuster,
 %D           date=\currentdate,
-%D      copyright=Public Domain]
+%D      copyright=Wolfgang Schuster,
+%D          email=schuster.wolfgang@googlemail.com,
+%D        license=Public Domain]
 
 \unprotect
+
+\useletterstyle[default] % default values
 
 \setupletterstyle
   [\v!firstpage,\v!secondpage]
@@ -29,7 +33,7 @@
 \setupletterstyle
   [\v!title,\v!subject,\v!opening,\v!appendices]
   [\c!before=,
-   \c!after={\blank[line]}]
+   \c!after={\blank[\v!line]}]
 
 \setupletterstyle
   [\v!title]
@@ -96,8 +100,7 @@
    \c!height=5mm,
    \c!voffset=\dimexpr\letterstylevalue\v!address\c!voffset-\letterstylevalue\v!backaddress\c!height\relax,
    \c!width=85mm,
-   \c!style=\c!tf\c!xx,
-   \c!bottomframe=\v!on]
+   \c!style=\c!tf\c!xx]
 
 \setupletterstyle
   [\v!reference]

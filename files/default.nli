@@ -1,11 +1,13 @@
 %D \module
 %D   [       file=default,
-%D        version=2008.07.08,
+%D        version=2008.10.27,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
 %D           date=\currentdate,
-%D      copyright=Public Domain]
+%D      copyright=Wolfgang Schuster,
+%D          email=schuster.wolfgang@googlemail.com,
+%D        license=Public Domain]
 
 %M \loadsetups[letter.xml]
 
@@ -16,55 +18,49 @@
 %D I define a few additional constants and variables, I will move them
 %D to the base some time.
 
-\startconstants            all
+\startinterface all
+  \setinterfaceconstant {opening}      {opening}
+  \setinterfaceconstant {content}      {content}
+  \setinterfaceconstant {closing}      {closing}
+  \setinterfaceconstant {signature}    {signature}
+  \setinterfaceconstant {dispatch}     {dispatch}
+  \setinterfaceconstant {appendices}   {appendices}
+  \setinterfaceconstant {fromaddress}  {fromaddress}
+  \setinterfaceconstant {frombank}     {frombank}
+  \setinterfaceconstant {frommail}     {frommail}
+  \setinterfaceconstant {fromfax}      {fromfax}
+  \setinterfaceconstant {fromlogo}     {fromlogo}
+  \setinterfaceconstant {fromname}     {fromname}
+  \setinterfaceconstant {fromphone}    {fromphone}
+  \setinterfaceconstant {fromurl}      {fromurl}
+  \setinterfaceconstant {toname}       {toname}
+  \setinterfaceconstant {toaddress}    {toaddress}
+  \setinterfaceconstant {enclosure}    {enclosure}
+  \setinterfaceconstant {copy}         {copy}
+  \setinterfaceconstant {postscript}   {postscript}
+  \setinterfaceconstant {attention}    {attention}
+  \setinterfaceconstant {distribution} {distribution}
+  \setinterfaceconstant {salutation}   {salutation}
+  \setinterfaceconstant {addressee}    {addressee}
+\stopinterface
 
-                  opening: opening
-                  content: content
-                  closing: closing
-                signature: signature
-                 dispatch: dispatch
-               appendices: appendices
-              fromaddress: fromaddress
-                 frombank: frombank
-                 frommail: frommail
-                  fromfax: fromfax
-                 fromlogo: fromlogo
-                 fromname: fromname
-                fromphone: fromphone
-                  fromurl: fromurl
-                   toname: toname
-                toaddress: toaddress
-                enclosure: enclosure
-                     copy: copy
-               postscript: postscript
-                attention: attention
-             distribution: distribution
-               salutation: salutation
-                addressee: addressee
-\stopconstants
-
-\startvariables            all
-
-                        e: e
-                     data: data
-                   sender: sender
-                 dispatch: dispatch
-                enclosure: enclosure
-                     copy: copy
-                  nobreak: nobreak
-                     memo: memo
-                addressee: addressee
-\stopvariables
-
-%D We have at the moment only the values from the core module, I use the settings
-%D from the dinb file as default settings, you could replace them in your own
-%D document but I won't use another letterstyle for this interface.
-%D 
-%D The labels are stored in a common file, you could use them in your own interface
-%D but you have to live with my names.
-
-\useletterstyle    [dinb]  % layout
-\useletterextension[label] % labels
+\startinterface all
+  \setinterfacevariable {e}          {e}
+  \setinterfacevariable {data}       {data}
+  \setinterfacevariable {sender}     {sender}
+  \setinterfacevariable {dispatch}   {dispatch}
+  \setinterfacevariable {enclosure}  {enclosure}
+  \setinterfacevariable {copy}       {copy}
+  \setinterfacevariable {nobreak}    {nobreak}
+  \setinterfacevariable {endgraf}    {endgraf}
+  \setinterfacevariable {memo}       {memo}
+  \setinterfacevariable {addressee}  {addressee}
+  \setinterfacevariable {french}     {french}
+  \setinterfacevariable {simplified} {simplified}
+  \setinterfacevariable {fullblock}  {fullblock}
+  \setinterfacevariable {hanging}    {hanging}
+  \setinterfacevariable {modified}   {modified}
+\stopinterface
 
 %D \subject{Reference line}
 %D 
@@ -403,11 +399,52 @@
 %D in the corresponding setups, this is only important if you want
 %D to define your own layout for header, address etc.
 
+\setvalue{\v!letter:\v!head:\v!a}%
+  {\lettervalue\c!fromname
+   \doiflettervalue\c!fromname\\
+   \lettervalue\c!fromaddress}
+
 \startsetups[letter:head]
-\let\\\endgraf
-\lettervalue\c!fromname
-\doiflettervalue\c!fromname\endgraf
-\lettervalue\c!fromaddress
+\def\\{\letterstylevalue\v!head\c!separator}%
+\executeifdefined{\v!letter:\v!head:\@@@@lsheadalternative}{\getvalue{\v!letter:\v!head:\v!a}}%
+\stopsetups
+
+\startsetups[letter:foot]
+\executeifdefined{\v!letter:\v!foot:\@@@@lsfootalternative}\donothing
+\stopsetups
+
+\startsetups[letter:nexthead]
+\executeifdefined{\v!letter:\v!nexthead:\@@@@lsnextheadalternative}\donothing
+\stopsetups
+
+\startsetups[letter:nextfoot]
+\executeifdefined{\v!letter:\v!nextfoot:\@@@@lsnextfootalternative}\donothing
+\stopsetups
+
+\setvalue{\v!letter:\v!header:\v!fullblock}%
+  {\hbox\!!to\hsize
+     {\rlap{\lettervalue\c!toname}%
+      \midaligned{\pagenumber}%
+      \llap{\framed[\c!frame=\v!off,\c!location=\v!top,\c!align=\v!left]
+        {\lettervalue\c!date   \\
+         \lettervalue\c!reference}}}}
+
+\setvalue{\v!letter:\v!header:\v!hanging}%
+  {\hbox\!!to\hsize
+     {\framed[\c!frame=\v!off,\c!location=\v!top,\c!align=v!right]
+       {\lettervalue\c!toname    \\
+        \lettervalue\c!date      \\
+        \lettervalue\c!reference \\
+        \labeltext{page}\pagenumber}}\hss}
+
+\copycsname\v!letter:\v!header:\v!modified\endcsname\csname\v!letter:\v!header:\v!hanging\endcsname
+
+\startsetups[letter:header]
+\executeifdefined{\v!letter:\v!header:\@@@@lsheaderalternative}\donothing
+\stopsetups
+
+\startsetups[letter:footer]
+\executeifdefined{\v!letter:\v!footer:\@@@@lsfooteralternative}\donothing
 \stopsetups
 
 %D \subject{Addressee field}
@@ -428,20 +465,13 @@
 \presetlocalframed[\????ls\v!dispatch]
 \presetlocalframed[\????ls\v!addressee]
 
-\startsetups[letter:address]
-\let\\\endgraf
-\offinterlineskip\vskip-\lineheight
-\doif\@@@@lsoptiondispatch \v!yes{\setups[letter:place:dispatch]}
-\doif\@@@@lsoptionaddressee\v!yes{\setups[letter:place:addressee]}
-\stopsetups
-
 \startsetups[letter:place:dispatch]
 
   \localframed
     [\????ls\v!dispatch]
-    {\doadaptleftskip {\letterstylevalue\v!addressee\c!leftmargin}%
-     \doadaptrightskip{\letterstylevalue\v!addressee\c!rightmargin}%
-     \doattributes{\????ls\v!addressee}\c!style\c!color{\setups[letter:address:dispatch]}}
+    {\doadaptleftskip {\letterstylevalue\v!dispatch\c!leftmargin}%
+     \doadaptrightskip{\letterstylevalue\v!dispatch\c!rightmargin}%
+     \doattributes{\????ls\v!dispatch}\c!style\c!color{\setups[letter:address:dispatch]}}
 
 \stopsetups
 
@@ -455,13 +485,23 @@
 
 \stopsetups
 
+\setvalue{\v!letter:\v!address:\v!a}%
+  {\doif\@@@@lsoptiondispatch \v!yes{\setups[letter:place:dispatch]}%
+   \doif\@@@@lsoptionaddressee\v!yes{\setups[letter:place:addressee]}}
+
+\startsetups[letter:address]
+\offinterlineskip\vskip-\lineheight
+\executeifdefined{\v!letter:\v!address:\@@@@lsaddressalternative}{\getvalue{\v!letter:\v!address:\v!a}}%
+\stopsetups
+
 \startsetups[letter:address:dispatch]
 \lettervalue\c!dispatch
 \stopsetups
 
 \startsetups[letter:address:content]
+\def\\{\letterstylevalue\v!address\c!separator}%
 \lettervalue\c!toname
-\doiflettervalue\c!toname\endgraf
+\doiflettervalue\c!toname\\
 \lettervalue\c!toaddress
 \stopsetups
 
@@ -472,7 +512,18 @@
 %D a not defined alternative the definition a is choosen.
 
 \startsetups[letter:reference]
-\executeifdefined{\v!letter:\v!reference:\@@@@ldalternative}{\getvalue{\v!letter:\v!reference:\v!a}}
+\executeifdefined{\v!letter:\v!reference:\@@@@lsreferencealternative}{\getvalue{\v!letter:\v!reference:\v!a}}
+\stopsetups
+
+\resetvalue{\v!letter:\v!location:\v!a}
+
+\setvalue{\v!letter:\v!location:\v!french}%
+  {\lettervalue\c!place
+   \doiflettervalue\c!place{\lettervalue{\c!place\c!separator}}%
+   \lettervalue\c!date}
+
+\startsetups[letter:location]
+\executeifdefined{\v!letter:\v!location:\@@@@lslocationalternative}{\getvalue{\v!letter:\v!location:\v!a}}
 \stopsetups
 
 \startsetups[letter:title]
@@ -486,11 +537,19 @@
 \labeltext{\v!letter:\c!subject}\lettervalue\c!subject
 \stopsetups
 
+\setvalue{\v!letter:\v!opening:\v!a}%
+  {\doifelselettervalue\c!opening
+     {\lettervalue\c!opening}
+     {\doiflettervalue\c!salutation
+        {\lettervalue\c!salutation}}}
+
+\setvalue{\v!letter:\v!opening:\v!french}%
+  {\ExpandSecondAfter\doifsomething{\letterstylevalue\v!option\c!indenting}
+     {\setupindenting[\@@@@lsoptionindenting]}%
+   \getvalue{\v!letter:\v!opening:\v!a}}
+
 \startsetups[letter:opening]
-\doifelselettervalue\c!opening
-  {\lettervalue\c!opening}
-  {\doiflettervalue\c!salutation
-     {\lettervalue\c!salutation}}  
+\executeifdefined{\v!letter:\v!opening:\@@@@lsopeningalternative}{\getvalue{\v!letter:\v!opening:\v!a}}
 \stopsetups
 
 \startsetups[letter:content]
@@ -510,9 +569,21 @@
    \doiflettervalue\c!signature{\letterstylevalue\v!closing\c!inbetween}%
    \lettervalue\c!signature}
 
+\setvalue{\v!letter:\v!closing:\v!french}%
+  {\ExpandSecondAfter\doifsomething{\letterstylevalue\v!option\c!indenting}
+     {\setupindenting[\@@@@lsoptionindenting,\v!first]}%
+   \lettervalue\c!closing
+   \doiflettervalue\c!signature{\letterstylevalue\v!closing\c!inbetween}%
+   \raggedcenter\doadaptleftskip{.5\textwidth}% quick and dirty
+   \lettervalue\c!signature\endgraf}
+
+\setvalue{\v!letter:\v!closing:\v!simplified}%
+  {\doiflettervalue\c!signature{\letterstylevalue\v!closing\c!inbetween}%
+   \lettervalue\c!signature}
+
 \startsetups[letter:closing]
-\let\\\crlf
-\executeifdefined{\v!letter:\v!closing:\@@@@lsclosingalternative}{\getvalue{\v!letter:\v!closing:\v!a}}
+\def\\{\letterstylevalue\v!closing\c!separator}%
+\executeifdefined{\v!letter:\v!closing:\@@@@lsclosingalternative}{\getvalue{\v!letter:\v!closing:\v!a}}%
 \stopsetups
 
 \startsetups[letter:appendices]
@@ -525,7 +596,7 @@
 \startsetups[letter:enclosure]
 \processaction
   [\lettervalue\c!enclosure]
-  [  \v!empty=>\vrule\!!height\zeropoint\!!height\zeropoint\!!width\hsize\relax\ifvmode\nowhitespace\fi,
+  [  \v!empty=>\vrule\!!height\zeropoint\!!depth\zeropoint\!!width\hsize\relax\ifvmode\nowhitespace\fi,
    \s!unknown=>\lettervalue\c!enclosure]
 \stopsetups
 
@@ -534,7 +605,7 @@
 \startsetups[letter:copy]
 \processaction
   [\lettervalue\c!copy]
-  [  \v!empty=>\vrule\!!height\zeropoint\!!height\zeropoint\!!width\hsize\relax\ifvmode\nowhitespace\fi,
+  [  \v!empty=>\vrule\!!height\zeropoint\!!depth\zeropoint\!!width\hsize\relax\ifvmode\nowhitespace\fi,
    \s!unknown=>\lettervalue\c!copy]
 \stopsetups
 
@@ -543,7 +614,7 @@
 \startsetups[letter:postscript]
 \processaction
   [\lettervalue\c!postscript]
-  [  \v!empty=>\vrule\!!height\zeropoint\!!height\zeropoint\!!width\hsize\relax\ifvmode\nowhitespace\fi,
+  [  \v!empty=>\vrule\!!height\zeropoint\!!depth\zeropoint\!!width\hsize\relax\ifvmode\nowhitespace\fi,
    \s!unknown=>\lettervalue\c!postscript]
 \stopsetups
 
@@ -552,14 +623,9 @@
    \doiflettervalue\c!fromaddress\\
    \lettervalue\c!fromaddress}
 
-\setvalue{\v!letter:\v!backaddress:\v!auto}%
-  {\lettervalue\c!fromname
-   \doiflettervalue\c!fromaddress\\
-   \lettervalue\c!fromaddress}
-
 \resetvalue{\v!letter:\v!backaddress:\v!no}
 
-\setvalue{\v!letter:\v!backaddress:\s!unknown}%
+\setvalue{\v!letter:\v!backaddress:\v!auto}%
   {\doifelselettervalue\c!backaddress
      {\lettervalue\c!backaddress}
      {\lettervalue\c!fromname
@@ -567,8 +633,8 @@
       \lettervalue\c!fromaddress}}
 
 \startsetups[letter:backaddress]
-\def\\{\lettervalue{\c!backaddress\c!separator}}
-\executeifdefined{\v!letter:\v!backaddress:\@@@@ldbackaddress}{\getvalue{\v!letter:\v!backaddress:\s!unknown}}
+\def\\{\letterstylevalue\c!backaddress\c!separator}%
+\executeifdefined{\v!letter:\v!backaddress:\@@@@lsbackaddressalternative}{\getvalue{\v!letter:\v!backaddress:\v!no}}%
 \stopsetups
 
 %D To prevent a pagebreak between the last line of the text and
@@ -578,6 +644,7 @@
 %D the elements.
 
 \defineblankmethod [\v!nobreak] {\penalty\plustenthousand}
+\defineblankmethod [\v!endgraf] {\endgraf}
 
 %D \subject{Additional settings}
 %D 
@@ -588,47 +655,20 @@
 \startsetups[letter:optimize]
 
   \setbox\scratchbox\hbox % trial typesetting to get the heigth of the reference line
-    {\executeifdefined{\v!letter:\v!reference:\@@@@ldalternative}{\getvalue{\v!letter:\v!reference:\v!a}}}
+    {\executeifdefined{\v!letter:\v!reference:\@@@@lsreferencealternative}{\getvalue{\v!letter:\v!reference:\v!a}}}
 
-  \setups[letter:reference:\@@@@ldalternative]
+  %\setups[letter:reference:\@@@@lsreferencealternative]
 
 \stopsetups
 
-\setupletter
-  [\c!alternative=\v!a,
-   \c!backaddress=\v!yes,
-   \c!list=\v!date,
-   \c!date=\currentdate,
-   \c!width=\zeropoint,
-   \c!backaddress\c!separator=\textcomma\space]
+%D We have at the moment only the values from the core module, I use the settings
+%D from the dinb file as default settings, you could replace them in your own
+%D document but I won't change the default style.
+%D 
+%D The labels are stored in a common file, you could use them in your own interface
+%D but you have to live with my names.
 
-\setupletterstyle
-  [\v!option]
-  [\c!dispatch=\v!yes,
-   \c!addressee=\v!yes]
-
-\setupletterstyle
-  [\v!dispatch,\v!addressee]
-  [\c!align=\v!right,
-   \c!width=\hsize,
-   \c!leftmargin=\zeropoint,
-   \c!rightmargin=\zeropoint,
-   \c!offset=\zeropoint,
-   \c!frame=\v!off]
-
-\setupletterstyle
-  [\v!dispatch]
-  [\c!location=\v!bottom,
-   \c!height=\dimexpr(\vsize/9)*3\relax]
-
-\setupletterstyle
-  [\v!addressee]
-  [\c!location=\v!top,
-   \c!height=\dimexpr(\vsize/9)*6\relax]
-
-\setupletterstyle
-  [\v!closing]
-  [\c!after={\blank[\v!line]},
-   \c!inbetween={\blank[\v!nobreak,2*\v!line]}]
+\useletterstyle    [dinb]    % layout
+\useletterextension[label]   % labels
 
 \protect \endinput

@@ -5,7 +5,9 @@
 %D       subtitle=Dutch NEN Style,
 %D         author=Wolfgang Schuster,
 %D           date=\currentdate,
-%D      copyright=Public Domain]
+%D      copyright=Wolfgang Schuster,
+%D          email=schuster.wolfgang@googlemail.com,
+%D        license=Public Domain]
 
 \unprotect
 
@@ -51,7 +53,8 @@
   [\v!backaddress]
   [\c!voffset=50mm,
    \c!height=5mm,
-   \c!width=80mm]
+   \c!width=80mm,
+   \c!bottomframe=\v!yes]
 
 \setupletterstyle
   [\v!address]

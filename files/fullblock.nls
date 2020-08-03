@@ -1,0 +1,69 @@
+%D \module
+%D   [       file=fullblock,
+%D        version=2007.05.18,
+%D          title=\CONTEXT\ Letter Style,
+%D       subtitle=Blockstyle initalization,
+%D         author=Wolfgang Schuster,
+%D           date=\currentdate,
+%D      copyright=Wolfgang Schuster]
+
+\unprotect
+
+\useletterstyle[blockstyle]
+
+\setupletterstyle
+  [\v!letter\v!head]
+  [\c!after={\blank[\v!line]}]
+
+\setupletterstyle
+  [\v!reference\v!line]
+  [\c!after={\blank[\v!line]}]
+
+\setupletterstyle
+  [\v!special\v!notation]
+  [\c!after={\blank[\v!line]}]
+
+\setupletterstyle
+  [\v!inside\v!address]
+  [\c!after={\blank[\v!line]}]
+
+\setupletterstyle
+  [\v!title]
+  [\c!after={\blank[\v!line]}]
+
+\setupletterstyle
+  [\v!opening]
+  [\c!after={\blank[\v!line]}]
+
+\setupletterstyle
+  [\v!subject]
+  [\c!after={\blank[\v!line]}]
+
+\setupletterstyle
+  [\v!content]
+  [\c!after={\blank[\v!line]}]
+
+\setupletterstyle
+  [\v!closing]
+  [\c!after={\blank[2*\v!line]}]
+
+\setupletterstyle
+  [\v!firstpage,\v!secondpage]
+  [\c!backspace=1in,
+   \c!width=\v!middle,
+   \c!topspace=1in,
+   \c!header=0in,
+   \c!footer=0in,
+   \c!height=\v!fit]
+
+\setupletterstyle
+  [\v!secondpage]
+  [\c!header=.5in]
+
+\setupletterstyle
+  [\v!header]
+  [\c!lefttext=\lettervalue\c!toname,
+   \c!middletext=\pagenumber,
+   \c!righttext={\framed[\c!frame=\v!off,\c!location=\v!top,\c!align=\v!left]{\lettervalue\c!date\\\lettervalue\c!reference}}]
+
+\protect \endinput

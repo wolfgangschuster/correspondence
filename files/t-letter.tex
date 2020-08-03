@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-letter,
-%D        version=2008.04.21,
+%D        version=2008.05.18,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Framework for Letters,
 %D         author=Wolfgang Schuster,
@@ -180,32 +180,67 @@
 %D only the macro and nothing else. You could also redefine the macro later
 %D because it is not used from the raw interface.
 
+%\def\setupletter
+%  {\dodoubleempty\dosetupletter}
+%
+%\def\dosetupletter[#1][#2]%
+%  {\ifsecondargument
+%     \dodosetupletter[#1][#2]%
+%   \else\iffirstargument
+%     \dodosetupletter[\v!option][#1]%
+%   \fi\fi}
+%
+%\def\dodosetupletter[#1][#2]%
+%  {\def\dododosetupletter##1%
+%     {\getparameters[\????ld##1][#2]}%
+%   \processcommalist[#1]\dododosetupletter}
+
 \def\setupletter
   {\dodoubleempty\dosetupletter}
 
 \def\dosetupletter[#1][#2]%
   {\ifsecondargument
      \dodosetupletter[#1][#2]%
-   \else\iffirstargument
-     \dodosetupletter[\v!option][#1]%
-   \fi\fi}
+   \else
+     \dodosetupletter[#1][]%
+   \fi}
 
 \def\dodosetupletter[#1][#2]%
-  {\def\dododosetupletter##1%
-     {\getparameters[\????ld##1][#2]}%
-   \processcommalist[#1]\dododosetupletter}
+  {\doifelsenothing{#2}
+     {\getparameters[\????ld][#1]}
+     {\def\dododosetupletter##1%
+        {\getparameters[\????ld##1][#2]}%
+      \processcommalist[#1]\dododosetupletter}}
+
+\definecomplexorsimple\setlettervalue
+
+\def\complexsetlettervalue[#1]#2%
+  {\setvalue{\????ld#1}{#2}}
+
+\def\simplesetlettervalue#1#2%
+  {\setvalue{\????ld#1}{#2}}
 
 %D A few extra macros to test for content of the letter values, don't rely
 %D on them at the moment because they could change or I will remove, rename,
 %D rewrite etc. them.
 
-\def\doiflettervalue#1#2%
-  {\doiftextelse{\lettervalue{#1}{#2}}
+%\def\doiflettervalue#1#2%
+%  {\doiftextelse{\lettervalue{#1}{#2}}
+%     \firstofoneargument
+%     \gobbleoneargument}
+%
+%\def\doifelselettervalue#1#2%
+%  {\doiftextelse{\lettervalue{#1}{#2}}
+%     \firstoftwoarguments
+%     \secondoftwoarguments}
+
+\def\doiflettervalue#1%
+  {\doiftextelse{\lettervalue{#1}}
      \firstofoneargument
      \gobbleoneargument}
 
-\def\doifelselettervalue#1#2%
-  {\doiftextelse{\lettervalue{#1}{#2}}
+\def\doifelselettervalue#1%
+  {\doiftextelse{\lettervalue{#1}}
      \firstoftwoarguments
      \secondoftwoarguments}
 
@@ -354,14 +389,17 @@
 \def\letterstylevalue#1#2%
   {\csname\????ls#1#2\endcsname}
 
-\def\lettervalue#1#2%
-  {\csname\????ld#1#2\endcsname}
+%\def\lettervalue#1#2%
+%  {\csname\????ld#1#2\endcsname}
+
+\def\lettervalue#1%
+  {\csname\????ld#1\endcsname}
 
 \def\letter!list!marking
   {\v!topmark,\v!botmark,\v!cutmark,\v!endmark,\v!usermark}
 
 \def\dodefineletterlayer[#1]%
-  {\doifelse{#1}\v!foldmark
+  {\ExpandSecondAfter\doifelse{#1}\v!foldmark
      {\def\dodododefineletterlayer##1{\dododefineletterlayer[##1]}%
       \processcommacommand[\letter!list!marking]\dodododefineletterlayer}
      {\dododefineletterlayer[#1]}}
@@ -408,7 +446,8 @@
 \let\letter!list!sections\empty
 
 \def\dodefinelettersection[#1]%
-  {\appendtocommalist{#1}\letter!list!sections
+  {\doifnotinset{#1}\letter!list!sections
+     {\appendtocommalist{#1}\letter!list!sections}%
    \setupletterstyle
      [#1]
      [\v!option]
@@ -435,7 +474,7 @@
    \dostopattributes
    \doifelsenothing{\letterstylevalue\@@lettersection\c!after}
       \endgraf
-     {\letterstylevalue\@@lettersection\c!after}%
+     {\endgraf\letterstylevalue\@@lettersection\c!after}%
    \endgroup}
 
 %D \subject{Placement of the content}
@@ -777,12 +816,12 @@
 \def\letter!list!layers
   {\v!topmark,\v!botmark,\v!cutmark,\v!endmark,\v!usermark,\v!letternext,\v!lettermain}
 
-\def\doresetletterlayer#1%
+\def\dodoresetletterlayer#1%
   {\resetlayer[#1]}
 
 \startsetups[letter:reset]
 
-  \processcommacommand[\letter!list!layers]\doresetletterlayer
+  \processcommacommand[\letter!list!layers]\dodoresetletterlayer
   
   \setuplayer[\v!letternext][\c!state=\v!continue]
 
@@ -844,7 +883,7 @@
 % start with a clean interface without predefined and unwanted values.
 
 \useletterinterface[\currentmoduleparameter\c!interface]
-\useletterstyle    [\currentmoduleparameter\c!style]
+\useletterstyle    [\currentmoduleparameter\c!style    ]
 \useletterextension[\currentmoduleparameter\c!extension]
 
 \stopmodule

@@ -1,0 +1,55 @@
+%D \module
+%D   [       file=blockstyle,
+%D        version=2007.05.18,
+%D          title=\CONTEXT\ Letter Style,
+%D       subtitle=Blockstyle initalization,
+%D         author=Wolfgang Schuster,
+%D           date=\currentdate,
+%D      copyright=Wolfgang Schuster]
+
+\unprotect
+
+\useletterstyle[default]
+
+\def\letter!order!sections
+  {\v!letter\v!head,\v!date\v!line,\v!reference\v!line,
+   \v!special\v!notation,\v!inside\v!address,\v!title,
+   \v!opening,\v!subject,\v!content,\v!closing,\v!appendices}
+
+\setupletterstyle
+  [\v!option]
+  [\c!backaddress=\v!no,
+   \c!address=\v!no,
+   \c!reference=\v!no,
+   \c!marking=\v!no]
+
+\startsetups[letter:head]
+% sender information appear in a lettersection
+\stopsetups
+
+\startsetups[letter:\v!letter\v!head]
+\let\\\crlf
+\doiflettervalue\c!fromname   {\lettervalue\c!fromname   \crlf}
+\doiflettervalue\c!fromaddress{\lettervalue\c!fromaddress\crlf}
+\doiflettervalue\c!fromphone  {\lettervalue\c!fromphone  \crlf}
+\stopsetups
+
+\startsetups[letter:\v!date\v!line]
+\lettervalue\c!date
+\stopsetups
+
+\startsetups[letter:\v!reference\v!line]
+\lettervalue\c!reference
+\stopsetups
+
+\startsetups[letter:\v!special\v!notation]
+\lettervalue\c!dispatch
+\stopsetups
+
+\startsetups[letter:\v!inside\v!address]
+\let\\\crlf
+\doiflettervalue\c!toname   {\lettervalue\c!toname   \crlf}
+\doiflettervalue\c!toaddress{\lettervalue\c!toaddress\crlf}
+\stopsetups
+
+\protect \endinput

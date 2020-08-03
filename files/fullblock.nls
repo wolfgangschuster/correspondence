@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=fullblock,
-%D        version=2008.11.29,
+%D        version=2008.12.16
 %D          title=\CONTEXT\ Letter Style,
 %D       subtitle=full-block/complete block style,
 %D         author=Wolfgang Schuster,
@@ -35,22 +35,9 @@
   [\v!secondpage]
   [\c!header=.5in]
 
-\startsetups[\v!letter:\v!header:\v!fullblock]
-
-  \framed
-    [\c!frame=\v!off,
-     \c!location=\v!top,
-     \c!align=\v!left]
-    {\lettervalue\c!date   \\
-     \lettervalue\c!reference}
-
-\stopsetups
-
 \setupletterstyle
-  [\v!header]
-  [\c!lefttext=\lettervalue\c!toname,
-   \c!middletext=\pagenumber,
-   \c!righttext=\setups{\v!letter:\v!header:\v!fullblock}]
+  [\v!nexthead]
+  [\c!alternative=\v!fullblock]
 
 \setupletterstyle
   [\v!option]

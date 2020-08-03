@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=modified,
-%D        version=2008.11.29,
+%D        version=2008.12.16,
 %D          title=\CONTEXT\ Letter Style,
 %D       subtitle=Block/Modified block style,
 %D         author=Wolfgang Schuster,
@@ -42,21 +42,9 @@
 
 \setuplabeltext[\s!en][\c!page=Page~]
 
-\startsetups[\v!letter:\v!header:\v!modified]
-
-  \framed
-    [\c!frame=\v!off,
-     \c!align=v!right]
-    {\lettervalue\c!toname    \\
-     \lettervalue\c!date      \\
-     \lettervalue\c!reference \\
-     \labeltext\c!page\pagenumber}
-
-\stopsetups
-
 \setupletterstyle
-  [\v!header]
-  [\c!lefttext=\setups{\v!letter:\v!header:\v!modified}]
+  [\v!nexthead]
+  [\c!alternative=\v!hanging]
 
 \setupletterstyle
   [\v!option]

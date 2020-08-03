@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-letter,
-%D        version=2008.11.29,
+%D        version=2008.12.16,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Framework for Letters,
 %D         author=Wolfgang Schuster,
@@ -74,44 +74,11 @@
 %D for odd and even pages (if you really want this in a letter) but you could
 %D solve this with the macro \tex{doifoddpageelse}, I will give you a short
 %D example below.
-%D 
-%D \showsetup{setupletterstyle:text}
-%D 
-%D This setups could produce somtimes a unwanted result is you use a doublesided
-%D layout, because the values for \mono{lefttext} and \mono{righttext} change on
-%D odd and even pages their position, e.g. \mono{righttext} will always go to the
-%D outer margin and \mono{lefttext} to the inner margin. Let's you want the
-%D pagenumber always on the right side you could use the following code, you could
-%D adapt it to your own needs without problems.
-%D 
-%D \starttyping
-%D \setupletterstyle
-%D   [header]
-%D   [lefttext=\doifoddpageelse\donothing\pagenumber,
-%D    righttext=\doifoddpageelse\pagenumber\donothing]
-%D \stoptyping
 
 \setvalue{\v!letter:\????ls:\v!firstpage }{\v!layout}
 \setvalue{\v!letter:\????ls:\v!secondpage}{\v!layout}
 
 \definecorrespondencesetup[\v!letter\v!style][\v!letter][\????ls]
-
-%D Setup for the header and footer texts.
-
-\newtoks\letter!toks!header
-\newtoks\letter!toks!footer
-
-\def\dosetupletterheader[#1][#2]%
-  {\letter!toks!header\emptytoks
-   \doifelsenothing{#2}
-     {\letter!toks!header{\setupheader[\v!text][#1]}}
-     {\letter!toks!header{\setupheader[#1][#2]}}}
-
-\def\dosetupletterfooter[#1][#2]%
-  {\letter!toks!footer\emptytoks
-   \doifelsenothing{#1}
-     {\letter!toks!footer{\setupfooter[\v!text][#1]}}
-     {\letter!toks!footer{\setupfooter[#1][#2]}}}
 
 %D \macros
 %D   {setupletter}
@@ -277,6 +244,12 @@
 \def\letter!list!marking
   {\v!topmark,\v!botmark,\v!cutmark,\v!endmark,\v!usermark}
 
+\def\letter!list!header
+  {\v!head,\v!nexthead,\v!lefthead,\v!righthead}
+
+\def\letter!list!footer
+  {\v!foot,\v!nextfoot,\v!leftfoot,\v!rightfoot}
+
 \definecorrespondencelayer      [\v!letter][\????ls]
 \definecorrespondencesection    [\v!letter][\????ls]
 \definecorrespondencedescription[\v!letter][\????ls]
@@ -296,11 +269,50 @@
 %D Header for the first page, you could use it to place the logo from your
 %D company or your own address and name.
 
-\dodefineletterlayer[\v!head]
+\dodefineletterlayer[\v!header]
 
 \startsetups[\v!letter:\v!place:\v!head]
 
-  \dosetletterlayer[\v!head]
+  % First page
+
+  \startlocalsetups[\v!letter:\v!place:\v!firsthead]
+
+    \ifnum\subpagenumber=\plusone\relax\dosetletterlayer[\v!head]\fi
+
+  \stoplocalsetups
+
+  % Following pages
+
+  \startlocalsetups[\v!letter:\v!place:\v!nexthead]
+
+    \ifnum\subpagenumber>\plusone\relax\dosetletterlayer[\v!nexthead]\fi
+
+  \stoplocalsetups
+
+  % Left pages
+
+  \startlocalsetups[\v!letter:\v!place:\v!lefthead]
+
+    \ifnum\subpagenumber>\plusone
+      \ifodd\subpagenumber\else\dosetletterlayer[\v!lefthead]\fi
+    \fi
+
+  \stoplocalsetups
+
+  % Right pages
+
+  \startlocalsetups[\v!letter:\v!place:\v!righthead]
+
+    \ifnum\subpagenumber>\plusone
+      \ifodd\subpagenumber\relax\dosetletterlayer[\v!righthead]\fi
+    \fi
+
+  \stoplocalsetups
+
+  \doif\@@@@lsoptionhead     \v!yes{\directsetup{\v!letter:\v!place:\v!firsthead}}
+  \doif\@@@@lsoptionnexthead \v!yes{\directsetup{\v!letter:\v!place:\v!nexthead }}
+  \doif\@@@@lsoptionlefthead \v!yes{\directsetup{\v!letter:\v!place:\v!lefthead }}
+  \doif\@@@@lsoptionrighthead\v!yes{\directsetup{\v!letter:\v!place:\v!righthead}}
 
 \stopsetups
 
@@ -349,11 +361,50 @@
 %D you should disable the footer for the second and following pages inb this
 %D case.
 
-\dodefineletterlayer[\v!foot]
+\dodefineletterlayer[\v!footer]
 
 \startsetups[\v!letter:\v!place:\v!foot]
 
-  \dosetletterlayer[\v!foot]
+  % First page
+
+  \startlocalsetups[\v!letter:\v!place:\v!foot]
+
+    \ifnum\subpagenumber=\plusone\relax\dosetletterlayer[\v!foot]\fi
+
+  \stoplocalsetups
+
+  % Following pages
+
+  \startlocalsetups[\v!letter:\v!place:\v!nextfoot]
+
+    \ifnum\subpagenumber>\plusone\relax\dosetletterlayer[\v!nextfoot]\fi
+
+  \stoplocalsetups
+
+  % Left pages
+
+  \startlocalsetups[\v!letter:\v!place:\v!leftfoot]
+
+    \ifnum\subpagenumber>\plusone
+      \ifodd\subpagenumber\else\dosetletterlayer[\v!leftfoot]\fi
+    \fi
+
+  \stoplocalsetups
+
+  % Right pages
+
+  \startlocalsetups[\v!letter:\v!place:\v!rightfoot]
+
+    \ifnum\subpagenumber>\plusone
+      \ifodd\subpagenumber\relax\dosetletterlayer[\v!rightfoot]\fi
+    \fi
+
+  \stoplocalsetups
+
+  \doif\@@@@lsoptionfoot     \v!yes{\directsetup{\v!letter:\v!place:\v!firstfoot}}
+  \doif\@@@@lsoptionnextfoot \v!yes{\directsetup{\v!letter:\v!place:\v!nextfoot }}
+  \doif\@@@@lsoptionleftfoot \v!yes{\directsetup{\v!letter:\v!place:\v!leftfoot }}
+  \doif\@@@@lsoptionrightfoot\v!yes{\directsetup{\v!letter:\v!place:\v!rightfoot}}
 
 \stopsetups
 
@@ -375,24 +426,6 @@
 \startsetups[\v!letter:\v!place:\v!letternext]
 
   \dosetletterlayer[\v!letternext]
-
-\stopsetups
-
-%D Layer to set head and foot blocks at the second and all following pages.
-
-\dodefineletterlayer[\v!nexthead]
-
-\startsetups[\v!letter:\v!place:\v!nexthead]
-
-  \dosetletterlayer[\v!nexthead]
-
-\stopsetups
-
-\dodefineletterlayer[\v!nextfoot]
-
-\startsetups[\v!letter:\v!place:\v!nextfoot]
-
-  \dosetletterlayer[\v!nextfoot]
 
 \stopsetups
 
@@ -579,12 +612,13 @@
   [\@@@@lsoptionbackground]
 
 \def\letter!list!backgrounds
-  {\v!letter:\c!backgroundimage,\v!letter:\c!background,%
-   \v!letter:\v!letternext,\v!letter:\v!lettermain,\v!letter:\v!head,%
-   \v!letter:\v!foot,\v!letter:\v!backaddress,\v!letter:\v!address,%
-   \v!letter:\v!reference,\v!letter:\v!location,\v!letter:\v!nexthead,%
-   \v!letter:\v!nextfoot,\v!letter:\v!topmark,\v!letter:\v!botmark,%
-   \v!letter:\v!cutmark,\v!letter:\v!endmark,\v!letter:\v!usermark}
+  {\v!letter:\c!backgroundimage,\v!letter:\c!background,\v!letter:\v!head,%
+   \v!letter:\v!letternext,\v!letter:\v!lettermain,\v!letter:\v!foot,%
+   \v!letter:\v!address,\v!letter:\v!reference,\v!letter:\v!location,%
+   \v!letter:\v!nexthead,\v!letter:\v!lefthead,\v!letter:\v!righthead,%
+   \v!letter:\v!nextfoot,\v!letter:\v!leftfoot,\v!letter:\v!rightfoot,%
+   \v!letter:\v!topmark,\v!letter:\v!botmark,\v!letter:\v!cutmark,%
+   \v!letter:\v!endmark,\v!letter:\v!usermark,\v!letter:\v!backaddress}
 
 %D Settings at the begin of every letter.
 
@@ -592,23 +626,18 @@
 
   \@@@@lsoptionbefore
 
+  \begingroup
+
+  \page[\@@@@lsoptionpage]
+
   \setupsubpagenumber
     [\c!number=\@@@@lsoptionpagenumber,
      \c!way=\v!by\v!text,
-     \c!state=\@@@@lsoptionstate]
-
-  \resetsubpagenumber
-
-  \begingroup
-
-  \page
+     \c!state=\v!start]
 
   \setuppagenumbering
     [\c!alternative=\@@@@lsoptionalternative,
      \c!location=] % use the header and footer option instead
-
-  \the\letter!toks!header
-  \the\letter!toks!footer
 
   \setupbackgrounds
     [\v!paper]
@@ -617,7 +646,8 @@
 
   \setupbackgrounds
     [\v!page]
-    [\c!background=\letter!list!backgrounds,
+    [\c!setups={\v!letter:\v!place:\v!head,\v!letter:\v!place:\v!foot},
+     \c!background=\letter!list!backgrounds,
      \c!backgroundcolor=\@@@@lsoptionbackgroundcolor]
 
   \doifletterstylevalue\v!option\c!bodyfont  {\switchtobodyfont[\@@@@lsoptionbodyfont  ]}
@@ -629,13 +659,13 @@
 
 \startsetups[\v!letter:\v!finish]
 
-  \page
+  \page[\@@@@lsoptionpage]
 
   \setuplayout[\v!reset]
 
-  \endgroup
-
   \resetsubpagenumber
+
+  \endgroup
 
   \@@@@lsoptionafter
 
@@ -661,29 +691,25 @@
   {\v!topmark,\v!botmark,\v!cutmark,\v!endmark,\v!usermark,\v!letternext,\v!lettermain}
 
 \def\dodoresetletterlayer#1%
-  {\resetlayer[#1]}
+  {\resetlayer[\v!letter:#1]}
 
 \startsetups[\v!letter:\v!reset]
 
   \processcommacommand[\letter!list!resetlayers]\dodoresetletterlayer
   
-  \setuplayer[\v!letternext][\c!state=\v!continue]
+  \setuplayer[\v!letter:\v!letternext][\c!state=\v!continue]
 
 \stopsetups
 
 \startsetups[\v!letter:\v!layer]
 
   \doif\@@@@lsoptionmarking    \v!yes{\directsetup{\v!letter:\v!place:\v!foldmark   }}
-  \doif\@@@@lsoptionhead       \v!yes{\directsetup{\v!letter:\v!place:\v!head       }}
   \doif\@@@@lsoptionbackaddress\v!yes{\directsetup{\v!letter:\v!place:\v!backaddress}}
   \doif\@@@@lsoptionaddress    \v!yes{\directsetup{\v!letter:\v!place:\v!address    }}
   \doif\@@@@lsoptionreference  \v!yes{\directsetup{\v!letter:\v!place:\v!reference  }}
   \doif\@@@@lsoptionlocation   \v!yes{\directsetup{\v!letter:\v!place:\v!location   }}
-  \doif\@@@@lsoptionfoot       \v!yes{\directsetup{\v!letter:\v!place:\v!foot       }}
   \doif\@@@@lsoptionlettermain \v!yes{\directsetup{\v!letter:\v!place:\v!lettermain }}
   \doif\@@@@lsoptionletternext \v!yes{\directsetup{\v!letter:\v!place:\v!letternext }}
-  \doif\@@@@lsoptionnexthead   \v!yes{\directsetup{\v!letter:\v!place:\v!nexthead   }}
-  \doif\@@@@lsoptionnextfoot   \v!yes{\directsetup{\v!letter:\v!place:\v!nextfoot   }}
 
 \stopsetups
 
@@ -694,7 +720,7 @@
 \def\doflushlettersection#1%
   {\doif{\letterstylevalue\v!option{#1}}\v!yes{\directsetup{\v!letter:\v!place:#1}}}
 
-\startsetups[letter:sequence]
+\startsetups[\v!letter:\v!sequence]
 
   \executeifdefined{\v!letter\s!start\c!optimize\@@@@lsoptionoptimize}\donothing
   \processcommacommand[\letter!order!sections]\doflushlettersection
@@ -705,6 +731,8 @@
 %D \subject{Default values}
 %D 
 %D Default settings for the option values of the letter.
+
+\setvalue{\v!letter:\????ls:\v!option}{\v!option}
 
 \setupletterstyle
   [\v!option]
@@ -719,13 +747,11 @@
    \c!backgroundimage=,
    \c!before=,
    \c!after=,
-   \c!header=\v!reset,
-   \c!footer=\v!reset,
-   \c!pagenumber=1,
+   \c!page=\v!yes,
+   \c!pagenumber=\plusone,
    \c!bodyfont=,
    \c!optimize=\v!no,
-   \c!alternative=\v!singlesided,
-   \c!state=\v!stop]
+   \c!alternative=\v!singlesided]
 
 % interface always before styles and extension because users should
 % start with a clean interface without predefined and unwanted values.

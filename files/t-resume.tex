@@ -1,15 +1,15 @@
 %D \module
 %D   [       file=t-resume,
-%D        version=2008.11.27,
+%D        version=2008.12.21,
 %D          title=\CONTEXT\ User Module,
-%D       subtitle=Framework for Letters,
+%D       subtitle=Resumes,
 %D         author=Wolfgang Schuster,
 %D           date=\currentdate,
 %D      copyright=Wolfgang Schuster,
 %D          email=schuster.wolfgang@googlemail.com,
 %D        license=Public Domain]
 
-\writestatus{loading}{Context User Module / Framework for Letters}
+\writestatus{loading}{Context User Module / Framework for Resumes}
 
 \unprotect
 
@@ -18,7 +18,7 @@
 %D I use a few extra constants and variables in my module.
 
 \startinterface all
-  \setinterfacevariable {resume}     {resume}
+  \setinterfacevariable {resume} {resume}
 \stopinterface
 
 \def\????rd{@@@@rd} % ResumeData
@@ -36,53 +36,21 @@
 
 \definecorrespondencesetup[\v!resume\v!style][\v!resume][\????rs]
 
-%D Setup for the header and footer texts.
-
-\newtoks\resume!toks!header
-\newtoks\resume!toks!footer
-
-\def\dosetupresumeheader[#1][#2]%
-  {\resume!toks!header\emptytoks
-   \doifelsenothing{#2}
-     {\resume!toks!header{\setupheader[\v!text][#1]}}
-     {\resume!toks!header{\setupheader[#1][#2]}}}
-
-\def\dosetupresumefooter[#1][#2]%
-  {\resume!toks!footer\emptytoks
-   \doifelsenothing{#1}
-     {\resume!toks!footer{\setupfooter[\v!text][#1]}}
-     {\resume!toks!footer{\setupfooter[#1][#2]}}}
-
 %D \macros
 %D   {setupresume}
 
-\definecorrespondencevalue[\v!resume][\????ld]
+\definecorrespondencevalue[\v!resume][\????rd]
 
-%D A few extra macros to test for content of the letter values, don't rely
-%D on them at the moment because they could change or I will remove, rename,
-%D rewrite etc. them.
-%D 
-%D With the change of the \tex{setupletter} command it was also necessary
-%D to change the definition for lettervalue tests.
+%D \macros
+%D   {doifresumevalue,doifelseresumevalue,doifresumestylevalue,doifelseresumestylevalue}
 
 \def\doifresumevalue         {\doifcorrespondencevalue         \????rd}
 \def\doifelseresumevalue     {\doifelsecorrespondencevalue     \????rd}
 \def\doifresumestylevalue    {\doifcorrespondencestylevalue    \????rs}
 \def\doifelseresumestylevalue{\doifelsecorrespondencestylevalue\????rs}
 
-%D \subject{Interface, Style and Extension files}
-%D 
 %D \macros
-%D   {useletterextension,useletterstyle,useletterinterface}
-%D
-%D This module provides different types of files beside the main module.
-%D 
-%D Two of them could be used by the user while the third is only used in
-%D this file but you're free to use but you should really now what you do.
-%D 
-%D Each of the files has it's own file extension, you have to use if you
-%D want to create such a file, this has the advantage to use the same name
-%D for a collection of macros.
+%D   {useresumeextension,useresumestyle,useresumeinterface}
 
 \def\resume!suffix!style    {nrs}
 \def\resume!suffix!extension{nre}
@@ -93,7 +61,7 @@
 \definecorrespondencefile[\v!resume\v!style    ][\resume!suffix!style    ]
 
 %D \macros
-%D   {letterstylevalue,lettervalue}
+%D   {resumestylevalue,resumevalue}
 
 \def\resumestylevalue#1#2%
   {\csname\????rs#1#2\endcsname}
@@ -124,8 +92,7 @@
 
 \stopsetups
 
-%D Header for the first page, you could use it to place the logo from your
-%D company or your own address and name.
+%D Header for the first page
 
 \dodefineresumelayer[\v!head]
 
@@ -135,10 +102,7 @@
 
 \stopsetups
 
-%D Footer block, you could use it to place information about your company
-%D but take care set \mono{repeat=yes} if you want to place it on every page,
-%D you should disable the footer for the second and following pages inb this
-%D case.
+%D Footer block
 
 \dodefineresumelayer[\v!foot]
 
@@ -176,7 +140,7 @@
 
 \stopsetups
 
-%D Letter content
+%D Resume content
 
 \dodefineresumesection[\v!content]
 
@@ -192,7 +156,7 @@
 
 \stopsetups
 
-%D Apendices
+%D Appendices
 
 \dodefineresumesection[\v!appendices]
 
@@ -241,14 +205,14 @@
 
   \stoplocalsetups
 
-  \doif\@@@@rsoptiontopmark \v!yes{\setups[\v!resume:\v!place:\v!topmark]}
-  \doif\@@@@rsoptionbotmark \v!yes{\setups[\v!resume:\v!place:\v!botmark]}
-  \doif\@@@@rsoptioncutmark \v!yes{\setups[\v!resume:\v!place:\v!cutmark]}
-  \doif\@@@@rsoptionusermark\v!yes{\setups[\v!resume:\v!place:\v!usermark]}
+  \doif\@@@@rsoptiontopmark \v!yes{\directsetup{\v!resume:\v!place:\v!topmark }}
+  \doif\@@@@rsoptionbotmark \v!yes{\directsetup{\v!resume:\v!place:\v!botmark }}
+  \doif\@@@@rsoptioncutmark \v!yes{\directsetup{\v!resume:\v!place:\v!cutmark }}
+  \doif\@@@@rsoptionusermark\v!yes{\directsetup{\v!resume:\v!place:\v!usermark}}
 
 \stopsetups
 
-%D Background graphic:
+%D Background graphic
 
 \defineoverlay
   [\v!resume:\c!backgroundimage]
@@ -265,29 +229,24 @@
    \v!resume:\v!nextfoot,\v!resume:\v!topmark,\v!resume:\v!botmark,%
    \v!resume:\v!cutmark,\v!resume:\v!usermark}
 
-%D Settings at the begin of every letter.
+%D Settings at the begin of every resume.
 
 \startsetups[\v!resume:\v!initialize]
 
   \@@@@rsoptionbefore
 
+  \begingroup
+
+  \page[\@@@@rsoptionpage]
+
   \setupsubpagenumber
     [\c!number=\@@@@rsoptionpagenumber,
      \c!way=\v!by\v!text,
-     \c!state=\@@@@rsoptionstate]
-
-  \resetsubpagenumber
-
-  \begingroup
-
-  \page
+     \c!state=\v!start]
 
   \setuppagenumbering
     [\c!alternative=\@@@@rsoptionalternative,
      \c!location=] % use the header and footer option instead
-
-  \the\resume!toks!header
-  \the\resume!toks!footer
 
   \setupbackgrounds
     [\v!paper]
@@ -299,38 +258,37 @@
     [\c!background=\resume!list!backgrounds,
      \c!backgroundcolor=\@@@@rsoptionbackgroundcolor]
 
-  \doifresumestylevalue\v!option\c!bodyfont  {\switchtobodyfont[\@@@@rsoptionbodyfont]}
-
-  \doifresumestylevalue\v!option\c!whitespace{\setupwhitespace[\@@@@rsoptionwhitespace]}
+  \doifresumestylevalue\v!option\c!bodyfont  {\switchtobodyfont[\@@@@rsoptionbodyfont  ]}
+  \doifresumestylevalue\v!option\c!whitespace{\setupwhitespace [\@@@@rsoptionwhitespace]}
 
 \stopsetups
 
-%D Settings at the end of every letter.
+%D Settings at the end of every resume.
 
 \startsetups[\v!resume:\v!finish]
 
-  \page
+  \page[\@@@@rsoptionpage]
 
   \setuplayout[\v!reset]
 
-  \endgroup
-
   \resetsubpagenumber
+
+  \endgroup
 
   \@@@@rsoptionafter
 
 \stopsetups
 
-%D Place the letter.
+%D Place the resume.
 
 \startsetups[\v!resume:\v!place]
 
-  \setups[\v!resume:\v!initialize] % Settings at the begin
-  \setups[\v!resume:\v!layout]     % Page layout
-  \setups[\v!resume:\v!reset]      % Reset layers
-  \setups[\v!resume:\v!layer]      % Place layers
-  \setups[\v!resume:\v!sequence]   % Place content
-  \setups[\v!resume:\v!finish]     % Settings at the end
+  \directsetup{\v!resume:\v!initialize} % Settings at the begin
+  \directsetup{\v!resume:\v!layout    } % Page layout
+  \directsetup{\v!resume:\v!reset     } % Reset layers
+  \directsetup{\v!resume:\v!layer     } % Place layers
+  \directsetup{\v!resume:\v!sequence  } % Place content
+  \directsetup{\v!resume:\v!finish    } % Settings at the end
 
 \stopsetups
 
@@ -350,20 +308,20 @@
 
 \startsetups[\v!resume:\v!layer]
 
-  \doif\@@@@rsoptionmarking \v!yes{\setups[\v!resume:\v!place:\v!foldmark]}
-  \doif\@@@@rsoptionhead    \v!yes{\setups[\v!resume:\v!place:\v!head    ]}
-  \doif\@@@@rsoptionfoot    \v!yes{\setups[\v!resume:\v!place:\v!foot    ]}
-  \doif\@@@@rsoptionnexthead\v!yes{\setups[\v!resume:\v!place:\v!nexthead]}
-  \doif\@@@@rsoptionnextfoot\v!yes{\setups[\v!resume:\v!place:\v!nextfoot]}
+  \doif\@@@@rsoptionmarking \v!yes{\directsetup{\v!resume:\v!place:\v!foldmark}}
+  \doif\@@@@rsoptionhead    \v!yes{\directsetup{\v!resume:\v!place:\v!head    }}
+  \doif\@@@@rsoptionfoot    \v!yes{\directsetup{\v!resume:\v!place:\v!foot    }}
+  \doif\@@@@rsoptionnexthead\v!yes{\directsetup{\v!resume:\v!place:\v!nexthead}}
+  \doif\@@@@rsoptionnextfoot\v!yes{\directsetup{\v!resume:\v!place:\v!nextfoot}}
 
 \stopsetups
 
-%D Place the letter content.
+%D Place the resume content.
 
 \let\resume!order!sections\resume!list!sections
 
 \def\doflushresumesection#1%
-  {\doif{\resumestylevalue\v!option{#1}}\v!yes{\setups[\v!resume:\v!place:#1]}}
+  {\doif{\resumestylevalue\v!option{#1}}\v!yes{\directsetup{\v!resume:\v!place:#1}}}
 
 \startsetups[\v!resume:\v!sequence]
 
@@ -384,12 +342,10 @@
    \c!backgroundimage=,
    \c!before=,
    \c!after=,
-   \c!header=\v!reset,
-   \c!footer=\v!reset,
-   \c!pagenumber=1,
+   \c!page=\v!yes,
+   \c!pagenumber=\plusone,
    \c!bodyfont=,
-   \c!alternative=\v!singlesided,
-   \c!state=\v!stop]
+   \c!alternative=\v!singlesided]
 
 %D Default style
 

@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2008.10.29,
+%D        version=2008.12.21,
 %D          title=\CONTEXT\ Resume Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -18,12 +18,20 @@
   {\iffirstargument
      \getparameters[\????rd][#1]%
    \fi
-   \def\stopresume{\directsetup{\v!resume:\v!place}}%
+   \def\stopresume{\directsetup{\v!resume:\v!place}\egroup}%
    \dostartbuffer[resumecontent][startresume][stopresume]}
 
 
 \def\startresumecontent
   {\dostartbuffer[resumecontent][startresumecontent][stopresumecontent]}
+
+
+\setupresume
+  [\c!content={\getbuffer[resumecontent]}]
+
+\startsetups[\v!resume:\v!content]
+\resumevalue\c!content
+\stopsetups
 
 
 \protect \endinput

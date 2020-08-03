@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=simplified,
-%D        version=2008.05.28,
+%D        version=2008.12.16,
 %D          title=\CONTEXT\ Letter Style,
 %D       subtitle=Simplified style,
 %D         author=Wolfgang Schuster,
@@ -35,22 +35,9 @@
   [\v!secondpage]
   [\c!header=.5in]
 
-\startsetups[letter:header:simplified]
-
-  \framed
-    [\c!frame=\v!off,
-     \c!location=\v!top,
-     \c!align=\v!left]
-    {\lettervalue\c!date   \\
-     \lettervalue\c!reference}
-
-\stopsetups
-
 \setupletterstyle
-  [\v!header]
-  [\c!lefttext=\lettervalue\c!toname,
-   \c!middletext=\pagenumber,
-   \c!righttext=\setups{letter:header:simplified}]
+  [\v!nexthead]
+  [\c!alternative=\v!simplified]
 
 \setupletterstyle
   [\v!closing]

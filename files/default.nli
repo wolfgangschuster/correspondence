@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2008.11.29,
+%D        version=2008.12.16,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -60,6 +60,7 @@
   \setinterfacevariable {fullblock}  {fullblock}
   \setinterfacevariable {hanging}    {hanging}
   \setinterfacevariable {modified}   {modified}
+  \setinterfacevariable {semiblock}  {semiblock}
 \stopinterface
 
 %D \subject{Reference line}
@@ -99,7 +100,7 @@
      {\getcommacommandsize[\@@@@lsreferencelist]% \@@@@ldreference?
       \ifnum\commalistsize<\plustwo\hfill\fi
       \processcommacommand[\@@@@lsreferencelist]\formatreferencelista\unskip}%
-   \global\letter!height!reference\dimexpr\ht\scratchbox+\dp\scratchbox\relax
+   \global\letter!height!reference\htdp\scratchbox
    \box\scratchbox}
 
 \startsetups[\v!letter:\v!reference:\v!a]
@@ -182,7 +183,7 @@
 
 \long\def\doformatreferencelistd#1%
   {\doifelse{#1}\v!line
-     {\NC\NC\NC\NR} % ugly but working
+     {\TB[\v!line]}
      {\NC \doattributes{\????ld#1}\c!titlestyle\c!titlecolor
             {\labeltext{\v!letter:#1}\lettervalue{#1\c!separator}}%
       \NC\doattributes{\????ld#1}\c!textstyle\c!textcolor{\lettervalue{#1}}
@@ -228,7 +229,7 @@
    \convertargument#1\to\ascii
    \doifelselettervalue{\ascii\c!width}
      {\hbox\!!to\lettervalue{\ascii\c!width}}
-     {\hbox}%
+     {\hbox}
      {\vbox
         {\vbox{\doattributes{\????ld\ascii}\c!titlestyle\c!titlecolor
            {\doformatreferenceliste{\labeltext{\v!letter:\ascii}}}}
@@ -256,7 +257,7 @@
 
 \startsetups[\v!letter:\v!reference:\v!none]
 
-  % Use the topspace value from the style
+  % Use the topspace value from the style file
 
 \stopsetups
 
@@ -290,8 +291,7 @@
           {\setvalue{\????ld\c!toaddress}{\getvalue{\????ld\????ld#1}}}}%
    \fi\fi
    \def\stopletter
-     {\directsetup{\v!letter:\v!place}\egroup
-      \setupsubpagenumber[\c!state=\@@@@lsoptionstate]}%
+     {\directsetup{\v!letter:\v!place}\egroup}%
    \dostartbuffer[lettercontent][startletter][stopletter]}
 
 %D Patched version of the \tex{flushbufferline} macro for \MKII,
@@ -356,7 +356,7 @@
 \executeifdefined{\v!letter:\v!nextfoot:\@@@@lsnextfootalternative}\donothing
 \stopsetups
 
-\setvalue{\v!letter:\v!header:\v!fullblock}%
+\setvalue{\v!letter:\v!nexthead:\v!fullblock}%
   {\hbox\!!to\hsize
      {\rlap{\lettervalue\c!toname}%
       \midaligned{\pagenumber}%
@@ -364,23 +364,22 @@
         {\lettervalue\c!date   \\
          \lettervalue\c!reference}}}}
 
-\setvalue{\v!letter:\v!header:\v!hanging}%
+\setvalue{\v!letter:\v!nexthead:\v!hanging}%
   {\hbox\!!to\hsize
      {\framed[\c!frame=\v!off,\c!location=\v!top,\c!align=v!right]
        {\lettervalue\c!toname    \\
         \lettervalue\c!date      \\
         \lettervalue\c!reference \\
-        \labeltext{page}\pagenumber}}\hss}
+        \labeltext\c!page\pagenumber}}\hss}
 
-\copycsname\v!letter:\v!header:\v!modified\endcsname\csname\v!letter:\v!header:\v!hanging\endcsname
+\setvalue{\v!letter:\v!nexthead:\v!semiblock}%
+  {\hbox\!!to\hsize
+     {\rlap{\lettervalue\c!toname}%
+      \midaligned{\pagenumber}%
+      \llap{\lettervalue\c!date}}}
 
-\startsetups[\v!letter:\v!header]
-\executeifdefined{\v!letter:\v!header:\@@@@lsheaderalternative}\donothing
-\stopsetups
-
-\startsetups[\v!letter:\v!footer]
-\executeifdefined{\v!letter:\v!footer:\@@@@lsfooteralternative}\donothing
-\stopsetups
+\copycsname\v!letter:\v!nexthead:\v!simplified\endcsname\csname\v!letter:\v!nexthead:\v!fullblock\endcsname
+\copycsname\v!letter:\v!nexthead:\v!modified  \endcsname\csname\v!letter:\v!nexthead:\v!hanging  \endcsname
 
 %D \subject{Addressee field}
 %D 

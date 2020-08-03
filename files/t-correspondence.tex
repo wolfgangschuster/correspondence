@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-correspondence,
-%D        version=2008.11.30,
+%D        version=2008.12.21,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Correspondence,
 %D         author=Wolfgang Schuster,
@@ -29,7 +29,12 @@
   \setinterfaceconstant {backgroundimage} {backgroundimage}
   \setinterfaceconstant {whitespace}      {whitespace}
   \setinterfaceconstant {nexthead}        {nexthead}
+  \setinterfaceconstant {lefthead}        {lefthead}
+  \setinterfaceconstant {righthead}       {righthead}
   \setinterfaceconstant {nextfoot}        {nextfoot}
+  \setinterfaceconstant {leftfoot}        {leftfoot}
+  \setinterfaceconstant {rightfoot}       {rightfoot}
+  \setinterfaceconstant {content}         {content}
 \stopinterface
 
 \startinterface all
@@ -43,8 +48,14 @@
   \setinterfacevariable {foldmark}    {foldmark}
   \setinterfacevariable {usermark}    {usermark}
   \setinterfacevariable {layer}       {layer}
+  \setinterfacevariable {firsthead}   {firsthead}
   \setinterfacevariable {nexthead}    {nexthead}
+  \setinterfacevariable {lefthead}    {lefthead}
+  \setinterfacevariable {righthead}   {righthead}
+  \setinterfacevariable {firstfoot}   {firstfoot}
   \setinterfacevariable {nextfoot}    {nextfoot}
+  \setinterfacevariable {leftfoot}    {leftfoot}
+  \setinterfacevariable {rightfoot}   {rightfoot}
   \setinterfacevariable {layout}      {layout}
   \setinterfacevariable {place}       {place}
   \setinterfacevariable {initialize}  {initialize}
@@ -114,14 +125,14 @@
 \def\dosetupcorrespondencelayout[#1][#2][#3][#4]%
   {\definelayout[#1#3][#4]}
 
-\def\dosetupcorrespondencelayer[#1][#2][#3][#4]%
-  {\dodosetupcorrespondencelayer[#1][#2][#3][\v!layer,\v!frame,\v!option][#4]}
-
 \def\dosetupcorrespondencesection[#1][#2][#3][#4]%
   {\getparameters[#2#3][#4]}
 
 \def\dosetupcorrespondencedescription[#1][#2][#3][#4]%
   {\setupdescriptions[#2#3][#4]}
+
+\def\dosetupcorrespondencelayer[#1][#2][#3][#4]%
+  {\dodosetupcorrespondencelayer[#1][#2][#3][\v!layer,\v!frame,\v!option][#4]}
 
 \def\dodosetupcorrespondencelayer[#1][#2][#3][#4][#5]%
   {\def\dododosetupcorrespondencelayer##1%
@@ -225,18 +236,18 @@
 
 %D Layers
 
-\def\letter!list!marking
-  {\v!topmark,\v!botmark,\v!cutmark,\v!endmark,\v!usermark}
-
 \def\definecorrespondencelayer[#1][#2]%
   {\setvalue{\s!do\e!define#1\v!layer}{\dodefinecorrespondencelayer[#1][#2]}%
    \setvalue{\s!do\e!set   #1\v!layer}{\dosetcorrespondencelayer   [#1][#2]}}
 
 \def\dodefinecorrespondencelayer[#1][#2][#3]%
-  {\ExpandSecondAfter\doifelse{#3}\v!foldmark
-     {\def\dodododefinecorrespondencelayer##1{\dododefinecorrespondencelayer[#1][#2][##1]}%
-      \processcommacommand[\csname#1!list!marking\endcsname]\dodododefinecorrespondencelayer}
-     {\dododefinecorrespondencelayer[#1][#2][#3]}}
+  {\def\dodododefinecorrespondencelayer##1{\dododefinecorrespondencelayer[#1][#2][##1]}%
+   \processaction
+     [#3]
+     [\v!foldmark=>{\processcommacommand[\csname#1!list!marking\endcsname]\dodododefinecorrespondencelayer},
+        \v!header=>{\processcommacommand[\csname#1!list!header\endcsname]\dodododefinecorrespondencelayer},
+        \v!footer=>{\processcommacommand[\csname#1!list!footer\endcsname]\dodododefinecorrespondencelayer},
+       \s!unknown=>{\dododefinecorrespondencelayer[#1][#2][#3]}]}
 
 \def\dododefinecorrespondencelayer[#1][#2][#3]%
   {\setvalue{#2\v!option#3}{\v!yes}%
@@ -281,6 +292,15 @@
         {\doadaptleftskip {\correspondencestylevalue{#2}{#3}\c!leftmargin}%
          \doadaptrightskip{\correspondencestylevalue{#2}{#3}\c!rightmargin}%
          \doattributes{#2#3}\c!style\c!color{#4}}}}
+
+\def\dosetheaderfooterlayer[#1]%
+  {\processaction
+     [#1]
+     [   v!yes=>\chardef\headerfooter\plusone,
+      \v!first=>\chardef\headerfooter\plustwo,
+       \v!next=>\chardef\headerfooter\plusthree,
+       \v!left=>\chardef\headerfooter\plusfour,
+      \v!right=>\chardef\headerfooter\plusfive]}
 
 %D Sections
 

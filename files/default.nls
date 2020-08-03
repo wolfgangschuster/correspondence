@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2008.11.29,
+%D        version=2008.12.16,
 %D          title=\CONTEXT\ Letter Style,
 %D       subtitle=Blockstyle initalization,
 %D         author=Wolfgang Schuster,
@@ -46,7 +46,9 @@
 
 \setupletterstyle
   [\v!nexthead,\v!nextfoot]
-  [\c!state=\v!next]
+  [\c!state=\v!start,
+   \c!hoffset=\backspace,
+   \c!voffset=\topspace]
 
 \setupletterstyle
   [\v!reference]

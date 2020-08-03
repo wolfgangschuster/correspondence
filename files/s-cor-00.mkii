@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-00,
-%D      version=2011.12.06,
+%D      version=2011.12.22,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Correspondence,
 %D       author=Wolfgang Schuster,
@@ -48,6 +48,7 @@
   \setinterfaceconstant {fromfax}         {fromfax}
   \setinterfaceconstant {frommail}        {frommail}
   \setinterfaceconstant {fromurl}         {fromurl}
+  \setinterfaceconstant {salutation}      {salutation}
 \stopinterface
 
 \startinterface all
@@ -109,6 +110,7 @@
   \setinterfacevariable {semiblock}       {semiblock}
   \setinterfacevariable {simplified}      {simplified}
   \setinterfacevariable {modified}        {modified}
+  \setinterfacevariable {blockstyle}      {blockstyle}
 \stopinterface
 
 % Messages
@@ -170,9 +172,9 @@
 \def\namedcorrespondenceparameter#1#2%
   {\csname\ifcsname\????correspondence#1#2\endcsname\????correspondence#1#2\else\s!empty\fi\endcsname}
 
-\unexpanded\def\setupcorrespondence[#1][#2]%
+\unexpanded\def\setupcorrespondence[#1]%
   {\def\currentcorrespondence{#1}%
-   \setupcurrentcorrespondence[#2]}
+   \setupcurrentcorrespondence}
 
 \unexpanded\def\setupcurrentcorrespondence
   {\getparameters[\????correspondence\currentcorrespondence]}
@@ -262,7 +264,7 @@
    \setupcurrentcorrespondencelayer[\s!parent=\????correspondencelayer,\c!state=\v!start,\c!alternative=\s!default,\c!distance=\lineheight,\c!separator=\crlf]%
    \setupcurrentcorrespondenceframe[\s!parent=\????correspondenceframe,\c!frame=\v!off,\c!offset=\zeropoint,\c!align=\v!right]%
    \definelayer  [#1:#2][\c!width=\overlaywidth,\c!height=\overlayheight]%
-   \defineoverlay[#1:#2][{\placecorrespondencelayer[#1][#2]}]}
+   \defineoverlay[#1:#2][\placecorrespondencelayer{#1}{#2}]}
 
 \newtoks\everysetupcorrespondencelayer
 
@@ -283,7 +285,7 @@
 \setvalue{correspondence_layer_state_\v!even  }{\!!doneafalse \!!donebfalse \!!donectrue }
 \setvalue{correspondence_layer_state_\v!odd   }{\!!doneafalse \!!donebtrue  \!!donecfalse}
 
-\unexpanded\def\placecorrespondencelayer[#1][#2]%
+\unexpanded\def\placecorrespondencelayer#1#2%
   {\correspondenceparameters{#1}{#2}\v!layer
    \executeifdefined{correspondence_layer_state_\correspondencelayerparameter\c!state}{\getvalue{correspondence_layer_state_\v!stop}}
    \ifnum\correspondencepage=\plusone
@@ -372,9 +374,9 @@
 \def\namedcorrespondenceoptionparameter#1#2%
   {\csname\ifcsname\????correspondenceoption#1#2\endcsname\????correspondenceoption#1#2\else\s!empty\fi\endcsname}
 
-\unexpanded\def\setupcorrespondenceoption[#1][#2]%
+\unexpanded\def\setupcorrespondenceoption[#1]%
   {\edef\currentcorrespondenceoption{#1}%
-   \setupcurrentcorrespondenceoption[#2]}%
+   \setupcurrentcorrespondenceoption}%
 
 \unexpanded\def\setupcurrentcorrespondenceoption
   {\getparameters[\????correspondenceoption\currentcorrespondenceoption]}

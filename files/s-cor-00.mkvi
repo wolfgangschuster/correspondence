@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-00,
-%D      version=2011.12.02,
+%D      version=2011.12.24,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Correspondence,
 %D       author=Wolfgang Schuster,
@@ -52,6 +52,7 @@
   \setinterfaceconstant {fromfax}         {fromfax}
   \setinterfaceconstant {frommail}        {frommail}
   \setinterfaceconstant {fromurl}         {fromurl}
+  \setinterfaceconstant {salutation}      {salutation}
 \stopinterface
 
 \startinterface all
@@ -113,6 +114,7 @@
   \setinterfacevariable {semiblock}       {semiblock}
   \setinterfacevariable {simplified}      {simplified}
   \setinterfacevariable {modified}        {modified}
+  \setinterfacevariable {blockstyle}      {blockstyle}
 \stopinterface
 
 % Messages
@@ -162,9 +164,9 @@
 
 % Setup
 
-\unexpanded\def\correspondence_setup[#environment][#parameters]%
+\unexpanded\def\correspondence_setup[#environment]%
   {\edef\currentcorrespondence{#environment}%
-   \setupcurrentcorrespondence[#parameters]}
+   \setupcurrentcorrespondence}
 
 \appendtoks
   \setuevalue{\e!setup\currentcorrespondence\e!endsetup}{\dodoubleargument\correspondence_setup[\currentcorrespondence]}%
@@ -172,8 +174,8 @@
 
 % Placement
 
-\newtoks\everybeforecorrespondence
-\newtoks\everyaftercorrespondence
+\newtoks\t_correspondence_before
+\newtoks\t_correspondence_after
 
 \unexpanded\def\correspondence_place[#environment]%
   {\begingroup
@@ -186,9 +188,20 @@
     } )}%
    \endgroup}
 
+%D Besides the normal letter environment there are three different ways to flush
+%D the content of a letter after the text was set with a buffer etc.
+%D
+%D \startitemize
+%D \item \type{\setups[letter:place]}
+%D \item \type{\placeletter}
+%D \item \type{\placecorrespondence[letter]}
+%D \stopitemize
+
+\let\placecorrespondence\correspondence_place
+
 \appendtoks
-   \global\correspondence_page\zerocount
-\to \everybeforecorrespondence
+   \global\c_correspondence_page\zerocount
+\to \t_correspondence_before
 
 \appendtoks
   \setuevalue{\e!place\currentcorrespondence}{\correspondence_place[\currentcorrespondence]}%
@@ -205,10 +218,10 @@
 \unexpanded\def\correspondence_layer_define[#environment][#element]%
   {\def\currentcorrespondencelayer{#environment:#element}%
    \let\currentcorrespondenceframe\currentcorrespondencelayer
-   \letcorrespondencelayerparameter\s!parent\????correspondencelayer
-   \letcorrespondenceframeparameter\s!parent\????correspondenceframe
+   \checkcorrespondencelayerparent
+   \checkcorrespondenceframeparent
    \definelayer  [\currentcorrespondencelayer][\c!width=\overlaywidth,\c!height=\overlayheight]%
-   \defineoverlay[\currentcorrespondencelayer][{\correspondence_layer_place[#environment][#element]}]}
+   \defineoverlay[\currentcorrespondencelayer][\correspondence_layer_place{#environment}{#element}]}
 
 \unexpanded\def\correspondence_layer_setup[#environment][#elements][#parameters]%
   {\def\correspondence_layer_command#element%
@@ -240,12 +253,12 @@
 \setvalue{correspondence_layer_state_\v!even  }{\!!doneafalse \!!donebfalse \!!donectrue }
 \setvalue{correspondence_layer_state_\v!odd   }{\!!doneafalse \!!donebtrue  \!!donecfalse}
 
-\unexpanded\def\correspondence_layer_place[#environment][#element]%
+\unexpanded\def\correspondence_layer_place#environment#element%
   {\correspondence_parameters{#environment}{#element}\v!layer
    \expandcheckedcsname{correspondence_layer_state_}{\correspondencelayerparameter\c!state}\v!stop
-   \ifnum\correspondence_page=\plusone
+   \ifnum\c_correspondence_page=\plusone
      \if!!donea\correspondence_layer_direct\fi
-   \else\ifodd\correspondence_page
+   \else\ifodd\c_correspondence_page
      \if!!doneb\correspondence_layer_direct\fi
    \else
      \if!!donec\correspondence_layer_direct\fi
@@ -287,7 +300,7 @@
 
 \unexpanded\def\correspondence_section_define[#environment][#element]%
   {\def\currentcorrespondencesection{#environment:#element}%
-   \letcorrespondencesectionparameter\s!parent\????correspondencesection}
+   \checkcorrespondencesectionparent}
 
 \unexpanded\def\correspondence_section_setup[#environment][#elements][#parameters]%
   {\def\correspondence_section_command#element%
@@ -326,9 +339,9 @@
 \installnamespace                                      {correspondenceoption}
 \installsimplecommandhandler \????correspondenceoption {correspondenceoption} \????correspondenceoption
 
-\unexpanded\def\correspondence_option_setup[#environment][#parameters]%
+\unexpanded\def\correspondence_option_setup[#environment]%
   {\edef\currentcorrespondenceoption{#environment}%
-   \setupcurrentcorrespondenceoption[#parameters]}%
+   \setupcurrentcorrespondenceoption}%
 
 \defineoverlay
   [correspondence:backgroundimage]
@@ -346,7 +359,7 @@
 
 \unexpanded\def\correspondence_description_define[#environment][#element]%
   {\def\currentcorrespondencedescription{#environment:#element}%
-   \letcorrespondencedescriptionparameter\s!parent\????correspondencedescription}
+   \checkcorrespondencedescriptionparent}
 
 \unexpanded\def\correspondence_description_setup[#environment][#elements][#parameters]%
   {\def\correspondence_description_command#element%
@@ -441,15 +454,15 @@
 %D \item rightpage.
 %D \stopitemize
 
-\newcount\correspondence_page
+\newcount\c_correspondence_page
 
 \ifdefined\changetolayout \else \let\changetolayout\page_layouts_change \fi
 
 \installlayoutmethod \v!correspondence
-  {\global\advance\correspondence_page\plusone
-   \ifnum\correspondence_page=\plusone
+  {\global\advance\c_correspondence_page\plusone
+   \ifnum\c_correspondence_page=\plusone
      \changetolayout{\currentcorrespondence:\v!firstpage}%
-   \else\ifodd\correspondence_page
+   \else\ifodd\c_correspondence_page
      \changetolayout{\currentcorrespondence:\v!rightpage}%
    \else
      \changetolayout{\currentcorrespondence:\v!leftpage }%

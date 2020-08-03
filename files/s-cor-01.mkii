@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-01,
-%D      version=2011.12.05,
+%D      version=2011.12.24,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Letters,
 %D       author=Wolfgang Schuster,
@@ -57,13 +57,12 @@
 \def\defineletterelement     {\doquadrupleargument\definecorrespondenceelement  [\v!letter]}
 \def\letterelement           {\doquadrupleargument\placecorrespondenceelement   [\v!letter]}
 
-\def\namedletterlayerparameter#1#2{\namedcorrespondencelayerparameter{\v!letter:#1}{#2}}
-\def\namedletterframeparameter#1#2{\namedcorrespondenceframeparameter{\v!letter:#1}{#2}}
+\def\namedletterlayerparameter#1{\namedcorrespondencelayerparameter{\v!letter:#1}}
+\def\namedletterframeparameter#1{\namedcorrespondenceframeparameter{\v!letter:#1}}
 
 % Layers
 
 \defineletterlayer [\v!head]
-\defineletterlayer [\v!firsthead]
 \defineletterlayer [\v!nexthead]
 \defineletterlayer [\v!lefthead]
 \defineletterlayer [\v!righthead]
@@ -90,6 +89,11 @@
 
 % Section
 
+\definelettersection [\v!head]
+\definelettersection [\v!date]
+\definelettersection [\v!reference]
+\definelettersection [\v!specialnotation]
+\definelettersection [\v!address]
 \definelettersection [\v!title]
 \definelettersection [\v!subject]
 \definelettersection [\v!opening]
@@ -164,11 +168,6 @@
 \startsetups[\v!letter:\v!layer:\v!head]
 \def\\{\correspondencelayerparameter\c!separator}
 \letterelement[\v!layer][\v!head][\correspondencelayerparameter\c!alternative]
-\stopsetups
-
-\startsetups[\v!letter:\v!layer:\v!firsthead]
-\def\\{\correspondencelayerparameter\c!separator}
-\letterelement[\v!layer][\v!firsthead][\correspondencelayerparameter\c!alternative]
 \stopsetups
 
 \defineletterelement[\v!layer][\v!nexthead][\v!gbrief]
@@ -381,6 +380,83 @@
 \letterelement[\v!layer][\v!location][\correspondencelayerparameter\c!alternative]
 \stopsetups
 
+\startsetups[\v!letter:\v!layer:\v!topmark]
+\def\\{\correspondencelayerparameter\c!separator}
+\letterelement[\v!layer][\v!topmark][\correspondencelayerparameter\c!alternative]
+\stopsetups
+
+\startsetups[\v!letter:\v!layer:\v!botmark]
+\def\\{\correspondencelayerparameter\c!separator}
+\letterelement[\v!layer][\v!botmark][\correspondencelayerparameter\c!alternative]
+\stopsetups
+
+\startsetups[\v!letter:\v!layer:\v!cutmark]
+\def\\{\correspondencelayerparameter\c!separator}
+\letterelement[\v!layer][\v!cutmark][\correspondencelayerparameter\c!alternative]
+\stopsetups
+
+\startsetups[\v!letter:\v!layer:\v!endmark]
+\def\\{\correspondencelayerparameter\c!separator}
+\letterelement[\v!layer][\v!endmark][\correspondencelayerparameter\c!alternative]
+\stopsetups
+
+\startsetups[\v!letter:\v!layer:\v!usermark]
+\def\\{\correspondencelayerparameter\c!separator}
+\letterelement[\v!layer][\v!usermark][\correspondencelayerparameter\c!alternative]
+\stopsetups
+
+\startsetups[\v!letter:\v!layer:\v!lettermain]
+\def\\{\correspondencelayerparameter\c!separator}
+\letterelement[\v!layer][\v!lettermain][\correspondencelayerparameter\c!alternative]
+\stopsetups
+
+\startsetups[\v!letter:\v!layer:\v!letternext]
+\def\\{\correspondencelayerparameter\c!separator}
+\letterelement[\v!layer][\v!letternext][\correspondencelayerparameter\c!alternative]
+\stopsetups
+
+\defineletterelement[\v!section][\v!head][\v!blockstyle]
+  {\correspondenceparameter\c!fromaddress}
+
+\startsetups[\v!letter:\v!section:\v!head]
+\def\\{\correspondencesectionparameter\c!separator}
+\letterelement[\v!section][\v!head][\correspondencesectionparameter\c!alternative]
+\stopsetups
+
+\defineletterelement[\v!section][\v!date][\v!blockstyle]
+  {\correspondenceparameter\c!date}
+
+\startsetups[\v!letter:\v!section:\v!date]
+\def\\{\correspondencesectionparameter\c!separator}
+\letterelement[\v!section][\v!date][\correspondencesectionparameter\c!alternative]
+\stopsetups
+
+\defineletterelement[\v!section][\v!reference][\v!blockstyle]
+  {\correspondenceparameter\c!reference}
+
+\startsetups[\v!letter:\v!section:\v!reference]
+\def\\{\correspondencesectionparameter\c!separator}
+\letterelement[\v!section][\v!reference][\correspondencesectionparameter\c!alternative]
+\stopsetups
+
+\defineletterelement[\v!section][\v!specialnotation][\v!blockstyle]
+  {\correspondenceparameter\c!dispatch}
+
+\startsetups[\v!letter:\v!section:\v!specialnotation]
+\def\\{\correspondencesectionparameter\c!separator}
+\letterelement[\v!section][\v!specialnotation][\correspondencesectionparameter\c!alternative]
+\stopsetups
+
+\defineletterelement[\v!section][\v!address][\v!blockstyle]
+  {\correspondenceparameter\c!toname
+   \doifsomething{\correspondenceparameter\c!toname}\\
+   \correspondenceparameter\c!toaddress}
+
+\startsetups[\v!letter:\v!section:\v!address]
+\def\\{\correspondencesectionparameter\c!separator}
+\letterelement[\v!section][\v!address][\correspondencesectionparameter\c!alternative]
+\stopsetups
+
 \defineletterelement[\v!section][\v!title][\s!default]
   {\doifsomethingelse{\correspondenceparameter\c!title}
      {\correspondenceparameter\c!title}
@@ -520,7 +596,7 @@
 \setuplettertext[\s!en][\v!yourref=Your ref.]
 \setuplettertext[\s!nl][\v!yourref=Uw kenmerk]
 \setuplettertext[\s!de][\v!yourref=Ihr Zeichen]
-\setuplettertext[\s!fr][\v!yourref=Vos références]
+\setuplettertext[\s!fr][\v!yourref=Vos r\eacute f\eacute rences]
 \setuplettertext[\s!it][\v!yourref=Vs./Rif.]
 \setuplettertext[\s!es][\v!yourref=Su ref.]
 
@@ -538,7 +614,7 @@
 \setuplettertext[\s!en][\v!myref=Our ref.]
 \setuplettertext[\s!nl][\v!myref=Ons kenmerk]
 \setuplettertext[\s!de][\v!myref=Unser Zeichen]
-\setuplettertext[\s!fr][\v!myref=Nos références]
+\setuplettertext[\s!fr][\v!myref=Nos r\eacute f\eacute rences]
 \setuplettertext[\s!it][\v!myref=Ns./Rif.]
 \setuplettertext[\s!es][\v!myref=Nuestra ref.]
 
@@ -556,7 +632,7 @@
 \setuplettertext[\s!en][\v!customer=Customer no.]
 \setuplettertext[\s!nl][\v!customer=Klant No.]
 \setuplettertext[\s!de][\v!customer=Kundennummer]
-\setuplettertext[\s!fr][\v!customer=Numéro de client]
+\setuplettertext[\s!fr][\v!customer=Num\eacute ro de client]
 \setuplettertext[\s!it][\v!customer=Nr.~cliente]
 \setuplettertext[\s!es][\v!customer=No. de cliente]
 
@@ -565,7 +641,7 @@
 \setuplettertext[\s!en][\v!invoice=Invoice no.]
 \setuplettertext[\s!nl][\v!invoice=Rekening No.]
 \setuplettertext[\s!de][\v!invoice=Rechnungsnummer]
-\setuplettertext[\s!fr][\v!invoice=Numéro de facture]
+\setuplettertext[\s!fr][\v!invoice=Num\eacute ro de facture]
 \setuplettertext[\s!it][\v!invoice=Nr.~fattura]
 \setuplettertext[\s!es][\v!invoice=No. de factura]
 
@@ -592,7 +668,7 @@
 \setuplettertext[\s!en][\v!copy=cc]
 \setuplettertext[\s!nl][\v!copy=Kopie aan]
 \setuplettertext[\s!de][\v!copy=Kopien an]
-\setuplettertext[\s!fr][\v!copy=Copieà]
+\setuplettertext[\s!fr][\v!copy=Copie\agrave]
 \setuplettertext[\s!it][\v!copy=Per conoscenza]
 \setuplettertext[\s!es][\v!copy=Copias]
 
@@ -610,7 +686,7 @@
 \setuplettertext[\s!en][\v!to=To]
 \setuplettertext[\s!nl][\v!to=Aan]
 \setuplettertext[\s!de][\v!to=An]
-\setuplettertext[\s!fr][\v!to=À]
+\setuplettertext[\s!fr][\v!to=\Agrave]
 \setuplettertext[\s!it][\v!to=A]
 \setuplettertext[\s!es][\v!to=A]
 
@@ -619,7 +695,7 @@
 \setuplettertext[\s!en][\v!toname=To]
 \setuplettertext[\s!nl][\v!toname=Aan]
 \setuplettertext[\s!de][\v!toname=An]
-\setuplettertext[\s!fr][\v!toname=À]
+\setuplettertext[\s!fr][\v!toname=\Agrave]
 \setuplettertext[\s!it][\v!toname=A]
 \setuplettertext[\s!es][\v!toname=A]
 
@@ -655,16 +731,16 @@
 \setuplettertext[\s!en][\v!phone=Phone]
 \setuplettertext[\s!nl][\v!phone=Telefoon]
 \setuplettertext[\s!de][\v!phone=Telefon]
-\setuplettertext[\s!fr][\v!phone=Téléphone]
+\setuplettertext[\s!fr][\v!phone=T\eacute l\eacute phone]
 \setuplettertext[\s!it][\v!phone=Telefono]
-\setuplettertext[\s!es][\v!phone=Teléfono]
+\setuplettertext[\s!es][\v!phone=Tel\eacute fono]
 
 % fax:
 
 \setuplettertext[\s!en][\v!fax=Fax]
 \setuplettertext[\s!nl][\v!fax=Fax]
 \setuplettertext[\s!de][\v!fax=Fax]
-\setuplettertext[\s!fr][\v!fax=Téléfax] % or Fax
+\setuplettertext[\s!fr][\v!fax=T\eacute l\eacute fax] % or Fax
 \setuplettertext[\s!it][\v!fax=Fax]
 \setuplettertext[\s!es][\v!fax=Fax]
 
@@ -735,7 +811,7 @@
 
 \setuplettertext[\s!en][\v!street=Street]
 \setuplettertext[\s!nl][\v!street=]
-\setuplettertext[\s!de][\v!street=Straße]
+\setuplettertext[\s!de][\v!street=Stra\ssharp e]
 \setuplettertext[\s!fr][\v!street=]
 \setuplettertext[\s!it][\v!street=]
 \setuplettertext[\s!es][\v!street=]

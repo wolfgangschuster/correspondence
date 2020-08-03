@@ -102,7 +102,7 @@ function correspondence.place(environment,settings)
     local whitespace       = settings.whitespace
     local backgroundcolor  = settings.backgroundcolor
     context.unprotect()
-    context(toks.everybeforecorrespondence)
+    context(toks.t_correspondence_before)
     context.page()
     -- page layout is controlled with the \setup…layout commands
     context.setuplayout{ method = v_correspondence }
@@ -143,7 +143,7 @@ function correspondence.place(environment,settings)
     context.resetsubpagenumber()
     -- make sure the normal layout is restored
     context.setuplayout{v_reset}
-    context(toks.everyaftercorrespondence)
+    context(toks.t_correspondence_after)
     context.protect()
 end
 

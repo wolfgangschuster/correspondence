@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-01,
-%D      version=2011.11.08,
+%D      version=2011.11.24,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Letters,
 %D       author=Wolfgang Schuster,
@@ -57,13 +57,12 @@
 \def\defineletterelement     {\doquadrupleargument\correspondence_element_define  [\v!letter]}
 \def\letterelement           {\doquadrupleargument\correspondence_element_place   [\v!letter]}
 
-\def\namedletterlayerparameter#element#key{\namedcorrespondencelayerparameter{\v!letter:#element}{#key}}
-\def\namedletterframeparameter#element#key{\namedcorrespondenceframeparameter{\v!letter:#element}{#key}}
+\def\namedletterlayerparameter#element{\namedcorrespondencelayerparameter{\v!letter:#element}}
+\def\namedletterframeparameter#element{\namedcorrespondenceframeparameter{\v!letter:#element}}
 
 % Layers
 
 \defineletterlayer [\v!head]
-\defineletterlayer [\v!firsthead]
 \defineletterlayer [\v!nexthead]
 \defineletterlayer [\v!lefthead]
 \defineletterlayer [\v!righthead]
@@ -177,17 +176,40 @@
 \letterelement[\v!layer][\v!head][\correspondencelayerparameter\c!alternative]
 \stopsetups
 
-\startsetups[\v!letter:\v!layer:\v!firsthead]
-\def\\{\correspondencelayerparameter\c!separator}
-\letterelement[\v!layer][\v!firsthead][\correspondencelayerparameter\c!alternative]
-\stopsetups
-
 \defineletterelement[\v!layer][\v!nexthead][\v!gbrief]
   {\maxaligned
      {\rlap{\correspondenceparameter\c!fromname}
       \midaligned{\lettertext\v!page\subpagenumber\lettertext\v!of\lastsubpagenumber}
       \llap{\correspondenceparameter\c!date}}
    \hairline}
+
+\defineletterelement[\v!layer][\v!nexthead][\v!fullblock]
+  {\maxaligned
+     {\rlap{\correspondenceparameter\c!toname}%
+      \midaligned{\pagenumber}%
+      \llap{\framed[\c!frame=\v!off,\c!location=\v!top,\c!align=\v!left]
+        {\correspondenceparameter\c!date   \\
+         \correspondenceparameter\c!reference}}}}
+
+\defineletterelement[\v!layer][\v!nexthead][\v!hanging]
+  {\maxaligned
+     {\framed[\c!frame=\v!off,\c!location=\v!top,\c!align=v!right]
+       {\correspondenceparameter\c!toname    \\
+        \correspondenceparameter\c!date      \\
+        \correspondenceparameter\c!reference \\
+        \lettertext\c!page\pagenumber}}\hss}
+
+\defineletterelement[\v!layer][\v!nexthead][\v!semiblock]
+  {\maxaligned
+     {\rlap{\correspondenceparameter\c!toname}%
+      \midaligned{\pagenumber}%
+      \llap{\correspondenceparameter\c!date}}}
+
+\defineletterelement[\v!layer][\v!nexthead][\v!simplified]
+  {\letterelement[\v!layer][\v!nexthead][\v!fullblock]}
+
+\defineletterelement[\v!layer][\v!nexthead][\v!modified]
+  {\letterelement[\v!layer][\v!nexthead][\v!hanging]}
 
 \startsetups[\v!letter:\v!layer:\v!nexthead]
 \def\\{\correspondencelayerparameter\c!separator}
@@ -219,7 +241,6 @@
        \bTD \correspondenceparameter\c!bankname\\\correspondenceparameter\c!banknumber\\\correspondenceparameter\c!accountnumber \eTD
      \eTR
    \eTABLE}
-
 
 \startsetups[\v!letter:\v!layer:\v!foot]
 \def\\{\correspondencelayerparameter\c!separator}
@@ -298,6 +319,83 @@
 \letterelement[\v!layer][\v!location][\correspondencelayerparameter\c!alternative]
 \stopsetups
 
+\startsetups[\v!letter:\v!layer:\v!topmark]
+\def\\{\correspondencelayerparameter\c!separator}
+\letterelement[\v!layer][\v!topmark][\correspondencelayerparameter\c!alternative]
+\stopsetups
+
+\startsetups[\v!letter:\v!layer:\v!botmark]
+\def\\{\correspondencelayerparameter\c!separator}
+\letterelement[\v!layer][\v!botmark][\correspondencelayerparameter\c!alternative]
+\stopsetups
+
+\startsetups[\v!letter:\v!layer:\v!cutmark]
+\def\\{\correspondencelayerparameter\c!separator}
+\letterelement[\v!layer][\v!cutmark][\correspondencelayerparameter\c!alternative]
+\stopsetups
+
+\startsetups[\v!letter:\v!layer:\v!endmark]
+\def\\{\correspondencelayerparameter\c!separator}
+\letterelement[\v!layer][\v!endmark][\correspondencelayerparameter\c!alternative]
+\stopsetups
+
+\startsetups[\v!letter:\v!layer:\v!usermark]
+\def\\{\correspondencelayerparameter\c!separator}
+\letterelement[\v!layer][\v!usermark][\correspondencelayerparameter\c!alternative]
+\stopsetups
+
+\startsetups[\v!letter:\v!layer:\v!lettermain]
+\def\\{\correspondencelayerparameter\c!separator}
+\letterelement[\v!layer][\v!lettermain][\correspondencelayerparameter\c!alternative]
+\stopsetups
+
+\startsetups[\v!letter:\v!layer:\v!letternext]
+\def\\{\correspondencelayerparameter\c!separator}
+\letterelement[\v!layer][\v!letternext][\correspondencelayerparameter\c!alternative]
+\stopsetups
+
+\defineletterelement[\v!section][\v!head][\v!blockstyle]
+  {\correspondenceparameter\c!fromaddress}
+
+\startsetups[\v!letter:\v!section:\v!head]
+\def\\{\correspondencesectionparameter\c!separator}
+\letterelement[\v!section][\v!head][\correspondencesectionparameter\c!alternative]
+\stopsetups
+
+\defineletterelement[\v!section][\v!date][\v!blockstyle]
+  {\correspondenceparameter\c!date}
+
+\startsetups[\v!letter:\v!section:\v!date]
+\def\\{\correspondencesectionparameter\c!separator}
+\letterelement[\v!section][\v!date][\correspondencesectionparameter\c!alternative]
+\stopsetups
+
+\defineletterelement[\v!section][\v!reference][\v!blockstyle]
+  {\correspondenceparameter\c!reference}
+
+\startsetups[\v!letter:\v!section:\v!reference]
+\def\\{\correspondencesectionparameter\c!separator}
+\letterelement[\v!section][\v!reference][\correspondencesectionparameter\c!alternative]
+\stopsetups
+
+\defineletterelement[\v!section][\v!specialnotation][\v!blockstyle]
+  {\correspondenceparameter\c!dispatch}
+
+\startsetups[\v!letter:\v!section:\v!specialnotation]
+\def\\{\correspondencesectionparameter\c!separator}
+\letterelement[\v!section][\v!specialnotation][\correspondencesectionparameter\c!alternative]
+\stopsetups
+
+\defineletterelement[\v!section][\v!address][\v!blockstyle]
+  {\correspondenceparameter\c!toname
+   \doifsomething{\correspondenceparameter\c!toname}\\
+   \correspondenceparameter\c!toaddress}
+
+\startsetups[\v!letter:\v!section:\v!address]
+\def\\{\correspondencesectionparameter\c!separator}
+\letterelement[\v!section][\v!address][\correspondencesectionparameter\c!alternative]
+\stopsetups
+
 \defineletterelement[\v!section][\v!title][\s!default]
   {\doifsomethingelse{\correspondenceparameter\c!title}
      {\correspondenceparameter\c!title}
@@ -351,6 +449,10 @@
       \raggedcenter\doadaptleftskip{.5\textwidth}%
       \correspondenceparameter\c!signature\endgraf}}
 
+\defineletterelement[\v!section][\v!closing][\v!simplified]
+  {\doifsomething{\correspondenceparameter\c!signature}{\blank[\correspondencesectionparameter\c!spaceinbetween]}%
+   \correspondenceparameter\c!signature}
+
 \startsetups[\v!letter:\v!section:\v!closing]
 \def\\{\correspondencesectionparameter\c!separator}
 \letterelement[\v!section][\v!closing][\correspondencesectionparameter\c!alternative]
@@ -379,13 +481,13 @@
   \ifx\currentcorrespondence\v!letter
     \doif{\correspondenceoptionparameter\c!option}\v!test{\useletterstyle[test]}%
   \fi
-\to \everybeforecorrespondence
+\to \t_correspondence_before
 
 \appendtoks
   \ifx\currentcorrespondence\v!letter
     \doif{\correspondenceoptionparameter\c!marking}\v!no{\setupletterlayer[\v!topmark,\v!botmark,\v!cutmark,\v!endmark,\v!usermark][\c!state=\v!stop]}%
   \fi
-\to \everybeforecorrespondence
+\to \t_correspondence_before
 
 \appendtoks
   \ifx\currentcorrespondence\v!letter
@@ -396,7 +498,7 @@
             [\v!firstpage]
             [\c!topspace=\dimexpr\namedletterlayerparameter\v!reference\c!y+\ht\scratchbox+\namedletterlayerparameter\v!reference\c!distance\relax]}}%
   \fi
-\to \everybeforecorrespondence
+\to \t_correspondence_before
 
 % Labels
 

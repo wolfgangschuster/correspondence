@@ -1,8 +1,8 @@
 %D \module
-%D   [     file=letter-imp-swissleft,
-%D      version=2011.10.29,
+%D   [     file=letter-imp-simplified,
+%D      version=2011.12.24,
 %D        title=\CONTEXT\ Letter Style,
-%D     subtitle=Swiss left style,
+%D     subtitle=Simplified style,
 %D       author=Wolfgang Schuster,
 %D         date=\currentdate,
 %D    copyright=Wolfgang Schuster,
@@ -23,35 +23,43 @@
 %C You should have received a copy of the GNU General Public License
 %C along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-\useletterstyle[dinb]
+\useletterstyle[blockstyle]
 
-\setupletterlayer
-  [\v!head]
-  [\c!y=8mm]
+\setupletterlayout
+  [\v!firstpage,\v!secondpage]
+  [\c!backspace=1in,
+   \c!width=\v!middle,
+   \c!topspace=1in,
+   \c!header=0in,
+   \c!footer=0in,
+   \c!height=\v!middle]
 
-\setupletterlayer
-  [\v!address]
-  [\c!x=20mm,
-   \c!y=40.5mm]
+\setupletterlayout
+  [\v!secondpage]
+  [\c!header=.5in]
 
-\setupletterlayer
-  [\v!backaddress]
-  [\c!x=20mm]
+\setuplettersection
+  [\v!closing]
+  [\c!spaceafter={2*\v!line}]
 
-\setupletterframe
-  [\v!address,\v!backaddress]
-  [\c!width=100mm]
-
-%\setupletterlayer
-%  [\v!reference]
-%  [\c!y=89mm,
-%   \c!spaceafter=\v!line]
-
-\setupletterlayer
-  [\v!reference]
-  [\c!y=89mm]
+\setuplettersection
+  [\v!nexthead,\v!closing]
+  [\c!alternative=\v!simplified]
 
 \setupletteroptions
-  [\c!marking=\v!no]
+  [\c!whitespace=\v!line]
+
+\setupletterelements
+  [\v!section]
+  [\v!head
+   \v!date,
+   \v!reference,
+   \v!specialnotation,
+   \v!address,
+   \v!title,
+   \v!subject,
+   \v!content,
+   \v!closing,
+   \v!appendices]
 
 \endinput

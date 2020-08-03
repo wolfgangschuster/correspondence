@@ -15,12 +15,6 @@
 
 %D I use a few extra constants and variables in my module.
 
-\ifx\setinterfaceconstant\undefined % fallback for old context versions
-  \let\setinterfaceconstant\gobbletwoarguments
-  \let\setinterfacevariable\gobbletwoarguments
-  \let\setinterfaceelement \gobbletwoarguments
-\fi
-
 \startinterface all
   \setinterfaceconstant {head}            {head}
   \setinterfaceconstant {foot}            {foot}
@@ -93,6 +87,13 @@
   \setinterfaceconstant {rulewidth}       {rulewidth}
   \setinterfaceconstant {fromalign}       {fromalign}
   \setinterfaceconstant {fromrule}        {fromrule}
+  \setinterfaceconstant {organization}    {organization}
+  \setinterfaceconstant {city}            {city}
+  \setinterfaceconstant {zip}             {zip}
+  \setinterfaceconstant {country}         {country}
+  \setinterfaceconstant {street}          {street}
+  \setinterfaceconstant {birthday}        {birthday}
+  \setinterfaceconstant {skype}           {skype}
 \stopinterface
 
 \startinterface all

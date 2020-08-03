@@ -484,7 +484,7 @@
 
 \def\registercorrespondencefile#1%
   {\doifundefined{@@@@#1@@@@}
-    {\letgvalue{@@@@#1@@@@}\empty
+    {\letgvalueempty{@@@@#1@@@@}%
      \modulecode{correspondence.checkfile("#1")}}}
 
 %D Lua table with all macro files and their current version, it is used
@@ -501,7 +501,7 @@ correspondence.files = {
         name        = "t-correspondence.tex",
         path        = "tex/context/third/letter/base/",
         type        = "base",
-        version     = "2009.05.10",
+        version     = "2009.06.29",
         description = "Core module"
     } ,
     {
@@ -545,7 +545,7 @@ correspondence.files = {
         name        = "default.nri",
         path        = "tex/context/third/letter/interface/",
         type        = "interface",
-        version     = "2009.03.31",
+        version     = "2009.06.28",
         description = "Default resume interface"
     } ,
     {
@@ -559,7 +559,7 @@ correspondence.files = {
         name        = "label.nle",
         path        = "tex/context/third/letter/extension/",
         type        = "extension",
-        version     = "2009.02.13",
+        version     = "2009.06.29",
         description = "Text labels"
     } ,
     {

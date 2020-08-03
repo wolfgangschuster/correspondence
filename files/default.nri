@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2009.03.31,
+%D        version=2009.06.28,
 %D          title=\CONTEXT\ Resume Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -51,12 +51,6 @@
 %D text \cr
 %D \stopcontent
 %D \stoptyping
-
-\long\def\dosetbuffer[#1]#2\endbuffer % added \long
-  {\begingroup
-   \setcurrentbuffer{#1}%
-   \mksetbuffer{#2}%
-   \endgroup}
 
 \def\startresume
   {\bgroup\dosingleempty\dostartresume}

@@ -14,18 +14,18 @@ version tag at the bottom of each file in the field date.
 \NC \bf File \NC \bf Revision \NC \bf Description            \NC\NR
 \stoptabulatehead
 
-\startluacode
+\startmodulecode
 tex.sprint(tex.ctxcatcodes,"\\starttabulate[|l|l|l|]")
-for k,v in pairs(thirddata.correspondence.files) do
+for k,v in global.pairs(correspondence.files) do
     tex.sprint(tex.ctxcatcodes,"\\NC")
-    tex.sprint(tex.ctxcatcodes,thirddata.correspondence.files[k]["name"])
+    tex.sprint(tex.ctxcatcodes,correspondence.files[k]["name"])
     tex.sprint(tex.ctxcatcodes,"\\NC")
-    tex.sprint(tex.ctxcatcodes,thirddata.correspondence.files[k]["version"])
+    tex.sprint(tex.ctxcatcodes,correspondence.files[k]["version"])
     tex.sprint(tex.ctxcatcodes,"\\NC")
-    tex.sprint(tex.ctxcatcodes,thirddata.correspondence.files[k]["description"])
+    tex.sprint(tex.ctxcatcodes,correspondence.files[k]["description"])
     tex.sprint(tex.ctxcatcodes,"\\NC\\NR")
 end
 tex.sprint(tex.ctxcatcodes,"\\stoptabulate")
-\stopluacode
+\stopmodulecode
 
 \stopcomponent

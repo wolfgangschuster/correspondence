@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=label,
-%D        version=2009.02.14,
+%D        version=2009.06.29,
 %D          title=\CONTEXT\ Letter Extension,
 %D       subject=Labels,
 %D         author=Wolfgang Schuster,
@@ -12,6 +12,8 @@
 % french labels: Olivier Guéry
 
 \unprotect
+
+%D \subject{Letter}
 
 %D Label: name
 
@@ -210,6 +212,71 @@
 \setuplabeltext[\s!fr][\v!letter:\c!bank=Compte en banque]
 \setuplabeltext[\s!it][\v!letter:\c!bank=Conto bancario]
 \setuplabeltext[\s!es][\v!letter:\c!bank=Cuenta bancaria]
+
+%D Label: organization
+
+\setuplabeltext[\s!en][\v!letter:\c!organization=Organization]
+\setuplabeltext[\s!nl][\v!letter:\c!organization=]
+\setuplabeltext[\s!de][\v!letter:\c!organization=Organisation]
+\setuplabeltext[\s!fr][\v!letter:\c!organization=]
+\setuplabeltext[\s!it][\v!letter:\c!organization=]
+\setuplabeltext[\s!es][\v!letter:\c!organization=]
+
+%D Label: city
+
+\setuplabeltext[\s!en][\v!letter:\c!city=City]
+\setuplabeltext[\s!nl][\v!letter:\c!city=]
+\setuplabeltext[\s!de][\v!letter:\c!city=Stadt]
+\setuplabeltext[\s!fr][\v!letter:\c!city=]
+\setuplabeltext[\s!it][\v!letter:\c!city=]
+\setuplabeltext[\s!es][\v!letter:\c!city=]
+
+%D Label: zip
+
+\setuplabeltext[\s!en][\v!letter:\c!zip=Zip]
+\setuplabeltext[\s!nl][\v!letter:\c!zip=]
+\setuplabeltext[\s!de][\v!letter:\c!zip=Postleitzahl] % PLZ?
+\setuplabeltext[\s!fr][\v!letter:\c!zip=]
+\setuplabeltext[\s!it][\v!letter:\c!zip=]
+\setuplabeltext[\s!es][\v!letter:\c!zip=]
+
+%D Label: country
+
+\setuplabeltext[\s!en][\v!letter:\c!country=Country]
+\setuplabeltext[\s!nl][\v!letter:\c!country=]
+\setuplabeltext[\s!de][\v!letter:\c!country=Land]
+\setuplabeltext[\s!fr][\v!letter:\c!country=]
+\setuplabeltext[\s!it][\v!letter:\c!country=]
+\setuplabeltext[\s!es][\v!letter:\c!country=]
+
+%D Label: street
+
+\setuplabeltext[\s!en][\v!letter:\c!street=Street]
+\setuplabeltext[\s!nl][\v!letter:\c!street=]
+\setuplabeltext[\s!de][\v!letter:\c!street=Stra\ssharp e]
+\setuplabeltext[\s!fr][\v!letter:\c!street=]
+\setuplabeltext[\s!it][\v!letter:\c!street=]
+\setuplabeltext[\s!es][\v!letter:\c!street=]
+
+%D Label: birthday
+
+\setuplabeltext[\s!en][\v!letter:\c!birthday=Birthday]
+\setuplabeltext[\s!nl][\v!letter:\c!birthday=]
+\setuplabeltext[\s!de][\v!letter:\c!birthday=Geburtstag]
+\setuplabeltext[\s!fr][\v!letter:\c!birthday=]
+\setuplabeltext[\s!it][\v!letter:\c!birthday=]
+\setuplabeltext[\s!es][\v!letter:\c!birthday=]
+
+%D Label: skype % for Henning Hraban Ramm
+
+\setuplabeltext[\s!en][\v!letter:\c!skype=Skype]
+\setuplabeltext[\s!nl][\v!letter:\c!skype=Skype]
+\setuplabeltext[\s!de][\v!letter:\c!skype=Skype]
+\setuplabeltext[\s!fr][\v!letter:\c!skype=Skype]
+\setuplabeltext[\s!it][\v!letter:\c!skype=Skype]
+\setuplabeltext[\s!es][\v!letter:\c!skype=Skype]
+
+%D \subject{Memo}
 
 %D Label: date
 

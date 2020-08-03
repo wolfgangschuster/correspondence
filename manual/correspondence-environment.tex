@@ -12,7 +12,7 @@
 \setvariables
   [correspondence]
   [title=Correspondence with \ConTeXt,
-   version=\ctxlua{tex.sprint(tex.ctxcatcodes,thirddata.correspondence.files[1]["version"])}]
+   version=\modulecode{tex.sprint(tex.ctxcatcodes,correspondence.files[1]["version"])}]
 
 
 %%%% Farbe
@@ -48,6 +48,7 @@
 
 %%%% Zusätzliche Module
 
+\usemodule[simplefonts]
 \usemodule[visual]
 \usemodule[letter]
 \usemodule[resume]
@@ -64,15 +65,17 @@
 
 %%%% Schriften
 
-\startmode[wolf]
-
 \definefontfeature[default][default][mode=node,expansion=quality,protrusion=quality]
 
-\usetypescriptfile[type-delicious]
-\usetypescriptfile[type-lucida]
+\startmode[wolf]
 
-\usetypescript[lucida,delicious]
-\setupbodyfont[lucida,11pt]
+\setupsimplefonts[size=11pt]
+
+\setmainfont[Lucida Bright]
+\setsansfont[Lucida Sans]
+\setmonofont[Lucida Sans Typewriter]
+
+\definefontfamily[delicious][Delicious]
 
 \stopmode
 
@@ -80,8 +83,13 @@
 
 \definefontfeature[default][default][mode=node,expansion=quality,protrusion=quality]
 
-\usetypescript[palatino,modern]
-\setupbodyfont[palatino,12pt]
+\setupsimplefonts[size=12pt]
+
+\setmainfont[TeX Gyre Pagella]
+\setsansfont[Latin Modern Sans]
+\setmonofont[Latin Modern Mono]
+
+\definefontfamily[modern][Latin Modern Sans]
 
 \stopnotmode
 
@@ -91,8 +99,8 @@
 %% Einnstellungen für die Musterbriefe
 
 \doifmodeelse{wolf}
-  {\setupletterstyle[option][bodyfont={delicious,ss}]}
-  {\setupletterstyle[option][bodyfont={modern,ss}]}
+  {\setupletterstyle[option][bodyfont=delicious]}
+  {\setupletterstyle[option][bodyfont=modern]}
 
 \setupletterstyle
   [option]
@@ -115,8 +123,8 @@
   [after={\blank[2*line]}]
 
 \doifmodeelse{wolf}
-  {\setupresumestyle[option][bodyfont={delicious,ss}]}
-  {\setupresumestyle[option][bodyfont={modern,ss}]}
+  {\setupresumestyle[option][bodyfont=delicious]}
+  {\setupresumestyle[option][bodyfont=modern]}
 
 \setupresumestyle
   [option]

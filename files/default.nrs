@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2009.02.10,
+%D        version=2009.10.10,
 %D          title=\CONTEXT\ Resume Style,
 %D       subtitle=Default Style,
 %D         author=Wolfgang Schuster,
@@ -26,10 +26,6 @@
    \c!backspace=\dimexpr\paperwidth/210*25\relax,
    \c!width=\dimexpr\paperwidth/210*150\relax,
    \c!bottomspace=\!!zeropoint]
-
-\setupresumestyle
-  [\v!head,\v!foot]
-  [\c!state=\v!start]
 
 \setupresumestyle
   [\v!nexthead,\v!nextfoot]

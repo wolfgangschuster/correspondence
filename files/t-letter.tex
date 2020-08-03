@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-letter,
-%D        version=2009.10.07,
+%D        version=2009.10.10,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Framework for Letters,
 %D         author=Wolfgang Schuster,
@@ -205,8 +205,7 @@
 %D The rest of module contains only internal macros and other settings,
 %D you don't need them as a normal user but you look at the default.
 
-\def\letterstylevalue#1#2%
-  {\csname\????ls#1#2\endcsname}
+\def\letterstylevalue{\correspondencestylevalue\????ls}
 
 %D The old definition of \type{\lettervalue} required two arguments.
 %D 
@@ -218,8 +217,7 @@
 %D The new definition needs only one arguments because \type{\setupletter}
 %D needs only one argument for the values in the new version.
 
-\def\lettervalue#1%
-  {\csname\????ld#1\endcsname}
+\def\lettervalue{\correspondencevalue\????ld}
 
 \let\letter!list!layers      \empty
 \let\letter!list!sections    \empty
@@ -257,42 +255,10 @@
 
 \startsetups[\v!letter:\v!place:\v!head]
 
-  % First page
-
-  \startlocalsetups[\v!letter:\v!place:\v!firsthead]
-
-    \dosetheaderfooterlayer[\v!letter][\????ls][\v!head]
-
-  \stoplocalsetups
-
-  % Following pages
-
-  \startlocalsetups[\v!letter:\v!place:\v!nexthead]
-
-    \dosetheaderfooterlayer[\v!letter][\????ls][\v!nexthead]
-
-  \stoplocalsetups
-
-  % Left pages
-
-  \startlocalsetups[\v!letter:\v!place:\v!lefthead]
-
-    \dosetheaderfooterlayer[\v!letter][\????ls][\v!lefthead]
-
-  \stoplocalsetups
-
-  % Right pages
-
-  \startlocalsetups[\v!letter:\v!place:\v!righthead]
-
-    \dosetheaderfooterlayer[\v!letter][\????ls][\v!righthead]
-
-  \stoplocalsetups
-
-  \doif\@@@@lsoptionhead     \v!yes{\directsetup{\v!letter:\v!place:\v!firsthead}}
-  \doif\@@@@lsoptionnexthead \v!yes{\directsetup{\v!letter:\v!place:\v!nexthead }}
-  \doif\@@@@lsoptionlefthead \v!yes{\directsetup{\v!letter:\v!place:\v!lefthead }}
-  \doif\@@@@lsoptionrighthead\v!yes{\directsetup{\v!letter:\v!place:\v!righthead}}
+  \doif\@@@@lsoptionhead     \v!yes{\dosetletterlayer[\v!head     ]} % First page
+  \doif\@@@@lsoptionnexthead \v!yes{\dosetletterlayer[\v!nexthead ]} % Following pages
+  \doif\@@@@lsoptionlefthead \v!yes{\dosetletterlayer[\v!lefthead ]} % Left pages
+  \doif\@@@@lsoptionrighthead\v!yes{\dosetletterlayer[\v!righthead]} % Right pages
 
 \stopsetups
 
@@ -345,42 +311,10 @@
 
 \startsetups[\v!letter:\v!place:\v!foot]
 
-  % First page
-
-  \startlocalsetups[\v!letter:\v!place:\v!firstfoot]
-
-    \dosetheaderfooterlayer[\v!letter][\????ls][\v!foot]
-
-  \stoplocalsetups
-
-  % Following pages
-
-  \startlocalsetups[\v!letter:\v!place:\v!nextfoot]
-
-    \dosetheaderfooterlayer[\v!letter][\????ls][\v!nextfoot]
-
-  \stoplocalsetups
-
-  % Left pages
-
-  \startlocalsetups[\v!letter:\v!place:\v!leftfoot]
-
-    \dosetheaderfooterlayer[\v!letter][\????ls][\v!leftfoot]
-
-  \stoplocalsetups
-
-  % Right pages
-
-  \startlocalsetups[\v!letter:\v!place:\v!rightfoot]
-
-    \dosetheaderfooterlayer[\v!letter][\????ls][\v!rightfoot]
-
-  \stoplocalsetups
-
-  \doif\@@@@lsoptionfoot     \v!yes{\directsetup{\v!letter:\v!place:\v!firstfoot}}
-  \doif\@@@@lsoptionnextfoot \v!yes{\directsetup{\v!letter:\v!place:\v!nextfoot }}
-  \doif\@@@@lsoptionleftfoot \v!yes{\directsetup{\v!letter:\v!place:\v!leftfoot }}
-  \doif\@@@@lsoptionrightfoot\v!yes{\directsetup{\v!letter:\v!place:\v!rightfoot}}
+  \doif\@@@@lsoptionfoot     \v!yes{\dosetletterlayer[\v!foot     ]} % First page
+  \doif\@@@@lsoptionnextfoot \v!yes{\dosetletterlayer[\v!nextfoot ]} % Following pages
+  \doif\@@@@lsoptionleftfoot \v!yes{\dosetletterlayer[\v!leftfoot ]} % Left pages
+  \doif\@@@@lsoptionrightfoot\v!yes{\dosetletterlayer[\v!rightfoot]} % Right pages
 
 \stopsetups
 
@@ -530,52 +464,11 @@
 
 \startsetups[\v!letter:\v!place:\v!foldmark]
 
-  % Upper foldmark
-
-  \startlocalsetups[\v!letter:\v!place:\v!topmark]
-
-    \dosetheaderfooterlayer[\v!letter][\????ls][\v!topmark]
-
-  \stoplocalsetups
-
-  % Lower foldmark
-
-  \startlocalsetups[\v!letter:\v!place:\v!botmark]
-
-    \dosetheaderfooterlayer[\v!letter][\????ls][\v!botmark]
-
-  \stoplocalsetups
-
-  % Cutmark
-
-  \startlocalsetups[\v!letter:\v!place:\v!cutmark]
-	
-    \dosetheaderfooterlayer[\v!letter][\????ls][\v!cutmark]
-
-  \stoplocalsetups
-
-  % Endmark, a relict from the typewriter area
-
-  \startlocalsetups[\v!letter:\v!place:\v!endmark]
-
-    \dosetheaderfooterlayer[\v!letter][\????ls][\v!endmark]
-
-  \stoplocalsetups
-
-  % Free mark, you could use it to place your own symbols
-
-  \startlocalsetups[\v!letter:\v!place:\v!usermark]
-
-    \dosetheaderfooterlayer[\v!letter][\????ls][\v!usermark]
-
-  \stoplocalsetups
-
-  \doif\@@@@lsoptionmarking\v!yes
-    {\doif\@@@@lsoptiontopmark \v!yes{\directsetup{\v!letter:\v!place:\v!topmark }}
-     \doif\@@@@lsoptionbotmark \v!yes{\directsetup{\v!letter:\v!place:\v!botmark }}
-     \doif\@@@@lsoptioncutmark \v!yes{\directsetup{\v!letter:\v!place:\v!cutmark }}
-     \doif\@@@@lsoptionendmark \v!yes{\directsetup{\v!letter:\v!place:\v!endmark }}
-     \doif\@@@@lsoptionusermark\v!yes{\directsetup{\v!letter:\v!place:\v!usermark}}}
+  \doif\@@@@lsoptiontopmark \v!yes{\dosetletterlayer[\v!topmark ]} % Upper foldmark
+  \doif\@@@@lsoptionbotmark \v!yes{\dosetletterlayer[\v!botmark ]} % Lower foldmark
+  \doif\@@@@lsoptioncutmark \v!yes{\dosetletterlayer[\v!cutmark ]} % Cutmark
+  \doif\@@@@lsoptionendmark \v!yes{\dosetletterlayer[\v!endmark ]} % Endmark, a relict from the typewriter area
+  \doif\@@@@lsoptionusermark\v!yes{\dosetletterlayer[\v!usermark]} % Free mark, you could use it to place your own symbols
 
 \stopsetups
 
@@ -625,7 +518,7 @@
 
   \setupbackgrounds
     [\v!page]
-    [\c!setups={\v!letter:\v!place:\v!head,\v!letter:\v!place:\v!foot,\v!letter:\v!place:\v!foldmark},
+    [\c!setups={\v!letter:\v!place:\v!head,\v!letter:\v!place:\v!foot,\v!letter:\v!layer},
      \c!background=\letter!list!backgrounds]
 
   \doifletterstylevalue\v!option\c!bodyfont  {\setupbodyfont  [\@@@@lsoptionbodyfont  ]}
@@ -656,7 +549,6 @@
   \directsetup{\v!letter:\v!initialize} % Settings at the begin
   \directsetup{\v!letter:\v!optimize  } % Interface dependend
   \directsetup{\v!letter:\v!layout    } % Page layout
-  \directsetup{\v!letter:\v!layer     } % Place layers
   \directsetup{\v!letter:\v!sequence  } % Place content
   \directsetup{\v!letter:\v!finish    } % Settings at the end
 
@@ -664,6 +556,7 @@
 
 \startsetups[\v!letter:\v!layer]
 
+  \doif\@@@@lsoptionmarking    \v!yes{\directsetup{\v!letter:\v!place:\v!foldmark   }}
   \doif\@@@@lsoptionbackaddress\v!yes{\directsetup{\v!letter:\v!place:\v!backaddress}}
   \doif\@@@@lsoptionaddress    \v!yes{\directsetup{\v!letter:\v!place:\v!address    }}
   \doif\@@@@lsoptionreference  \v!yes{\directsetup{\v!letter:\v!place:\v!reference  }}
@@ -695,9 +588,6 @@
 \setupletterstyle
   [\v!option]
   [\c!marking=\v!yes,
-   \c!topmark=\v!yes,
-   \c!botmark=\v!yes,
-   \c!cutmark=\v!yes,
    \c!endmark=\v!no,
    \c!usermark=\v!no,
    \c!backaddress=\v!no,

@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=knuth,
-%D        version=2009.09.21,
+%D        version=2009.10.08,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Lettformat Interface, % Donald Knuth's own letter format
 %D         author=Wolfgang Schuster,
@@ -54,9 +54,9 @@
 
 \startsetups[\v!letter:\v!closing]
 
-  \leftskip\dimexpr\textwidth/13*8\relax
+  \leftskip\dimexpr\textwidth/13*8\relax % relative value to allow papersize changes
   \obeylines
-  \def\par{\normalpar\vskip1cm\def\par{\normalpar\blank[\v!nowhite]}}
+  \def\par{\normalpar\vskip1cm\def\par{{\normalpar\let\par\normalpar\blank[\v!nowhite]}}} % restore \par for \blank command
   \getbuffer[closing]\normalpar
 
 \stopsetups

@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=dinb,
-%D        version=2009.10.07,
+%D        version=2009.10.10,
 %D          title=\CONTEXT\ Letter Style,
 %D       subtitle=DIN 676 B,
 %D         author=Wolfgang Schuster,
@@ -109,6 +109,11 @@
 
 \setupletterstyle
   [\v!backaddress]
+  [\v!option]
+  [\c!style=\c!tf\c!xx]
+
+\setupletterstyle
+  [\v!backaddress]
   [\v!layer]
   [\c!hoffset=\backspace,
    \c!voffset=\dimexpr\letterstylevalue{\v!address\v!layer}\c!voffset-\letterstylevalue{\v!backaddress\v!frame}\c!height\relax]
@@ -117,8 +122,7 @@
   [\v!backaddress]
   [\v!frame]
   [\c!height=5mm,
-   \c!width=85mm,
-   \c!style=\c!tf\c!xx]
+   \c!width=85mm]
 
 \setupletterstyle
   [\v!reference]

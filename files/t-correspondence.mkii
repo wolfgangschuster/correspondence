@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-correspondence,
-%D        version=2009.10.07,
+%D        version=2009.10.10,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Correspondence,
 %D         author=Wolfgang Schuster,
@@ -180,11 +180,13 @@
 
 %D Tests
 
-\long\def\doifcorrespondencevalue           #1#2{\doifsomething    {\csname  #1#2\endcsname}}
-\long\def\doifelsecorrespondencevalue       #1#2{\doifsomethingelse{\csname  #1#2\endcsname}}
-\long\def\doifcorrespondencestylevalue    #1#2#3{\doifsomething    {\csname#1#2#3\endcsname}}
-\long\def\doifelsecorrespondencestylevalue#1#2#3{\doifsomethingelse{\csname#1#2#3\endcsname}}
-\long\def\correspondencestylevalue        #1#2#3{\csname#1#2#3\endcsname}
+\def\correspondencevalue       #1#2{\csname\ifcsname  #1#2\endcsname  #1#2\else\s!empty\fi\endcsname}
+\def\correspondencestylevalue#1#2#3{\csname\ifcsname#1#2#3\endcsname#1#2#3\else\s!empty\fi\endcsname}
+
+\long\def\doifcorrespondencevalue           #1#2{\doifsomething    {\correspondencevalue         {#1}{#2}}}
+\long\def\doifelsecorrespondencevalue       #1#2{\doifsomethingelse{\correspondencevalue         {#1}{#2}}}
+\long\def\doifcorrespondencestylevalue    #1#2#3{\doifsomething    {\correspondencestylevalue{#1}{#2}{#3}}}
+\long\def\doifelsecorrespondencestylevalue#1#2#3{\doifsomethingelse{\correspondencestylevalue{#1}{#2}{#3}}}
 
 %D External files
 
@@ -208,9 +210,9 @@
   {\def\dodododefinecorrespondencelayer##1{\dododefinecorrespondencelayer[#1][#2][##1]}%
    \processaction
      [#3]
-     [\v!foldmark=>{\processcommacommand[\getvalue{#1!list!marking}]\dodododefinecorrespondencelayer},
-        \v!header=>{\processcommacommand[\getvalue{#1!list!header}]\dodododefinecorrespondencelayer},
-        \v!footer=>{\processcommacommand[\getvalue{#1!list!footer}]\dodododefinecorrespondencelayer},
+     [\v!foldmark=>{\processcommacommand[\csname#1!list!marking\endcsname]\dodododefinecorrespondencelayer},
+        \v!header=>{\processcommacommand[\csname#1!list!header\endcsname ]\dodododefinecorrespondencelayer},
+        \v!footer=>{\processcommacommand[\csname#1!list!footer\endcsname ]\dodododefinecorrespondencelayer},
        \s!unknown=>{\dododefinecorrespondencelayer[#1][#2][#3]}]}
 
 \def\dododefinecorrespondencelayer[#1][#2][#3]%
@@ -225,7 +227,7 @@
       \c!height=\paperheight]%
    \dodosetupcorrespondencelayer
      [#1][#2][#3][\v!option]%
-     [\c!state=\v!stop,
+     [\c!state=\v!start,
       \c!symbol=,
       \c!list=,
       \c!alternative=\v!a,
@@ -249,32 +251,6 @@
       \c!offset=\zeropoint,
       \c!preset=\v!left\v!top]}
 
-\def\dosetcorrespondencelayer[#1][#2][#3]%
-  {\doifelsecorrespondencestylevalue{#2}{#3}\c!symbol
-     {\dodosetcorrespondencelayer[#1][#2][#3][\correspondencestylevalue{#2}{#3}\c!symbol]}
-     {\dodosetcorrespondencelayer[#1][#2][#3][\directsetup{#1:#3}]}}
-
-\def\dodosetcorrespondencelayer[#1][#2][#3][#4]%
-  {\setlayer[#1:#3]
-     {\localframed[#2#3\v!frame]
-        {\edef\currentcorrespondenceelement{#3}%
-         \doadaptleftskip {\correspondencestylevalue{#2}{#3}\c!leftmargin }%
-         \doadaptrightskip{\correspondencestylevalue{#2}{#3}\c!rightmargin}%
-         \doattributes{#2#3}\c!style\c!color{#4}}}}
-
-\def\dodosetheaderfooterlayer#1{\csname @@headfoot@@#1\endcsname}
-
-\setvalue{@@headfoot@@\v!start    }{\!!doneatrue            }
-\setvalue{@@headfoot@@\v!stop     }{\!!doneafalse           }
-\setvalue{@@headfoot@@\v!first    }{\!!doneatrue            }
-\setvalue{@@headfoot@@\v!next     }{\!!donebtrue\!!donectrue}
-\setvalue{@@headfoot@@\v!left     }{\!!donebtrue            }
-\setvalue{@@headfoot@@\v!right    }{\!!donectrue            }
-\setvalue{@@headfoot@@\v!leftpage }{\!!donebtrue            }
-\setvalue{@@headfoot@@\v!rightpage}{\!!donectrue            }
-\setvalue{@@headfoot@@\v!page     }{\!!donedtrue            }
-\setvalue{@@headfoot@@\v!subpage  }{\!!donedfalse           }
-
 % \def\dosetheaderfooterlayer[#1][#2][#3]%
 %   {\!!doneafalse % first page
 %    \!!donebfalse % even numbered pages
@@ -294,21 +270,49 @@
 % Alternative version of the macro above for the experimental
 % interface because \subpagenumber can't be used in \ifnum.
 
-\def\dosetheaderfooterlayer[#1][#2][#3]%
+\def\dosetcorrespondencelayer[#1][#2][#3]%
   {\!!doneafalse % first page
    \!!donebfalse % even numbered pages
    \!!donecfalse % odd numbered pages
    \!!donedfalse % real pagenumber
-   \processcommacommand[\getvalue{#2#3\c!state}]\dodosetheaderfooterlayer
+   \processcommacommand[\csname#2#3\c!state\endcsname]\docorrespondencelayerstate
    \doifnotvalue{#2#3\v!layer\c!state}\v!stop{\setuplayer[#1:#3][\c!state=\v!start]}%
    \ifnum\if!!doned\pagenumber\else\correspagenumber\fi=\plusone
-     \if!!donea\dosetcorrespondencelayer[#1][#2][#3]\fi
+     \if!!donea\dodosetcorrespondencelayer[#1][#2][#3]\fi
    \else
      \ifodd\if!!doned\pagenumber\else\correspagenumber\fi
-       \if!!donec\dosetcorrespondencelayer[#1][#2][#3]\fi
+       \if!!donec\dodosetcorrespondencelayer[#1][#2][#3]\fi
      \else
-       \if!!doneb\dosetcorrespondencelayer[#1][#2][#3]\fi
+       \if!!doneb\dodosetcorrespondencelayer[#1][#2][#3]\fi
    \fi\fi}
+
+\def\dodosetcorrespondencelayer[#1][#2][#3]%
+  {\doifelsecorrespondencestylevalue{#2}{#3}\c!symbol
+     {\dododosetcorrespondencelayer[#1][#2][#3][\correspondencestylevalue{#2}{#3}\c!symbol]}
+     {\dododosetcorrespondencelayer[#1][#2][#3][\directsetup{#1:#3}]}}
+
+\def\dododosetcorrespondencelayer[#1][#2][#3][#4]%
+  {\setlayer[#1:#3]
+     {\localframed[#2#3\v!frame]
+        {\edef\currentcorrespondenceelement{#3}%
+         \doadaptleftskip {\correspondencestylevalue{#2}{#3}\c!leftmargin }%
+         \doadaptrightskip{\correspondencestylevalue{#2}{#3}\c!rightmargin}%
+         \doattributes{#2#3}\c!style\c!color{#4}}}}
+
+\def\docorrespondencelayerstate#1{\csname @@headfoot@@#1\endcsname}
+
+\setvalue{@@headfoot@@\v!start    }{\!!doneatrue                           }
+\setvalue{@@headfoot@@\v!stop     }{\!!doneafalse\!!donebfalse\!!donecfalse}
+\setvalue{@@headfoot@@\v!first    }{\!!doneatrue                           }
+\setvalue{@@headfoot@@\v!next     }{\!!donebtrue\!!donectrue               }
+\setvalue{@@headfoot@@\v!continue }{\!!donebtrue\!!donectrue               }
+\setvalue{@@headfoot@@\v!repeat   }{\!!doneatrue\!!donebtrue\!!donectrue   }
+\setvalue{@@headfoot@@\v!left     }{\!!donebtrue                           }
+\setvalue{@@headfoot@@\v!right    }{\!!donectrue                           }
+\setvalue{@@headfoot@@\v!leftpage }{\!!donebtrue                           }
+\setvalue{@@headfoot@@\v!rightpage}{\!!donectrue                           }
+\setvalue{@@headfoot@@\v!page     }{\!!donedtrue                           }
+\setvalue{@@headfoot@@\v!subpage  }{\!!donedfalse                          }
 
 %D Sections
 
@@ -421,7 +425,7 @@
 \def\doflushcorrespondencedescription[#1][#2]%
   {\def\dodoflushcorrespondencedescription##1%
      {\doif{\correspondencestylevalue{#2}\v!option{##1}}\v!yes{\dosetcorrespondencedescription[#1][#2][##1]}}%
-   \processcommacommand[\getvalue{#1!list!descriptions}]\dodoflushcorrespondencedescription}
+   \processcommacommand[\csname#1!list!descriptions\endcsname]\dodoflushcorrespondencedescription}
 
 %D Commands to define named elements for header, footer etc. and use them,
 %D clone them or delete their content.

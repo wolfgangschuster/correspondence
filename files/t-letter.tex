@@ -1,11 +1,11 @@
 %D \module
 %D   [       file=t-letter,
-%D        version=2008.05.18,
+%D        version=2008.05.28,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Framework for Letters,
 %D         author=Wolfgang Schuster,
 %D           date=\currentdate,
-%D      copyright=Public Domain]
+%D      copyright=Wolfgang Schuster]
 
 %M \loadsetups[cont-en.xml]
 %M \loadsetups[letter.xml]
@@ -48,6 +48,7 @@
                   cutmark: cutmark
                   endmark: endmark
                 reference: reference
+                 location: location
                    option: option
                   address: address
                  foldmark: foldmark
@@ -140,7 +141,9 @@
      {\doifelsenothing{#3}
         {\ExpandSecondAfter\doifinsetelse{##1}\letter!list!sections
            {\dododododosetupletterstyle[##1][\v!option][#2]}
-           {\dododododosetupletterstyle[##1][\v!layer,\v!frame,\v!option][#2]}}
+           {\ExpandSecondAfter\doifinsetelse{##1}\letter!list!descriptions
+              {\setupdescriptions[\v!letter##1][#2]}
+              {\dododododosetupletterstyle[##1][\v!layer,\v!frame,\v!option][#2]}}}
         {\dododododosetupletterstyle[##1][#2][#3]}}%
    \processcommacommand[#1]\dodododosetupletterstyle}
 
@@ -446,7 +449,8 @@
 \let\letter!list!sections\empty
 
 \def\dodefinelettersection[#1]%
-  {\doifnotinset{#1}\letter!list!sections
+  {\setvalue{\????ls\v!option#1}{\v!yes}%
+   \doifnotinset{#1}\letter!list!sections
      {\appendtocommalist{#1}\letter!list!sections}%
    \setupletterstyle
      [#1]
@@ -476,6 +480,24 @@
       \endgraf
      {\endgraf\letterstylevalue\@@lettersection\c!after}%
    \endgroup}
+
+\let\letter!list!descriptions\empty
+
+\def\dodefineletterdescription[#1]%
+  {\setvalue{\????ls\v!option#1}{\v!yes}%
+   \doifnotinset{#1}\letter!list!descriptions
+     {\appendtocommalist{#1}\letter!list!descriptions}%
+   \definedescription[\v!letter#1][\c!width=\zeropoint]}
+
+\def\dosetletterdescription[#1]%
+  {\csname\e!start\v!letter#1\endcsname
+   \setups[letter:#1]%
+   \csname\e!stop \v!letter#1\endcsname}
+
+\def\doflushletterdescription
+  {\def\dodoflushletterdescription##1%
+     {\doif{\letterstylevalue\v!option{##1}}\v!yes{\dosetletterdescription[##1]}}%
+   \processcommacommand[\letter!list!descriptions]\dodoflushletterdescription}
 
 %D \subject{Placement of the content}
 %D 
@@ -527,6 +549,16 @@
 \startsetups[letter:place:reference]
 
   \dosetletterlayer[\v!reference]
+
+\stopsetups
+
+%D Location field
+
+\dodefineletterlayer[\v!location]
+
+\startsetups[letter:place:location]
+
+  \dosetletterlayer[\v!location]
 
 \stopsetups
 
@@ -744,7 +776,7 @@
 
 \def\letter!list!backgrounds
   {\v!color,\v!letternext,\v!lettermain,\v!head,\v!foot,%
-   \v!backaddress,\v!graphic,\v!address,\v!reference,%
+   \v!backaddress,\v!graphic,\v!address,\v!reference,\v!location,%
    \v!topmark,\v!botmark,\v!cutmark,\v!endmark,\v!usermark}
 
 %D Settings at the begin of every letter.
@@ -834,6 +866,7 @@
   \doif\@@@@lsoptionbackaddress\v!yes{\setups[letter:place:backaddress]}
   \doif\@@@@lsoptionaddress    \v!yes{\setups[letter:place:address]}
   \doif\@@@@lsoptionreference  \v!yes{\setups[letter:place:reference]}
+  \doif\@@@@lsoptionlocation   \v!yes{\setups[letter:place:location]}
   \doif\@@@@lsoptionfoot       \v!yes{\setups[letter:place:foot]}
   \doif\@@@@lsoptionlettermain \v!yes{\setups[letter:place:lettermain]}
   \doif\@@@@lsoptionletternext \v!yes{\setups[letter:place:letternext]}
@@ -845,7 +878,7 @@
 \let\letter!order!sections\letter!list!sections
 
 \def\doflushlettersection#1%
-  {\setups[letter:place:#1]}
+  {\doif{\letterstylevalue\v!option{#1}}\v!yes{\setups[letter:place:#1]}}
 
 \startsetups[letter:sequence]
 

@@ -11,7 +11,7 @@
       Letter module for ConTeXt.
     </TPM:Description>
     <TPM:Author>Wolfgang Schuster</TPM:Author>
-    <TPM:RunFiles size="81543">
+    <TPM:RunFiles size="89579">
       tex/context/third/letter/base/t-letter.tex
       tex/context/third/letter/interface/default.nli
       tex/context/third/letter/interface/pragma.nli
@@ -26,16 +26,22 @@
       tex/context/third/letter/style/pragma.nls
       tex/context/third/letter/style/knuth.nls
       tex/context/third/letter/style/dutch.nls
+      tex/context/third/letter/style/french.nls
+      tex/context/third/letter/style/english.nls
       tex/context/third/letter/style/default.nls
       tex/context/third/letter/style/blockstyle.nls
       tex/context/third/letter/style/fullblock.nls
       tex/context/third/letter/style/semiblock.nls
-      tex/context/third/letter/style/modifiedblock.nls
+      tex/context/third/letter/style/modified.nls
+      tex/context/third/letter/style/hanging.nls
+      tex/context/third/letter/style/memo.nls
+      tex/context/third/letter/style/simplified.nls
       tex/context/interface/third/letter.xml
       tpm/t-letter.tpm
    </TPM:RunFiles>
-    <TPM:DocFiles size="125316">
+    <TPM:DocFiles size="115032">
       doc/context/third/letter/letter-doc.pdf
+      doc/context/third/letter/todo.txt
     </TPM:DocFiles>
     <TPM:Requires>
       <TPM:Package name="context"/>

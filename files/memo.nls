@@ -1,0 +1,72 @@
+%D \module
+%D   [       file=memo,
+%D        version=2008.05.28,
+%D          title=\CONTEXT\ Letter Style,
+%D       subtitle=Memo style,
+%D         author=Wolfgang Schuster,
+%D           date=\currentdate,
+%D      copyright=Wolfgang Schuster]
+
+\unprotect
+
+\useletterstyle[blockstyle]
+
+\def\letter!order!sections
+  {\v!date\v!line,\v!reference\v!line,\v!inside\v!address,
+   \v!letter\v!head,\v!special\v!notation,\v!title,
+   \v!opening,\v!subject,\v!content,\v!closing,\v!appendices}
+
+\setupletterstyle
+  [\v!letter\v!head,\v!reference\v!line,
+   \v!special\v!notation,\v!inside\v!address,
+   \v!title,\v!subject]
+  [\c!before=\nowhitespace,
+   \c!after=\nowhitespace]
+
+\setupletterstyle
+  [\v!subject,\v!content,\v!closing]
+  [\c!after={\blank[\v!line]}]
+
+\setupletterstyle
+  [\v!closing]
+  [\c!leftmargin=.5\textwidth]
+
+\setupletterstyle
+  [\v!firstpage,\v!secondpage]
+  [\c!backspace=1in,
+   \c!width=\v!middle,
+   \c!topspace=1in,
+   \c!header=0in,
+   \c!footer=0in,
+   \c!height=\v!fit]
+
+\setupletterstyle
+  [\v!option]
+  [\c!whitespace=\v!line,
+   \c!opening=\v!no,
+   \c!reference\c!line=\v!no,
+   \v!special\v!notation=\v!no,
+   \c!title=\v!no]
+
+\setuplabeltext[\s!en][\c!date=Date: ]
+
+\startsetups[letter:\v!date\v!line]
+\labeltext\c!date\lettervalue\c!date
+\stopsetups
+
+\startsetups[letter:\v!letter\v!head]
+\let\\\crlf
+\labeltext\c!fromname\lettervalue\c!fromname
+\stopsetups
+
+\startsetups[letter:\v!inside\v!address]
+\let\\\crlf
+\labeltext\c!toname\lettervalue\c!toname
+\stopsetups
+
+\startsetups[letter:subject]
+\let\\\crlf
+\labeltext\c!subject\lettervalue\c!subject
+\stopsetups
+
+\protect \endinput

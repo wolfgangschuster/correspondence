@@ -1,0 +1,52 @@
+%D \module
+%D   [       file=french,
+%D        version=2008.04.28,
+%D          title=\CONTEXT\ Letter Style,
+%D       subtitle=French Style,
+%D         author=Wolfgang Schuster,
+%D           date=\currentdate,
+%D      copyright=Wolfgang Schuster]
+
+\unprotect
+
+\useletterstyle[dinb]
+
+\setupletterstyle
+  [\v!firstpage,\v!secondpage]
+  [\c!backspace=26mm,
+   \c!width=\v!middle,
+   \c!topspace=105mm,
+   \c!bottomspace=22mm,
+   \c!height=\v!fit]
+
+\setupletterstyle
+  [\v!secondpage]
+  [\c!topspace=27mm,
+   \c!header=12mm]
+
+\setupletterstyle
+  [\v!head]
+  [\c!hoffset=16mm,
+   \c!voffset=23mm]
+
+\setupletterstyle
+  [\v!address]
+  [\c!hoffset=115mm,
+   \c!voffset=53mm]
+
+\setupletterstyle
+  [\v!location]
+  [\c!hoffset=115mm,
+   \c!voffset=28mm]
+
+\setupletterstyle
+  [\v!title,\v!subject,\v!opening,\v!content,\v!closing,\v!appendices]
+  [\c!leftmargin=15mm]
+
+\setupletterstyle
+  [\v!option]
+  [\c!cutmark=\v!no,
+   \c!botmark=\v!no,
+   \c!usermark=\v!yes]
+
+\protect \endinput

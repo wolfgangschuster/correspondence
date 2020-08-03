@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=blockstyle,
-%D        version=2007.05.18,
+%D        version=2008.05.28,
 %D          title=\CONTEXT\ Letter Style,
 %D       subtitle=Blockstyle initalization,
 %D         author=Wolfgang Schuster,
@@ -29,9 +29,7 @@
 
 \startsetups[letter:\v!letter\v!head]
 \let\\\crlf
-\doiflettervalue\c!fromname   {\lettervalue\c!fromname   \crlf}
-\doiflettervalue\c!fromaddress{\lettervalue\c!fromaddress\crlf}
-\doiflettervalue\c!fromphone  {\lettervalue\c!fromphone  \crlf}
+\lettervalue\c!fromaddress
 \stopsetups
 
 \startsetups[letter:\v!date\v!line]

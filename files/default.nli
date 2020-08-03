@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2008.04.24,
+%D        version=2008.05.28,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -32,6 +32,9 @@
                   fromurl: fromurl
                    toname: toname
                 toaddress: toaddress
+                enclosing: enclosing
+                     copy: copy
+               postscript: postscript
 \stopconstants
 
 \startvariables            all
@@ -40,6 +43,8 @@
                      data: data
                    sender: sender
                  dispatch: dispatch
+                enclosing: enclosing
+                     copy: copy
 \stopvariables
 
 %D We have at the moment only the values from the core module, I use the settings
@@ -155,7 +160,7 @@
 
 \stopsetups
 
-%D Alternative d, text is place in a block like alternative bit the text
+%D Alternative d, text is placed in a block like alternative bit the text
 %D is put in a table.
 
 \long\def\doformatreferencelistd#1%
@@ -243,7 +248,7 @@
 %D \macros
 %D   {setupletter,setlettervalue}
 %D 
-%D The values for the letter field ist set eitheir either with \tex{setupletter}
+%D The values for the letter field is set eitheir either with \tex{setupletter}
 %D or with \tex{setlettervalue}, the first commands allows you to input the data
 %D in a key-val list while the second is only able to accept a single value.
 %D 
@@ -263,43 +268,43 @@
 %D number of arguments but the new definition will move to the core file as soon
 %D as I replace \tex{setupletter} in the core.
 
-\def\setupletter
-  {\dodoubleempty\dosetupletter}
-
-\def\dosetupletter[#1][#2]%
-  {\ifsecondargument
-     \dodosetupletter[#1][#2]%
-   \else
-     \dodosetupletter[#1][]%
-   \fi}
-
-\def\dodosetupletter[#1][#2]%
-  {\doifelsenothing{#2}
-     {\getparameters[\????ld][#1]}
-     {\def\dododosetupletter##1%
-        {\getparameters[\????ld##1][#2]}%
-      \processcommalist[#1]\dododosetupletter}}
-
-\def\lettervalue#1%
-  {\csname\????ld#1\endcsname}
-
-\def\doiflettervalue#1%
-  {\doiftextelse{\lettervalue{#1}}
-     \firstofoneargument
-     \gobbleoneargument}
-
-\def\doifelselettervalue#1%
-  {\doiftextelse{\lettervalue{#1}}
-     \firstoftwoarguments
-     \secondoftwoarguments}
-
-\definecomplexorsimple\setlettervalue
-
-\def\complexsetlettervalue[#1]#2%
-  {\setvalue{\????ld#1}{#2}}
-
-\def\simplesetlettervalue#1#2%
-  {\setvalue{\????ld#1}{#2}}
+%\def\setupletter
+%  {\dodoubleempty\dosetupletter}
+%
+%\def\dosetupletter[#1][#2]%
+%  {\ifsecondargument
+%     \dodosetupletter[#1][#2]%
+%   \else
+%     \dodosetupletter[#1][]%
+%   \fi}
+%
+%\def\dodosetupletter[#1][#2]%
+%  {\doifelsenothing{#2}
+%     {\getparameters[\????ld][#1]}
+%     {\def\dododosetupletter##1%
+%        {\getparameters[\????ld##1][#2]}%
+%      \processcommalist[#1]\dododosetupletter}}
+%
+%\def\lettervalue#1%
+%  {\csname\????ld#1\endcsname}
+%
+%\def\doiflettervalue#1%
+%  {\doiftextelse{\lettervalue{#1}}
+%     \firstofoneargument
+%     \gobbleoneargument}
+%
+%\def\doifelselettervalue#1%
+%  {\doiftextelse{\lettervalue{#1}}
+%     \firstoftwoarguments
+%     \secondoftwoarguments}
+%
+%\definecomplexorsimple\setlettervalue
+%
+%\def\complexsetlettervalue[#1]#2%
+%  {\setvalue{\????ld#1}{#2}}
+%
+%\def\simplesetlettervalue#1#2%
+%  {\setvalue{\????ld#1}{#2}}
 
 %D \macros
 %D   {startletter}
@@ -313,12 +318,17 @@
 %D \showsetup{startletter}
 
 \def\startletter
-  {\bgroup\dosingleempty\dostartletter}
+  {\bgroup\dodoubleempty\dostartletter}
 
-\def\dostartletter[#1]%
-  {\iffirstargument
+\def\dostartletter[#1][#2]%
+  {\ifsecondargument
      \setupletter[#1]%
-   \fi
+     \setvalue{\????ld\c!toaddress}{#2}%
+   \else\iffirstargument
+     \doifassignmentelse{#1}
+       {\setupletter[#1]}
+       {\setvalue{\????ld\c!toaddress}{#1}}%
+   \fi\fi
    \def\stopletter
      {\setups[letter:place]\egroup
       \setupsubpagenumber[\c!state=\@@@@lsoptionstate]}%
@@ -430,7 +440,25 @@
 
 \startsetups[letter:appendices]
 \let\\\endgraf
-\lettervalue\c!appendices
+\doflushletterdescription
+\stopsetups
+
+\dodefineletterdescription[\v!enclosing]
+
+\startsetups[letter:enclosing]
+\lettervalue\c!enclosing
+\stopsetups
+
+\dodefineletterdescription[\v!copy]
+
+\startsetups[letter:copy]
+\lettervalue\c!copy
+\stopsetups
+
+\dodefineletterdescription[\v!postscript]
+
+\startsetups[letter:postscript]
+\lettervalue\c!postscript
 \stopsetups
 
 \startsetups[letter:backaddress]

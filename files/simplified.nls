@@ -1,8 +1,8 @@
 %D \module
-%D   [       file=fullblock,
+%D   [       file=simplified,
 %D        version=2008.05.28,
 %D          title=\CONTEXT\ Letter Style,
-%D       subtitle=full-block/complete block style,
+%D       subtitle=Simplified style,
 %D         author=Wolfgang Schuster,
 %D           date=\currentdate,
 %D      copyright=Wolfgang Schuster]
@@ -33,7 +33,7 @@
   [\v!secondpage]
   [\c!header=.5in]
 
-\startsetups[letter:header:fullblock]
+\startsetups[letter:header:simplified]
 
   \framed
     [\c!frame=\v!off,
@@ -48,10 +48,12 @@
   [\v!header]
   [\c!lefttext=\lettervalue\c!toname,
    \c!middletext=\pagenumber,
-   \c!righttext=\setups{letter:header:fullblock}]
+   \c!righttext=\setups{letter:header:simplified}]
 
 \setupletterstyle
   [\v!option]
-  [\c!whitespace=\v!line]
+  [\c!whitespace=\v!line,
+   %\c!closing=\v!no, % not possible at the moment because it disables the signature
+   \c!opening=\v!no]
 
 \protect \endinput

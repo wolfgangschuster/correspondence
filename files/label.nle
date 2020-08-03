@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=label,
-%D        version=2008.04.21,
+%D        version=2008.05.28,
 %D          title=\CONTEXT\ Letter Extension,
 %D       subtitle=Labels,
 %D         author=Wolfgang Schuster,
@@ -19,7 +19,6 @@
                   invoice: invoice
                   subject: subject
                        cc: cc
-                  subject: subject
                 enclosure: enclosure
                     phone: phone
                       fax: fax
@@ -106,12 +105,12 @@
 
 %D Label: subject
 
-\setuplabeltext[\s!en][\c!subject=Subject]
-\setuplabeltext[\s!nl][\c!subject=Onderwerp]
-\setuplabeltext[\s!de][\c!subject=Betrifft]
-\setuplabeltext[\s!fr][\c!subject=Concernant]
-\setuplabeltext[\s!it][\c!subject=Oggetto]
-\setuplabeltext[\s!es][\c!subject=Asunto]
+\setuplabeltext[\s!en][\c!subject=Subject: ]
+\setuplabeltext[\s!nl][\c!subject=Onderwerp: ]
+\setuplabeltext[\s!de][\c!subject=Betrifft: ]
+\setuplabeltext[\s!fr][\c!subject=Concernant: ]
+\setuplabeltext[\s!it][\c!subject=Oggetto: ]
+\setuplabeltext[\s!es][\c!subject=Asunto: ]
 
 %D Label: cc
 
@@ -140,6 +139,15 @@
 \setuplabeltext[\s!it][\c!to=A]
 \setuplabeltext[\s!es][\c!to=A]
 
+%D Label: toname
+
+\setuplabeltext[\s!en][\c!toname=To: ]
+\setuplabeltext[\s!nl][\c!toname=Aan: ]
+\setuplabeltext[\s!de][\c!toname=An: ]
+\setuplabeltext[\s!fr][\c!toname=A: ]
+\setuplabeltext[\s!it][\c!toname=A: ]
+\setuplabeltext[\s!es][\c!toname=A: ]
+
 %D Label: from
 
 \setuplabeltext[\s!en][\c!from=From]
@@ -148,6 +156,15 @@
 \setuplabeltext[\s!fr][\c!from=De]
 \setuplabeltext[\s!it][\c!from=Da]
 \setuplabeltext[\s!es][\c!from=De]
+
+%D Label: fromname
+
+\setuplabeltext[\s!en][\c!fromname=From: ]
+\setuplabeltext[\s!nl][\c!fromname=Van: ]
+\setuplabeltext[\s!de][\c!fromname=Von: ]
+\setuplabeltext[\s!fr][\c!fromname=De: ]
+\setuplabeltext[\s!it][\c!fromname=Da: ]
+\setuplabeltext[\s!es][\c!fromname=De: ]
 
 %D Label: date
 

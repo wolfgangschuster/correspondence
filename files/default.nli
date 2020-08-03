@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2008.05.28,
+%D        version=2008.06.02,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -333,6 +333,28 @@
      {\setups[letter:place]\egroup
       \setupsubpagenumber[\c!state=\@@@@lsoptionstate]}%
    \startbuffer[lettercontent][startletter][stopletter]}
+
+%D Patched version of the \tex{flushbufferline} macro for \MKII,
+%D the changes are definition as long and removing of \tex{string}
+%D in the argument of the last write block.
+
+\long\def\flushbufferline#1%
+  {\iftmpblockstarted
+     \ifsegmentatebuffer
+       \ifemptybufferline
+         \immediate\write\tmpblocks{\string\stopbufferparagraph }%
+         \immediate\write\tmpblocks{\string\startbufferparagraph}%
+       \else
+         \immediate\write\tmpblocks{#1}%
+       \fi
+     \else
+       \immediate\write\tmpblocks{#1}%
+     \fi
+   \else
+     \doifsomething{#1}
+       {\tmpblockstartedtrue
+        \immediate\write\tmpblocks{#1}}%
+   \fi}
 
 %D \macros
 %D   {startlettercontent}

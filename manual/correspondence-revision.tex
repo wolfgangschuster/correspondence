@@ -15,17 +15,18 @@ version tag at the bottom of each file in the field date.
 \stoptabulatehead
 
 \startmodulecode
-tex.sprint(tex.ctxcatcodes,"\\starttabulate[|l|l|l|]")
+global.context.starttabulate( { "|l|l|l|" } )
 for k,v in global.pairs(correspondence.files) do
-    tex.sprint(tex.ctxcatcodes,"\\NC")
-    tex.sprint(tex.ctxcatcodes,correspondence.files[k]["name"])
-    tex.sprint(tex.ctxcatcodes,"\\NC")
-    tex.sprint(tex.ctxcatcodes,correspondence.files[k]["version"])
-    tex.sprint(tex.ctxcatcodes,"\\NC")
-    tex.sprint(tex.ctxcatcodes,correspondence.files[k]["description"])
-    tex.sprint(tex.ctxcatcodes,"\\NC\\NR")
+    global.context.NC()
+    global.context("%s",correspondence.files[k]["name"])
+    global.context.NC()
+    global.context("%s",correspondence.files[k]["version"])
+    global.context.NC()
+    global.context("%s",correspondence.files[k]["description"])
+    global.context.NC()
+    global.context.NR()
 end
-tex.sprint(tex.ctxcatcodes,"\\stoptabulate")
+global.context.stoptabulate()
 \stopmodulecode
 
 \stopcomponent

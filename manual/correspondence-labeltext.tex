@@ -20,13 +20,13 @@ only the labels for the {\em memo} style are not included.
   [name,room,yourref,yourmail,myref,mymail,customer,invoice,
    attention,subject,cc,enclosure,to,toname,from,fromname,date,
    phone,fax,email,url,bank,organization,city,zip,country,street]
-  \NC                                    \currentcommalistitem
-  \NC \mainlanguage[en]\labeltext{letter:\currentcommalistitem}
-  \NC \mainlanguage[nl]\labeltext{letter:\currentcommalistitem}
-  \NC \mainlanguage[de]\labeltext{letter:\currentcommalistitem}
-  \NC \mainlanguage[fr]\labeltext{letter:\currentcommalistitem}
-  \NC \mainlanguage[it]\labeltext{letter:\currentcommalistitem}
-  \NC \mainlanguage[es]\labeltext{letter:\currentcommalistitem}
+  \NC                                    #1
+  \NC \mainlanguage[en]\labeltext{letter:#1}
+  \NC \mainlanguage[nl]\labeltext{letter:#1}
+  \NC \mainlanguage[de]\labeltext{letter:#1}
+  \NC \mainlanguage[fr]\labeltext{letter:#1}
+  \NC \mainlanguage[it]\labeltext{letter:#1}
+  \NC \mainlanguage[es]\labeltext{letter:#1}
   \NC\NR
 \stopprocesscommalist
 \stoplinetable

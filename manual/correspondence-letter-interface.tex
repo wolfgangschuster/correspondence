@@ -1,6 +1,16 @@
 \startcomponent correspondence-letter-interface
 
-\environment correspondence-environment
+%\environment correspondence-environment
+
+\usemodule[letter]
+
+\ifx\startexamplecontent\undefined
+
+  \def\startexamplecontent     {\gobbleuntil\stopexamplecontent}
+  \def\examplecontent          {\dodoubleempty\doexamplecontent}
+  \def\doexamplecontent[#1][#2]{\framed[width=6cm,height=8cm]{}}
+
+\fi
 
 \chapter{Interface}
 

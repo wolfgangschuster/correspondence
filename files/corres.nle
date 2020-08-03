@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=corres,
-%D        version=2008.11.29,
+%D        version=2009.02.13,
 %D          title=\CONTEXT\ Letter Extension,
 %D       subtitle=XML Handling,
 %D         author=Wolfgang Schuster,
@@ -12,18 +12,6 @@
 \unprotect
 
 \usemodule[corres]
-
-\startinterface all
-  \setinterfaceconstant {prefix}       {prefix}
-  \setinterfaceconstant {suffix}       {suffix}
-  \setinterfaceconstant {initials}     {initials}
-  \setinterfaceconstant {formalname}   {formalname}
-  \setinterfaceconstant {informalname} {informalname}
-\stopinterface
-
-\startinterface all
-  \setinterfacevariable {handle} {handle}
-\stopinterface
 
 \setupletter
   [\c!prefix=\XMLflush{prefix},

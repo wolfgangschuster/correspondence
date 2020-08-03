@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-letter,
-%D        version=2008.12.25,
+%D        version=2008.02.13,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Framework for Letters,
 %D         author=Wolfgang Schuster,
@@ -601,10 +601,7 @@
 
   \page[\@@@@lsoptionpage]
 
-  \setupsubpagenumber
-    [\c!number=\@@@@lsoptionpagenumber,
-     \c!way=\v!by\v!text,
-     \c!state=\v!start]
+  \setupcorrespagenumber[\v!reset]
 
   \setuppagenumbering
     [\c!alternative=\@@@@lsoptionalternative,
@@ -618,8 +615,7 @@
   \setupbackgrounds
     [\v!page]
     [\c!setups={\v!letter:\v!place:\v!head,\v!letter:\v!place:\v!foot},
-     \c!background=\letter!list!backgrounds,
-     \c!backgroundcolor=\@@@@lsoptionbackgroundcolor]
+     \c!background=\letter!list!backgrounds]
 
   \doifletterstylevalue\v!option\c!bodyfont  {\setupbodyfont  [\@@@@lsoptionbodyfont  ]}
   \doifletterstylevalue\v!option\c!whitespace{\setupwhitespace[\@@@@lsoptionwhitespace]}
@@ -634,7 +630,7 @@
 
   \setuplayout[\v!reset]
 
-  \resetsubpagenumber
+  \resetcorrespagenumber
 
   \endgroup
 
@@ -649,26 +645,9 @@
   \directsetup{\v!letter:\v!initialize} % Settings at the begin
   \directsetup{\v!letter:\v!optimize  } % Interface dependend
   \directsetup{\v!letter:\v!layout    } % Page layout
-  \directsetup{\v!letter:\v!reset     } % Reset layers
   \directsetup{\v!letter:\v!layer     } % Place layers
   \directsetup{\v!letter:\v!sequence  } % Place content
   \directsetup{\v!letter:\v!finish    } % Settings at the end
-
-\stopsetups
-
-%D Reset the layer content.
-
-\def\letter!list!resetlayers
-  {\v!topmark,\v!botmark,\v!cutmark,\v!endmark,\v!usermark,\v!letternext,\v!lettermain}
-
-\def\dodoresetletterlayer#1%
-  {\resetlayer[\v!letter:#1]}
-
-\startsetups[\v!letter:\v!reset]
-
-  \processcommacommand[\letter!list!resetlayers]\dodoresetletterlayer
-  
-  \setuplayer[\v!letter:\v!letternext][\c!state=\v!continue]
 
 \stopsetups
 

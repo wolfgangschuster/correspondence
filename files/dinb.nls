@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=dinb,
-%D        version=2008.12.23,
+%D        version=2009.02.14,
 %D          title=\CONTEXT\ Letter Style,
 %D       subtitle=DIN 676 B,
 %D         author=Wolfgang Schuster,
@@ -75,9 +75,14 @@
 
 \setupletterstyle
   [\v!head,\v!nexthead,\v!lefthead,\v!righthead]
+  [\v!layer]
   [\c!hoffset=\backspace,
-   \c!voffset=16.9mm,
-   \c!width=\textwidth,
+   \c!voffset=16.9mm]
+
+\setupletterstyle
+  [\v!head,\v!nexthead,\v!lefthead,\v!righthead]
+  [\v!frame]
+  [\c!width=\textwidth,
    \c!height=28.1mm]
 
 \setupletterstyle
@@ -92,16 +97,26 @@
 
 \setupletterstyle
   [\v!address]
+  [\v!layer]
   [\c!hoffset=\backspace,
-   \c!voffset=50mm,
-   \c!width=85mm,
+   \c!voffset=50mm]
+
+\setupletterstyle
+  [\v!address]
+  [\v!frame]
+  [\c!width=85mm,
    \c!height=40mm]
 
 \setupletterstyle
   [\v!backaddress]
+  [\v!layer]
   [\c!hoffset=\backspace,
-   \c!height=5mm,
-   \c!voffset=\dimexpr\letterstylevalue\v!address\c!voffset-\letterstylevalue\v!backaddress\c!height\relax,
+   \c!voffset=\dimexpr\letterstylevalue{\v!address\v!layer}\c!voffset-\letterstylevalue{\v!backaddress\v!frame}\c!height\relax]
+
+\setupletterstyle
+  [\v!backaddress]
+  [\v!frame]
+  [\c!height=5mm,
    \c!width=85mm,
    \c!style=\c!tf\c!xx]
 

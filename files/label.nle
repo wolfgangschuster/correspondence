@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=label,
-%D        version=2008.08.08,
+%D        version=2009.02.13,
 %D          title=\CONTEXT\ Letter Extension,
 %D       subject=Labels,
 %D         author=Wolfgang Schuster,
@@ -9,30 +9,9 @@
 %D          email=schuster.wolfgang@googlemail.com,
 %D        license=Public Domain]
 
-\unprotect
-
 % french labels: Olivier Guéry
 
-\startinterface all
-  \setinterfaceconstant {yourref}   {yourref}
-  \setinterfaceconstant {yourmail}  {yourmail}
-  \setinterfaceconstant {myref}     {myref}
-  \setinterfaceconstant {mymail}    {mymail}
-  \setinterfaceconstant {customer}  {customer}
-  \setinterfaceconstant {invoice}   {invoice}
-  \setinterfaceconstant {subject}   {subject}
-  \setinterfaceconstant {cc}        {cc}
-  \setinterfaceconstant {enclosure} {enclosure}
-  \setinterfaceconstant {phone}     {phone}
-  \setinterfaceconstant {fax}       {fax}
-  \setinterfaceconstant {email}     {email}
-  \setinterfaceconstant {url}       {url}
-  \setinterfaceconstant {bank}      {bank}
-  \setinterfaceconstant {name}      {name}
-  \setinterfaceconstant {room}      {room}
-%  \setinterfaceconstant {yourorder}  {yourorder}  -> Ihre Bestellung vom
-%  \setinterfaceconstant {ourinvoice} {ourinvoice} -> Unsere Rechnung vom
-\stopinterface
+\unprotect
 
 %D Label: name
 

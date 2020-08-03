@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2009.02.09,
+%D        version=2009.02.14,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -11,56 +11,7 @@
 
 %M \loadsetups[t-letter.xml]
 
-%D \subject{Constants and Variables}
-
 \unprotect
-
-%D I define a few additional constants and variables, I will move them
-%D to the base some time.
-
-\startinterface all
-  \setinterfaceconstant {opening}      {opening}
-  \setinterfaceconstant {closing}      {closing}
-  \setinterfaceconstant {signature}    {signature}
-  \setinterfaceconstant {dispatch}     {dispatch}
-  \setinterfaceconstant {appendices}   {appendices}
-  \setinterfaceconstant {fromaddress}  {fromaddress}
-  \setinterfaceconstant {frombank}     {frombank}
-  \setinterfaceconstant {frommail}     {frommail}
-  \setinterfaceconstant {fromfax}      {fromfax}
-  \setinterfaceconstant {fromlogo}     {fromlogo}
-  \setinterfaceconstant {fromname}     {fromname}
-  \setinterfaceconstant {fromphone}    {fromphone}
-  \setinterfaceconstant {fromurl}      {fromurl}
-  \setinterfaceconstant {toname}       {toname}
-  \setinterfaceconstant {toaddress}    {toaddress}
-  \setinterfaceconstant {enclosure}    {enclosure}
-  \setinterfaceconstant {copy}         {copy}
-  \setinterfaceconstant {postscript}   {postscript}
-  \setinterfaceconstant {attention}    {attention}
-  \setinterfaceconstant {distribution} {distribution}
-  \setinterfaceconstant {salutation}   {salutation}
-  \setinterfaceconstant {addressee}    {addressee}
-\stopinterface
-
-\startinterface all
-  \setinterfacevariable {e}          {e}
-  \setinterfacevariable {data}       {data}
-  \setinterfacevariable {sender}     {sender}
-  \setinterfacevariable {dispatch}   {dispatch}
-  \setinterfacevariable {enclosure}  {enclosure}
-  \setinterfacevariable {copy}       {copy}
-  \setinterfacevariable {nobreak}    {nobreak}
-  \setinterfacevariable {endgraf}    {endgraf}
-  \setinterfacevariable {memo}       {memo}
-  \setinterfacevariable {addressee}  {addressee}
-  \setinterfacevariable {french}     {french}
-  \setinterfacevariable {simplified} {simplified}
-  \setinterfacevariable {fullblock}  {fullblock}
-  \setinterfacevariable {hanging}    {hanging}
-  \setinterfacevariable {modified}   {modified}
-  \setinterfacevariable {semiblock}  {semiblock}
-\stopinterface
 
 %D \subject{Reference line}
 %D 
@@ -107,12 +58,12 @@
 \setupletterstyle
   [\v!reference]
   [\c!hoffset=\backspace,
-   \c!voffset=\dimexpr\letterstylevalue\v!address\c!voffset+\letterstylevalue\v!address\c!height+\plusthree\c!mm\relax,
+   \c!voffset=\dimexpr\letterstylevalue{\v!address\v!layer}\c!voffset+\letterstylevalue{\v!address\v!frame}\c!height+\plusthree\c!mm\relax,
    \c!width=\textwidth]
 
 \setupletterstyle
   [\v!firstpage]
-  [\c!topspace=\dimexpr\letterstylevalue\v!reference\c!voffset+\letter!height!reference+\plustwo\lineheight\relax]
+  [\c!topspace=\dimexpr\letterstylevalue{\v!reference\v!layer}\c!voffset+\letterstylevalue\v!reference\c!spaceafter+\letter!height!reference\relax]
 
 \stopsetups
 
@@ -141,7 +92,7 @@
   [\v!reference]
   [\v!layer]
   [\c!hoffset=125.7mm,
-   \c!voffset=\letterstylevalue\v!address\c!voffset]
+   \c!voffset=\letterstylevalue{\v!address\v!layer}\c!voffset]
 
 \setupletterstyle
   [\v!reference]
@@ -206,7 +157,7 @@
   [\v!reference]
   [\v!layer]
   [\c!hoffset=125.7mm,
-   \c!voffset=\letterstylevalue\v!address\c!voffset]
+   \c!voffset=\letterstylevalue{\v!address\v!layer}\c!voffset]
 
 \setupletterstyle
   [\v!reference]
@@ -273,10 +224,36 @@
 %D 
 %D \showsetup{startletter}
 
+% \def\startletter
+%   {\bgroup\dodoubleempty\dostartletter}
+%
+% \def\dostartletter[#1][#2]%
+%   {\ifsecondargument
+%      \getparameters[\????ld][#1]%
+%      \doifundefinedelse{\????ld\????ld#2}
+%        {\setvalue{\????ld\c!toaddress}{#2}}
+%        {\setvalue{\????ld\c!toaddress}{\getvalue{\????ld\????ld#2}}}%
+%    \else\iffirstargument
+%      \doifassignmentelse{#1}
+%        {\getparameters[\????ld][#1]}
+%        {\doifundefinedelse{\????ld\????ld#1}
+%           {\setvalue{\????ld\c!toaddress}{#1}}
+%           {\setvalue{\????ld\c!toaddress}{\getvalue{\????ld\????ld#1}}}}%
+%    \fi\fi
+%    \def\stopletter
+%      {\directsetup{\v!letter:\v!place}\egroup}%
+%    \dostartbuffer[lettercontent][startletter][stopletter]}
+
+\long\def\dosetbuffer[#1]#2\endbuffer % added \long
+  {\begingroup
+   \setcurrentbuffer{#1}%
+   \mksetbuffer{#2}%
+   \endgroup}
+
 \def\startletter
   {\bgroup\dodoubleempty\dostartletter}
 
-\def\dostartletter[#1][#2]%
+\long\def\dostartletter[#1][#2]#3\stopletter
   {\ifsecondargument
      \getparameters[\????ld][#1]%
      \doifundefinedelse{\????ld\????ld#2}
@@ -289,31 +266,30 @@
           {\setvalue{\????ld\c!toaddress}{#1}}
           {\setvalue{\????ld\c!toaddress}{\getvalue{\????ld\????ld#1}}}}%
    \fi\fi
-   \def\stopletter
-     {\directsetup{\v!letter:\v!place}\egroup\setupsubpagenumber[\c!state=\v!start]}%
-   \dostartbuffer[lettercontent][startletter][stopletter]}
+   \setbuffer[lettercontent]#3\endbuffer
+   \directsetup{\v!letter:\v!place}\egroup}
 
-%D Patched version of the \tex{flushbufferline} macro for \MKII,
-%D the changes are definition as long and removing of \tex{string}
-%D in the argument of the last write block.
-
-\long\def\flushbufferline#1%
-  {\iftmpblockstarted
-     \ifsegmentatebuffer
-       \ifemptybufferline
-         \immediate\write\tmpblocks{\string\stopbufferparagraph }%
-         \immediate\write\tmpblocks{\string\startbufferparagraph}%
-       \else
-         \immediate\write\tmpblocks{#1}%
-       \fi
-     \else
-       \immediate\write\tmpblocks{#1}%
-     \fi
-   \else
-     \doifsomething{#1}
-       {\tmpblockstartedtrue
-        \immediate\write\tmpblocks{#1}}%
-   \fi}
+% %D Patched version of the \tex{flushbufferline} macro for \MKII,
+% %D the changes are definition as long and removing of \tex{string}
+% %D in the argument of the last write block.
+%
+% \long\def\flushbufferline#1%
+%   {\iftmpblockstarted
+%      \ifsegmentatebuffer
+%        \ifemptybufferline
+%          \immediate\write\tmpblocks{\string\stopbufferparagraph }%
+%          \immediate\write\tmpblocks{\string\startbufferparagraph}%
+%        \else
+%          \immediate\write\tmpblocks{#1}%
+%        \fi
+%      \else
+%        \immediate\write\tmpblocks{#1}%
+%      \fi
+%    \else
+%      \doifsomething{#1}
+%        {\tmpblockstartedtrue
+%         \immediate\write\tmpblocks{#1}}%
+%    \fi}
 
 %D \macros
 %D   {startlettercontent}

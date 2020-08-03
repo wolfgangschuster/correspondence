@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=pragma,
-%D        version=2008.02.17,
+%D        version=2009.02.12,
 %D          title=\CONTEXT\ Letter Extension,
 %D       subtitle=Pragma Style,
 %D         author=Wolfgang Schuster,
@@ -13,6 +13,10 @@
 
 \useletterstyle    [pragma] % prefined layout
 \useletterextension[pragma] % example text
+
+\setupletterstyle
+  [\v!reference]
+  [\c!alternative=\v!none]
 
 \setvariables
   [letter:head]
@@ -29,22 +33,7 @@
 
 \setvariables
   [letter:data]
-  [address=,
-   subject=,
-   date=,
-   concerns=,
-   residence=,
-   reference=,
-   opening=,
-   initials=,
-   prefix=,
-   suffix=,
-   informalname=,
-   formalname=,
-   content={\getbuffer[texletter]},
-   author=,
-   greeting=,
-   appendices=]
+  [content={\getbuffer[texletter]}]
 
 \startsetups[letter:address]
   \def\\{\endgraf}\getvariable{letter:data}{address}
@@ -90,7 +79,7 @@
     [\v!address]
     [\v!layer]
     [\c!line=\getvariable{letter:address}{line},
-     \c!hoffset=\dimexpr\backspace-\linewidth-\getvariable{letter:address}{hoffset}\relax,
+     \c!hoffset=\dimexpr\backspace-\linewidth+\getvariable{letter:address}{hoffset}\relax,
      \c!height=\getvariable{letter:address}{noflines}\lineheight]
 
   \setupletterstyle

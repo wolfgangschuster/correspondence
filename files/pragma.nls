@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=pragma,
-%D        version=2008.02.07,
+%D        version=2009.02.12,
 %D          title=\CONTEXT\ Letter Style,
 %D       subtitle=Pragma Style,
 %D         author=Wolfgang Schuster,
@@ -10,6 +10,8 @@
 %D        license=Public Domain]
 
 \unprotect
+
+\useletterstyle[default]
 
 \setupcolors
   [\c!state=\v!start]
@@ -66,8 +68,7 @@
 \setupletterstyle
   [\v!reference]
   [\c!hoffset=\dimexpr\backspace-\linewidth,
-   \c!voffset=\dimexpr\letterstylevalue{\v!address\v!layer}\c!voffset+
-              \letterstylevalue{\v!address\v!layer}\v!height\relax,
+   \c!voffset=\dimexpr\letterstylevalue{\v!address\v!layer}\c!voffset+\letterstylevalue{\v!address\v!layer}\v!height\relax,
    \c!width=\dimexpr\textwidth+2\linewidth,
    \c!height=3\lineheight]
 

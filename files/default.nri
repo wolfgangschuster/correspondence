@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2008.12.21,
+%D        version=2009.02.14,
 %D          title=\CONTEXT\ Resume Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -10,11 +10,6 @@
 %D        license=Public Domain]
 
 \unprotect
-
-\startinterface all
-  \setinterfacevariable {casual}  {casual}
-  \setinterfacevariable {classic} {classic}
-\stopinterface
 
 %D The resume provides no own commands to write the information
 %D for your curriculum vitae but you can use \CONTEXT's own
@@ -57,15 +52,31 @@
 %D \stopcontent
 %D \stoptyping
 
+% \def\startresume
+%   {\bgroup\dosingleempty\dostartresume}
+%
+% \def\dostartresume[#1]%
+%   {\iffirstargument
+%      \getparameters[\????rd][#1]%
+%    \fi
+%    \def\stopresume{\directsetup{\v!resume:\v!place}\egroup\setupsubpagenumber[\c!state=\v!start]}%
+%    \dostartbuffer[resumecontent][startresume][stopresume]}
+
+\long\def\dosetbuffer[#1]#2\endbuffer % added \long
+  {\begingroup
+   \setcurrentbuffer{#1}%
+   \mksetbuffer{#2}%
+   \endgroup}
+
 \def\startresume
   {\bgroup\dosingleempty\dostartresume}
 
-\def\dostartresume[#1]%
+\long\def\dostartresume[#1]#2\stopresume
   {\iffirstargument
      \getparameters[\????rd][#1]%
    \fi
-   \def\stopresume{\directsetup{\v!resume:\v!place}\egroup\setupsubpagenumber[\c!state=\v!start]}%
-   \dostartbuffer[resumecontent][startresume][stopresume]}
+   \setbuffer[resumecontent]#2\endbuffer
+   \directsetup{\v!resume:\v!place}\egroup}
 
 \def\startresumecontent
   {\dostartbuffer[resumecontent][startresumecontent][stopresumecontent]}
@@ -85,7 +96,7 @@
 \executeifdefined{\v!resume:\v!foot:\@@@@rsfootalternative}\donothing
 \stopsetups
 
-\startsetups[\v!letter:\v!nexthead]
+\startsetups[\v!resume:\v!nexthead]
 \executeifdefined{\v!resume:\v!nexthead:\@@@@rsnextheadalternative}\donothing
 \stopsetups
 

@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=knuth,
-%D        version=2008.11.29,
+%D        version=2009.01.23,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Lettformat Interface, % Donald Knuth's own letter format
 %D         author=Wolfgang Schuster,
@@ -37,6 +37,7 @@
 \startsetups[\v!letter:\v!opening]
 
   \obeylines
+  \def\par{\letterstylevalue\v!opening\c!separator}
   \getbuffer[address]
 
 \stopsetups
@@ -51,8 +52,14 @@
 
   \leftskip=4in
   \obeylines
-  \def\par{\normalpar\vskip1cm\let\par\normalpar}
+  \def\par{\normalpar\vskip1cm\def\par{\normalpar\nowhitespace}}
   \getbuffer[closing]
+
+\stopsetups
+
+\startsetups[\v!letter:\v!nexthead]
+
+  \getvalue{\v!letter:\v!nexthead:\v!knuth}
 
 \stopsetups
 

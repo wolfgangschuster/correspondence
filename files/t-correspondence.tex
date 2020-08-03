@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-correspondence,
-%D        version=2008.02.09,
+%D        version=2008.02.13,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Correspondence,
 %D         author=Wolfgang Schuster,
@@ -37,6 +37,51 @@
   \setinterfaceconstant {content}         {content}
   \setinterfaceconstant {backaddress}     {backaddress}
   \setinterfaceconstant {optimize}        {optimize}
+  \setinterfaceconstant {opening}         {opening}
+  \setinterfaceconstant {closing}         {closing}
+  \setinterfaceconstant {signature}       {signature}
+  \setinterfaceconstant {dispatch}        {dispatch}
+  \setinterfaceconstant {appendices}      {appendices}
+  \setinterfaceconstant {fromaddress}     {fromaddress}
+  \setinterfaceconstant {frombank}        {frombank}
+  \setinterfaceconstant {frommail}        {frommail}
+  \setinterfaceconstant {fromfax}         {fromfax}
+  \setinterfaceconstant {fromlogo}        {fromlogo}
+  \setinterfaceconstant {fromname}        {fromname}
+  \setinterfaceconstant {fromphone}       {fromphone}
+  \setinterfaceconstant {fromurl}         {fromurl}
+  \setinterfaceconstant {toname}          {toname}
+  \setinterfaceconstant {toaddress}       {toaddress}
+  \setinterfaceconstant {enclosure}       {enclosure}
+  \setinterfaceconstant {copy}            {copy}
+  \setinterfaceconstant {postscript}      {postscript}
+  \setinterfaceconstant {attention}       {attention}
+  \setinterfaceconstant {distribution}    {distribution}
+  \setinterfaceconstant {salutation}      {salutation}
+  \setinterfaceconstant {addressee}       {addressee}
+  \setinterfaceconstant {prefix}          {prefix}
+  \setinterfaceconstant {suffix}          {suffix}
+  \setinterfaceconstant {initials}        {initials}
+  \setinterfaceconstant {formalname}      {formalname}
+  \setinterfaceconstant {informalname}    {informalname}
+  \setinterfaceconstant {yourref}         {yourref}
+  \setinterfaceconstant {yourmail}        {yourmail}
+  \setinterfaceconstant {myref}           {myref}
+  \setinterfaceconstant {mymail}          {mymail}
+  \setinterfaceconstant {customer}        {customer}
+  \setinterfaceconstant {invoice}         {invoice}
+  \setinterfaceconstant {subject}         {subject}
+  \setinterfaceconstant {cc}              {cc}
+  \setinterfaceconstant {enclosure}       {enclosure}
+  \setinterfaceconstant {phone}           {phone}
+  \setinterfaceconstant {fax}             {fax}
+  \setinterfaceconstant {email}           {email}
+  \setinterfaceconstant {url}             {url}
+  \setinterfaceconstant {bank}            {bank}
+  \setinterfaceconstant {name}            {name}
+  \setinterfaceconstant {room}            {room}
+  \setinterfaceconstant {yourorder}       {yourorder}
+  \setinterfaceconstant {ourinvoice}      {ourinvoice}
 \stopinterface
 
 \startinterface all
@@ -80,6 +125,36 @@
   \setinterfacevariable {notation}    {notation}
   \setinterfacevariable {inside}      {inside}
   \setinterfacevariable {optimize}    {optimize}
+  \setinterfacevariable {file}        {file}
+  \setinterfacevariable {e}           {e}
+  \setinterfacevariable {data}        {data}
+  \setinterfacevariable {sender}      {sender}
+  \setinterfacevariable {dispatch}    {dispatch}
+  \setinterfacevariable {enclosure}   {enclosure}
+  \setinterfacevariable {copy}        {copy}
+  \setinterfacevariable {nobreak}     {nobreak}
+  \setinterfacevariable {endgraf}     {endgraf}
+  \setinterfacevariable {memo}        {memo}
+  \setinterfacevariable {addressee}   {addressee}
+  \setinterfacevariable {french}      {french}
+  \setinterfacevariable {simplified}  {simplified}
+  \setinterfacevariable {fullblock}   {fullblock}
+  \setinterfacevariable {hanging}     {hanging}
+  \setinterfacevariable {modified}    {modified}
+  \setinterfacevariable {semiblock}   {semiblock}
+  \setinterfacevariable {handle}      {handle}
+  \setinterfacevariable {casual}      {casual}
+  \setinterfacevariable {classic}     {classic}
+  \setinterfacevariable {knuth}       {knuth}
+  \setinterfacevariable {firstname}   {firstname}
+  \setinterfacevariable {familyname}  {familyname}
+  \setinterfacevariable {street}      {street}
+  \setinterfacevariable {town}        {town}
+  \setinterfacevariable {mobile}      {mobile}
+  \setinterfacevariable {phone}       {phone}
+  \setinterfacevariable {fax}         {fax}
+  \setinterfacevariable {email}       {email}
+  \setinterfacevariable {info}        {info}
 \stopinterface
 
 \startinterface all
@@ -96,6 +171,7 @@
 %
 % 1: letter|resume / interface|style|extension / filename
 % 2: letter|resume / interface|style|extension / filename
+% 3: <number> / <number>
 
 \definemessageconstant {correspondence}
 
@@ -103,7 +179,74 @@
         title: correspondence
             1: loading -- -- --
             2: -- -- -- not found
+            3: correspage set -- processed (size --)
 \stopmessages
+
+%D Page numbering
+
+\def\????cn{@@@@cn}
+
+\definesystemconstant {correspage}
+
+\definetwopasslist\s!correspage
+
+\definenumber[\s!correspage]
+
+\newcount\correspageno
+\newif\ifresettingcorrespagenumber
+
+\def\newnofcorrespages{0}
+\def\nofcorrespages   {0}
+
+\def\savenofcorrespages
+  {\showmessage\m!correspondence{3}{\newnofcorrespages,\the\correspageno}%
+   \immediatesavetwopassdata{\s!correspage}{\newnofcorrespages}{\the\correspageno}}
+
+\def\numberofcorrespages
+  {\nofcorrespages}
+
+\def\correspagenumber
+  {\the\correspageno}
+
+\appendtoks\savenofcorrespages\to\everybye
+
+\def\setupcorrespagenumber
+  {\dosingleargument\dosetupcorrespagenumber}
+
+\def\dosetupcorrespagenumber[#1]%
+  {\doifelse{#1}\v!reset
+     {\resetcorrespagenumber}
+     {\getparameters[\????cn][#1]}}
+
+\def\resetcorrespagenumber
+  {\global\resettingcorrespagenumbertrue}
+
+\def\setcorrespagenumbers
+  {\iftwopassdatafound
+     \xdef\nofcorrespages{\twopassdata}%
+   \else
+     \xdef\nofcorrespages{0}%
+   \fi}
+
+\def\gotonextcorrespage
+  {\ifresettingcorrespagenumber
+     \resetnumber[\s!correspage]%
+     \global\resettingcorrespagenumberfalse
+   \fi
+   \xdef\oldcorrespage{\the\correspageno}%
+   \incrementnumber[\s!correspage]%
+   \global\correspageno\rawnumber[\s!correspage]\relax
+   \ifnum\correspageno=\plusone
+     \gettwopassdata\s!correspage
+     \setcorrespagenumbers
+     \ifnum\oldcorrespage>\zerocount
+       \showmessage\m!correspondence{3}{\newnofcorrespages,\oldcorrespage}%
+       \immediatesavetwopassdata{\s!correspage}{\newnofcorrespages}{\oldcorrespage}%
+     \fi
+     \doglobal\increment\newnofcorrespages\relax
+   \fi}
+
+\appendtoks\gotonextcorrespage\to\beforeeverypage
 
 %D Value list
 
@@ -299,6 +442,8 @@
       \c!alternative=\v!a,
       \c!separator=\crlf,
       \c!offset=\zeropoint,
+      \c!spacebefore=\zeropoint,
+      \c!spaceafter=\zeropoint,
       \c!leftmargin=\zeropoint,
       \c!rightmargin=\zeropoint]%
    \dodosetupcorrespondencelayer
@@ -340,29 +485,6 @@
 \setvalue{@@headfoot@@\v!page     }{\!!donedtrue            }
 \setvalue{@@headfoot@@\v!subpage  }{\!!donedfalse           }
 
-\def\dosetheaderfooterlayer[#1][#2][#3]%
-  {\!!doneafalse % first page
-   \!!donebfalse % even numbered pages
-   \!!donecfalse % odd numbered pages
-   \!!donedfalse % real pagenumber
-   \processcommacommand[\csname#2#3\c!state\endcsname]\dodosetheaderfooterlayer
-   \doifnotvalue{#2#3\v!layer\c!state}\v!stop{\setuplayer[#1:#3][\c!state=\v!start]}%
-   \ifnum\if!!doned\pagenumber\else\subpagenumber\fi=\plusone
-     \if!!donea\dosetcorrespondencelayer[#1][#2][#3]\fi
-   \else
-     \ifodd\if!!doned\pagenumber\else\subpagenumber\fi
-       \if!!donec\dosetcorrespondencelayer[#1][#2][#3]\fi
-     \else
-       \if!!doneb\dosetcorrespondencelayer[#1][#2][#3]\fi
-   \fi\fi}
-
-% Alternative version of the macro above for the experimental
-% interface because \subpagenumber can't be used in \ifdim.
-%
-% \newcount\correspondencepagenumber
-%
-% \appendtoks\global\advance\correspondencepagenumber\plusone\to\everyaftershipout
-%
 % \def\dosetheaderfooterlayer[#1][#2][#3]%
 %   {\!!doneafalse % first page
 %    \!!donebfalse % even numbered pages
@@ -370,14 +492,33 @@
 %    \!!donedfalse % real pagenumber
 %    \processcommacommand[\csname#2#3\c!state\endcsname]\dodosetheaderfooterlayer
 %    \doifnotvalue{#2#3\v!layer\c!state}\v!stop{\setuplayer[#1:#3][\c!state=\v!start]}%
-%    \ifnum\if!!doned\pagenumber\else\correspondencepagenumber\fi=\plusone
+%    \ifnum\if!!doned\pagenumber\else\subpagenumber\fi=\plusone
 %      \if!!donea\dosetcorrespondencelayer[#1][#2][#3]\fi
 %    \else
-%      \ifodd\if!!doned\pagenumber\else\correspondencepagenumber\fi
+%      \ifodd\if!!doned\pagenumber\else\subpagenumber\fi
 %        \if!!donec\dosetcorrespondencelayer[#1][#2][#3]\fi
 %      \else
 %        \if!!doneb\dosetcorrespondencelayer[#1][#2][#3]\fi
 %    \fi\fi}
+
+% Alternative version of the macro above for the experimental
+% interface because \subpagenumber can't be used in \ifdim.
+
+\def\dosetheaderfooterlayer[#1][#2][#3]%
+  {\!!doneafalse % first page
+   \!!donebfalse % even numbered pages
+   \!!donecfalse % odd numbered pages
+   \!!donedfalse % real pagenumber
+   \processcommacommand[\csname#2#3\c!state\endcsname]\dodosetheaderfooterlayer
+   \doifnotvalue{#2#3\v!layer\c!state}\v!stop{\setuplayer[#1:#3][\c!state=\v!start]}%
+   \ifnum\if!!doned\pagenumber\else\correspagenumber\fi=\plusone
+     \if!!donea\dosetcorrespondencelayer[#1][#2][#3]\fi
+   \else
+     \ifodd\if!!doned\pagenumber\else\correspagenumber\fi
+       \if!!donec\dosetcorrespondencelayer[#1][#2][#3]\fi
+     \else
+       \if!!doneb\dosetcorrespondencelayer[#1][#2][#3]\fi
+   \fi\fi}
 
 %D Sections
 

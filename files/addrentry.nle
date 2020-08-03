@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=addrentry,
-%D        version=2008.11.29,
+%D        version=2008.12.26,
 %D          title=\CONTEXT\ Letter Extension,
 %D       subtitle=KOMA-Script addrentry support,
 %D         author=Wolfgang Schuster,
@@ -22,8 +22,8 @@
 
 \let\adrchar\gobbleoneargument
 
-\def\address!file!extension{adr}
+\definefileconstant {addressfile} {adr}
 
-\definecorrespondencefile[\v!address\v!file][\address!file!extension]
+\definecorrespondencefile[\v!address][\v!file][\f!addressfile]
 
 \protect \endinput

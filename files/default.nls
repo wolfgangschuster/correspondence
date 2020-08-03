@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2008.12.23,
+%D        version=2009.02.14,
 %D          title=\CONTEXT\ Letter Style,
 %D       subtitle=Blockstyle initalization,
 %D         author=Wolfgang Schuster,
@@ -77,7 +77,8 @@
   [\v!reference]
   [\v!option]
   [\c!list=\lettervalue\c!list,
-   \c!alternative=\lettervalue\c!alternative]
+   \c!alternative=\lettervalue\c!alternative,
+   \c!spaceafter=\plustwo\lineheight]
 
 \setupletterstyle
   [\v!backaddress]

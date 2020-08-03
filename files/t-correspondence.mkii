@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-correspondence,
-%D        version=2009.07.22,
+%D        version=2009.09.21,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Correspondence,
 %D         author=Wolfgang Schuster,
@@ -10,6 +10,8 @@
 %D        license=Public Domain]
 
 \unprotect
+
+\startmodule[correspondence]
 
 % Placeholders for the messages:
 %
@@ -26,6 +28,7 @@
   \setinterfacemessage{correspondence}{2}    {-- -- -- not found}
   \setinterfacemessage{correspondence}{3}    {correspage set -- processed (size --)}
   \setinterfacemessage{correspondence}{4}    {--: --}
+  \setinterfacemessage{correspondence}{5}    {your context is too old, you use you need at last version '--'} % not used in mkii
 \stopinterface
 
 %D Page numbering
@@ -364,7 +367,7 @@
    \getparameters
      [#2#3]
      [\c!location=\v!left,
-      \c!inbetween=\nowhitespace,
+      \c!inbetween={\blank[\v!nowhite]},
       \c!before=\blank,
       \c!after=\blank,
       \c!width=\v!broad,
@@ -435,5 +438,7 @@
 \def\docorrespondenceelement[#1][#2][#3]%
   {\edef\currentcorrespondenceelement{#2}%
    \csname#1:#2:#3\endcsname}
+
+\stopmodule
 
 \protect \endinput

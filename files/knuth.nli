@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=knuth,
-%D        version=2009.02.19,
+%D        version=2009.09.21,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Lettformat Interface, % Donald Knuth's own letter format
 %D         author=Wolfgang Schuster,
@@ -56,7 +56,7 @@
 
   \leftskip\dimexpr\textwidth/13*8\relax
   \obeylines
-  \def\par{\normalpar\vskip1cm\def\par{\normalpar\nowhitespace}}
+  \def\par{\normalpar\vskip1cm\def\par{\normalpar\blank[\v!nowhite]}}
   \getbuffer[closing]\normalpar
 
 \stopsetups

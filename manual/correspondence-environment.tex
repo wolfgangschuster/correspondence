@@ -21,9 +21,7 @@
 
 \setupcolors[state=start]
 
-\definecolor[lettercolor][green]
-\definecolor[lettercolor][h=BBD0B4]
-%\definecolor[lettercolor][h=E7DDAF]
+\definecolor[lettercolor]  [h=BBD0B4]
 \definecolor[fakerulecolor][darkgray]
 
 \definecolor[twhite][r=1,g=1,b=1,t=.75,a=1]
@@ -35,8 +33,6 @@
 
 
 %%%% Hyperlinks etc.
-
-\appendtoks\def\\{ }\to\simplifiedcommands
 
 \setupinteraction
   [state=start,
@@ -65,11 +61,9 @@
 
 %%%% Schriften
 
-\definefontfeature[default][default][mode=node,expansion=quality,protrusion=quality]
-
 \startmode[wolf]
 
-\setupsimplefonts[size=11pt]
+\setupsimplefonts[size=11pt,expansion=quality,protrusion=quality]
 
 \setmainfont[Lucida Bright]
 \setsansfont[Lucida Sans]
@@ -77,21 +71,19 @@
 
 \setupbodyfontenvironment[default][em=italic]
 
-\definefontfamily[examplefont][Delicious]
+\definesimplefonttypeface[examplefont][Delicious]
 
 \stopmode
 
 \startnotmode[wolf]
 
-\definefontfeature[default][default][mode=node,expansion=quality,protrusion=quality]
-
-\setupsimplefonts[size=12pt]
+\setupsimplefonts[size=11pt,expansion=quality,protrusion=quality]
 
 \setmainfont[TeX Gyre Pagella]
 \setsansfont[Latin Modern Sans]
 \setmonofont[Latin Modern Mono]
 
-\definefontfamily[examplefont][Latin Modern Sans]
+\definesimplefonttypeface[examplefont][Latin Modern Sans]
 
 \stopnotmode
 
@@ -171,6 +163,10 @@
    color=black]
 
 %% Seitennummerierung
+
+\definestructureconversionset [pagenumber] [] [numbers]
+
+\setupuserpagenumber[numberconversionset=pagenumber]
 
 \setuppagenumbering
   [alternative=doublesided,

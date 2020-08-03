@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=memo,
-%D        version=2008.11.29,
+%D        version=2009.09.21,
 %D          title=\CONTEXT\ Letter Style,
 %D       subtitle=Memo style,
 %D         author=Wolfgang Schuster,
@@ -22,8 +22,8 @@
   [\v!letter\v!head,\v!reference\v!line,
    \v!special\v!notation,\v!inside\v!address,
    \v!title,\v!subject]
-  [\c!before=\nowhitespace,
-   \c!after=\nowhitespace]
+  [\c!before={\blank[\v!nowhite]},
+   \c!after={\blank[\v!nowhite]}]
 
 \setupletterstyle
   [\v!subject,\v!content,\v!closing]

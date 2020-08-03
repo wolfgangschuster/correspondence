@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=dinb,
-%D        version=2009.02.14,
+%D        version=2009.09.20,
 %D          title=\CONTEXT\ Letter Style,
 %D       subtitle=DIN 676 B,
 %D         author=Wolfgang Schuster,
@@ -47,7 +47,7 @@
 
 \setupletterstyle
   [\v!content]
-  [\c!after={\blank[nobreak,line]}]
+  [\c!after={\blank[\v!nobreak,\v!line]}]
 
 \setupletterstyle
   [\v!closing]

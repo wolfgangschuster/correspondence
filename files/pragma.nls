@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=pragma,
-%D        version=2009.02.12,
+%D        version=2009.09.20,
 %D          title=\CONTEXT\ Letter Style,
 %D       subtitle=Pragma Style,
 %D         author=Wolfgang Schuster,
@@ -85,7 +85,7 @@
 
 \startsetups[letter:title:before]
   \startlinecorrection
-  \blank[\dimexpr\letterstylevalue\v!reference\c!voffset+\letterstylevalue\v!reference\c!height-\letterstylevalue{\v!address\v!layer}\c!voffset\relax]
+  \blank[\the\dimexpr\letterstylevalue\v!reference\c!voffset+\letterstylevalue\v!reference\c!height-\letterstylevalue{\v!address\v!layer}\c!voffset\relax]
   \stoplinecorrection
 \stopsetups
 

@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=t-correspondence,
-%D        version=2009.07.22,
+%D        version=2009.09.21,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=Correspondence,
 %D         author=Wolfgang Schuster,
@@ -10,6 +10,8 @@
 %D        license=Public Domain]
 
 \unprotect
+
+\startmodule[correspondence]
 
 % Placeholders for the messages:
 %
@@ -26,7 +28,28 @@
   \setinterfacemessage{correspondence}{2}    {-- -- -- not found}
   \setinterfacemessage{correspondence}{3}    {correspage set -- processed (size --)}
   \setinterfacemessage{correspondence}{4}    {--: --}
+  \setinterfacemessage{correspondence}{5}    {your context is too old, you use you need at last version '--'}
 \stopinterface
+
+%D Module setup
+
+\setupmodule[\c!contextversion=2009.09.21]
+
+%D Check ConTeXt version
+
+\ifx\forcequitjob\undefined % copied from core-job, needed for older installations
+
+  \def\forcequitjob#1%
+    {\writestatus\m!systems{forcing quit: #1}%
+     \batchmode
+     \dorecurse\textlevel{\stoptext}
+     \normalend}
+
+\fi
+
+\doifolderversionelse\contextversion{\currentmoduleparameter\c!contextversion}
+  {\showmessage\m!correspondence{5}{\currentmoduleparameter\c!contextversion}\forcequitjob\v!correspondence}
+   \donothing
 
 %D Page numbering
 
@@ -387,7 +410,7 @@
    \getparameters
      [#2#3]
      [\c!location=\v!left,
-      \c!inbetween=\nowhitespace,
+      \c!inbetween={\blank[\v!nowhite]},
       \c!before=\blank,
       \c!after=\blank,
       \c!width=\v!broad,
@@ -478,7 +501,7 @@ correspondence.files = {
         name        = "t-correspondence.tex",
         path        = "tex/context/third/letter/base/",
         type        = "base",
-        version     = "2009.07.22",
+        version     = "2009.09.21",
         description = "Core module"
     } ,
     {
@@ -500,7 +523,7 @@ correspondence.files = {
         name        = "default.nli",
         path        = "tex/context/third/letter/interface/",
         type        = "interface",
-        version     = "2009.07.22",
+        version     = "2009.07.23",
         description = "Default letter interface"
 
     } ,
@@ -515,7 +538,7 @@ correspondence.files = {
         name        = "knuth.nli",
         path        = "tex/context/third/letter/interface/",
         type        = "interface",
-        version     = "2009.01.23",
+        version     = "2009.09.21",
         description = "letter.tex Interface"
     } ,
     {
@@ -529,7 +552,7 @@ correspondence.files = {
         name        = "moderncv.nri",
         path        = "tex/context/third/letter/interface/",
         type        = "interface",
-        version     = "2009.06.30",
+        version     = "2009.09.20",
         description = "moderncv resume interface"
     } ,
     {
@@ -578,14 +601,14 @@ correspondence.files = {
         name        = "dinb.nls",
         path        = "tex/context/third/letter/style/",
         type        = "style",
-        version     = "2009.02.14",
+        version     = "2009.09.20",
         description = "German style DIN 676 B"
     } ,
     {
         name        = "pragma.nls",
         path        = "tex/context/third/letter/style/",
         type        = "style",
-        version     = "2009.02.12",
+        version     = "2009.09.20",
         description = "m-letter.tex style"
     } ,
     {
@@ -606,7 +629,7 @@ correspondence.files = {
         name        = "french.nls",
         path        = "tex/context/third/letter/style/",
         type        = "style",
-        version     = "2008.08.07",
+        version     = "2009.09.20",
         description = "French letter style"
     } ,
     {
@@ -620,7 +643,7 @@ correspondence.files = {
         name        = "default.nls",
         path        = "tex/context/third/letter/style/",
         type        = "style",
-        version     = "2009.07.16",
+        version     = "2009.09.20",
         description = "Basic style"
     } ,
     {
@@ -662,7 +685,7 @@ correspondence.files = {
         name        = "memo.nls",
         path        = "tex/context/third/letter/style/",
         type        = "style",
-        version     = "2008.11.29",
+        version     = "2009.09.21",
         description = "Memo style"
     } ,
     {
@@ -734,5 +757,7 @@ end
 \stopmodulecode
 
 \registercorrespondencefile{t-correspondence.tex}
+
+\stopmodule
 
 \protect \endinput

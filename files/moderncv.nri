@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=moderncv,
-%D        version=2009.06.30,
+%D        version=2009.09.20,
 %D          title=\CONTEXT\ Resume Interface,
 %D       subtitle=moderncv Interface,
 %D         author=Wolfgang Schuster,
@@ -118,13 +118,13 @@
   {\dosingleempty\docvlistitem}
 
 \def\docvlistitem[#1]#2% default symbol is \textbullet and not \endash
-  {\cvline[none]{}{\doifelsenothing{#1}{--}{#1}~\vtop{\hsize\measure{listitemmaincolumnwidth}#2}}}
+  {\cvline[\v!nowhite]{}{\doifelsenothing{#1}{--}{#1}~\vtop{\hsize\measure{listitemmaincolumnwidth}#2}}}
 
 \def\cvlistdoubleitem
   {\dosingleempty\docvlistdoubleitem}
 
 \def\docvlistdoubleitem[#1]#2#3%
-  {\cvline[none]{}%
+  {\cvline[\v!nowhite]{}%
      {\hbox\bgroup
         \doifelsenothing{#1}{--}{#1}~\vtop{\hsize\measure{listdoubleitemmaincolumnwidth}#2}%
         \hfill

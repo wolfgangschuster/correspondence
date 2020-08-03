@@ -1,6 +1,6 @@
 %D \module
 %D   [       file=default,
-%D        version=2009.07.22,
+%D        version=2009.09.20,
 %D          title=\CONTEXT\ Letter Interface,
 %D       subtitle=Default Interface,
 %D         author=Wolfgang Schuster,
@@ -257,11 +257,7 @@
    \dodoubleempty\dostartletter}
 
 \def\dostartletter[#1][#2]%
-  {\ifcase\letterenvironmentmode\relax
-     \@EA\dostartbufferletter
-   \else
-     \@EA\dostartcontentletter
-   \fi[#1][#2]}
+  {\doifelse\@@@@lsoptionmethod\v!buffer\dostartbufferletter\dostartcontentletter[#1][#2]}
 
 \long\def\dostartcontentletter[#1][#2]#3\stopletter
   {\ifsecondargument
@@ -702,8 +698,9 @@
 %D before and after commands where we control the distance between
 %D the elements.
 
-\defineblankmethod [\v!nobreak] {\penalty\plustenthousand}
-\defineblankmethod [\v!endgraf] {\endgraf                }
+\doifmodeelse{mkii}
+  {\defineblankmethod[\v!nobreak]{\penalty\!!tenthousand}}
+  {\definevspacing   [\v!nobreak][\v!samepage           ]}
 
 %D \subject{Additional settings}
 %D 

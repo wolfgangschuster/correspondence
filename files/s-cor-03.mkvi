@@ -1,0 +1,211 @@
+%D \module
+%D   [     file=s-cor-03,
+%D      version=2012.12.13,
+%D        title=\CONTEXT\ User Module,
+%D     subtitle=Resume,
+%D       author=Wolfgang Schuster,
+%D         date=\currentdate,
+%D    copyright=Wolfgang Schuster,
+%D      license=GNU General Public License]
+
+%C Copyright (C) 2011  Wolfgang Schuster
+%C
+%C This program is free software: you can redistribute it and/or modify
+%C it under the terms of the GNU General Public License as published by
+%C the Free Software Foundation, either version 3 of the License, or
+%C (at your option) any later version.
+%C
+%C This program is distributed in the hope that it will be useful,
+%C but WITHOUT ANY WARRANTY; without even the implied warranty of
+%C MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%C GNU General Public License for more details.
+%C
+%C You should have received a copy of the GNU General Public License
+%C along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+\unprotect
+
+\startmodule[resume]
+
+\usemodule[cor-00]
+
+\setupmodule
+  [\c!style=]
+
+% Namespaces
+
+\installnamespace {resumelayerrenderings}
+\installnamespace {resumesectionrenderings}
+
+% Commands
+
+\definecorrespondence[\v!resume]
+
+\def\defineresumelayer                {\dodoubleargument\correspondence_layer_define                 [\v!resume]}
+\def\defineresumesection              {\dodoubleargument\correspondence_section_define               [\v!resume]}
+\def\defineresumedescription          {\dodoubleargument\correspondence_description_define           [\v!resume]}
+\def\defineresumehead                 {\dodoubleargument\correspondence_head_define                  [\v!resume]}
+\def\defineresumeparagraph            {\dodoubleargument\correspondence_paragraph_define             [\v!resume]}
+
+\def\defineresumelayeralternative     {\doquadrupleempty\correspondence_layer_alternative_define     [\v!resume]}
+\def\defineresumesectionalternative   {\doquadrupleempty\correspondence_section_alternative_define   [\v!resume]}
+\def\defineresumeheadalternative      {\doquadrupleempty\correspondence_head_alternative_define      [\v!resume]}
+\def\defineresumeparagraphalternative {\doquadrupleempty\correspondence_paragraph_alternative_define [\v!resume]}
+
+\def\defineresumeelements             {\dotripleargument\correspondence_elements_define              [\v!resume]}
+\def\setupresumeelements              {\dotripleargument\correspondence_elements_define              [\v!resume]}
+
+\def\setupresumestyle                 {\dotripleargument\correspondence_style_setup                  [\v!resume]}
+\def\setupresumelayer                 {\dotripleargument\correspondence_layer_setup                  [\v!resume]}
+\def\setupresumeframe                 {\dotripleargument\correspondence_frame_setup                  [\v!resume]}
+\def\setupresumelayout                {\dotripleargument\correspondence_layout_setup                 [\v!resume]}
+\def\setupresumesection               {\dotripleargument\correspondence_section_setup                [\v!resume]}
+\def\setupresumedescription           {\dotripleargument\correspondence_description_setup            [\v!resume]}
+\def\setupresumehead                  {\dotripleargument\correspondence_head_setup                   [\v!resume]}
+\def\setupresumeparagraph             {\dotripleargument\correspondence_paragraph_setup              [\v!resume]}
+\def\setupresumeoptions               {\dodoubleargument\correspondence_option_setup                 [\v!resume]}
+\def\setupresume                      {\dodoubleargument\correspondence_setup                        [\v!resume]}
+
+\def\setupresumelayeralternative      {\dotripleargument\correspondence_layer_alternative_setup      [\v!resume]}
+\def\setupresumesectionalternative    {\dotripleargument\correspondence_section_alternative_setup    [\v!resume]}
+\def\setupresumeheadalternative       {\dotripleargument\correspondence_head_alternative_setup       [\v!resume]}
+\def\setupresumeparagraphalternative  {\dotripleargument\correspondence_paragraph_alternative_setup  [\v!resume]}
+
+\def\useresumestyle                   {\dodoubleargument\correspondence_file_load                    [\v!resume]}
+
+\def\defineresumeelement              {\doquadrupleargument\correspondence_element_define            [\v!resume]}
+\def\resumeelement                    {\doquadrupleargument\correspondence_element_place             [\v!resume]}
+
+\def\namedresumelayerparameter    #element{\namedcorrespondencelayerparameter    {\v!resume:#element}}
+\def\namedresumeframeparameter    #element{\namedcorrespondenceframeparameter    {\v!resume:#element}}
+\def\namedresumesectionparameter  #element{\namedcorrespondencesectionparameter  {\v!resume:#element}}
+\def\namedresumeparagraphparameter#element{\namedcorrespondenceparagraphparameter{\v!resume:#element}}
+
+% Heading
+
+\defineresumehead [\v!resume\v!section]
+\defineresumehead [\v!resume\v!subsection]
+
+% Paragraphs
+
+\defineresumeparagraph [\v!resume\v!paragraph]
+\defineresumeparagraph [\v!two\v!columns]
+\defineresumeparagraph [\v!three\v!columns]
+
+% Layers
+
+\defineresumelayer [\v!head]
+\defineresumelayer [\v!nexthead]
+\defineresumelayer [\v!lefthead]
+\defineresumelayer [\v!righthead]
+
+\defineresumelayer [\v!foot]
+\defineresumelayer [\v!nextfoot]
+\defineresumelayer [\v!leftfoot]
+\defineresumelayer [\v!rightfoot]
+
+\defineresumelayer [\v!topmark]
+\defineresumelayer [\v!botmark]
+\defineresumelayer [\v!cutmark]
+\defineresumelayer [\v!endmark]
+\defineresumelayer [\v!usermark]
+
+\defineresumelayer [\v!resumemain]
+\defineresumelayer [\v!resumenext]
+
+% Section
+
+\defineresumesection [\v!head]
+\defineresumesection [\v!content]
+\defineresumesection [\v!closing]
+
+% Setups
+
+% layer: head
+
+% setups -> see s-cor-00.mkvi
+
+% layer: nexthead
+
+% setups -> see s-cor-00.mkvi
+
+% layer: lefthead
+
+% setups -> see s-cor-00.mkvi
+
+% layer: righthead
+
+% setups -> see s-cor-00.mkvi
+
+% layer: topmark
+
+% setups -> see s-cor-00.mkvi
+
+% layer: botmark
+
+% setups -> see s-cor-00.mkvi
+
+% layer: cutmark
+
+% setups -> see s-cor-00.mkvi
+
+% layer: endmark
+
+% setups -> see s-cor-00.mkvi
+
+% layer: usermark
+
+% setups -> see s-cor-00.mkvi
+
+% layer: resumemain
+
+% setups -> see s-cor-00.mkvi
+
+% layer: resumenext
+
+% setups -> see s-cor-00.mkvi
+
+% section: head
+
+\defineresumesectionalternative[\v!head:\s!default][\c!renderingsetup=\????resumesectionrenderings:\v!head:\s!default]
+
+\startsetups[\????resumesectionrenderings:\v!head:\s!default]
+  \def\\{\correspondencesectionparameter\c!separator}
+  \correspondenceparameter\c!fromaddress
+\stopsetups
+
+% section: content
+
+\defineresumesectionalternative[\v!content:\s!default][\c!renderingsetup=\????resumesectionrenderings:\v!content:\s!default]
+
+\startsetups[\????resumesectionrenderings:\v!content:\s!default]
+  \getbufferdata[\????correspondencebuffer\v!resume]
+\stopsetups
+
+% section: closing
+
+% setups -> see s-cor-00.mkvi
+
+% paragraph:
+
+
+
+% Extras
+
+\appendtoks
+  \ifx\currentcorrespondence\v!resume
+    \doif{\correspondenceoptionparameter\c!marking}\v!no{\setupresumelayer[\v!topmark,\v!botmark,\v!cutmark,\v!endmark,\v!usermark][\c!state=\v!stop]}%
+  \fi
+\to \t_correspondence_before
+
+% Labels
+
+\definelabelclass[resume]
+
+% Files
+
+\useresumestyle[default,\currentmoduleparameter\c!style]
+
+\stopmodule
+
+\protect \endinput

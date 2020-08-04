@@ -131,6 +131,8 @@
   \setinterfacevariable {resume}          {resume}
   \setinterfacevariable {resumemain}      {resumemain}
   \setinterfacevariable {resumenext}      {resumenext}
+  \setinterfacevariable {casual}          {casual}
+  \setinterfacevariable {classic}         {classic}
   % frames
   \setinterfacevariable {frames}          {frames}
   \setinterfacevariable {framesmain}      {framesmain}
@@ -995,6 +997,14 @@
   {\edef\currentcorrespondencestyle  {#environment:#element}%
    \edef\p_correspondence_style_width{\correspondencestyleparameter\c!width}%
    \hbox \ifx\p_correspondence_style_width\empty \else to \p_correspondence_style_width \fi{#content\hss}}
+
+\unexpanded\def\formattedcorrespondenceparameter#element%
+  {\begingroup
+     \edef\currentcorrespondenceelement{#element}%
+     \edef\currentcorrespondencestyle  {\currentcorrespondence:#element}%
+     \usecorrespondencestylestyleandcolor\c!style\c!color
+     \correspondenceparameter\currentcorrespondenceelement
+   \endgroup}
 
 %D \section{Layout}
 %D

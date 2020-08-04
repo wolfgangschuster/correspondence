@@ -137,6 +137,74 @@
 
 % setups -> see s-cor-00.mkvi
 
+% layer: foot
+
+\defineresumelayeralternative[\v!foot:\v!casual][\c!renderingsetup=\????resumelayerrenderings:\v!foot:\v!casual]
+
+\def\resumefootalternativecasual[#1][#2]% Can I make a generic version?
+  {\bgroup
+   \def\resumefootalternativecasual##1%
+     {\doifresumevalue{##1}{\advance\scratchcounter\plusone}}%
+   \def\doresumefootsingleelement##1%
+     {\doifresumevalue{##1}{\attributedresumevalue{#1}}}%
+   \def\doresumefootmultipleelement##1%
+     {\doifresumevalue{##1}
+        {\advance\scratchcounter\plusone
+         \attributedresumevalue{##1}
+         \unless\ifnum\scratchcounter=\resumefootvalues
+           #2%
+         \fi}}%
+   \scratchcounter\zerocount
+   \processcommalist[#1]\resumefootalternativecasual
+   \edef\resumefootvalues{\number\scratchcounter}%
+   \scratchcounter\zerocount
+   \ifnum\resumefootvalues>0
+     \ifnum\resumefootvalues=1
+       \processcommalist[#1]\doresumefootsingleelement
+     \else
+       \processcommalist[#1]\doresumefootmultipleelement
+     \fi
+   \fi
+   \egroup}
+
+\def\m_correspondence_resume_foot_casual#element%
+  {\ifvoid\scratchboxone
+     \doifsomething{\correspondenceparameter{#element}}{\setbox\scratchboxone\hbox{\formattedcorrespondenceparameter{#element}}}%
+   \else
+     \doifsomething{\correspondenceparameter{#element}}
+       {\setbox\scratchboxtwo\box\scratchboxone
+        \setbox\scratchboxone\hbox{\copy\scratchboxtwo \quad\color[resume:separator]{\symbol[bullet]}\quad \formattedcorrespondenceparameter{#element}}%
+        \ifdim\wd\scratchboxone>\hsize
+          \unhbox\scratchboxtwo\endgraf
+          \setbox\scratchboxone\hbox{\formattedcorrespondenceparameter{#element}}%
+        \fi}%
+    \fi}
+
+\startsetups[\????resumelayerrenderings:\v!foot:\v!casual]
+  \doifsomething{\correspondenceparameter{street}}
+    {\formattedcorrespondenceparameter{street}
+     \doifsomething{\correspondenceparameter{town}}{\quad\color[resume:separator]{\symbol[dash]}\quad}}
+  \doifsomething{\correspondenceparameter{town}}{\formattedcorrespondenceparameter{town}}
+  \par
+  \setbox\scratchboxone\box\voidbox
+ %\processcommalist[mobile,phone,fax,email,info]\m_correspondence_resume_foot_casual
+  \processcommacommand[\correspondencelayerparameter\c!list]\m_correspondence_resume_foot_casual
+  \unhbox\scratchboxone
+\stopsetups
+
+% layer: nextfoot
+
+\defineresumelayeralternative[\v!nextfoot:\v!casual ][\c!renderingsetup=\????resumelayerrenderings:\v!nextfoot:\v!casual ]
+\defineresumelayeralternative[\v!nextfoot:\v!classic][\c!renderingsetup=\????resumelayerrenderings:\v!nextfoot:\v!classic]
+
+\startsetups[\????resumelayerrenderings:\v!nextfoot:\v!casual]
+  \color[resume:address]{\it\subpagenumber/\lastsubpagenumber}
+\stopsetups
+
+\startsetups[\????resumelayerrenderings:\v!nextfoot:\v!classic]
+  \color[resume:quote]{\it\subpagenumber/\lastsubpagenumber}
+\stopsetups
+
 % layer: topmark
 
 % setups -> see s-cor-00.mkvi
@@ -174,6 +242,51 @@
   \correspondenceparameter\c!fromaddress
 \stopsetups
 
+\defineresumesectionalternative[\v!head:\v!casual][\c!renderingsetup=\????resumesectionrenderings:\v!head:\v!casual]
+
+\startsetups[\????resumesectionrenderings:\v!head:\v!casual]
+  \hbox to\hsize\bgroup
+    \framed[\c!offset=2\points,\c!strut=\v!no,\c!framecolor=resume:forename]{\correspondenceparameter{image}}
+    \hfill
+    \hbox\bgroup
+      \formattedcorrespondenceparameter{firstname}
+      \space
+      \formattedcorrespondenceparameter{familyname}
+    \egroup
+  \egroup
+  \vskip-\baselineskip
+  \blank[\v!medium]
+  \blackrule[\c!height=2\linewidth,\c!width=\hsize,\c!color=resume:1]
+  \doifsomething{\correspondenceparameter{quote}}
+    {\blank[\v!line]
+     \midaligned{\formattedcorrespondenceparameter{quote}}}
+\stopsetups
+
+\defineresumesectionalternative[\v!head:\v!classic][\c!renderingsetup=\????resumesectionrenderings:\v!head:\v!classic]
+
+\startsetups[\????resumesectionrenderings:\v!head:\v!classic]
+  \hbox to \hsize\bgroup
+    \vbox\bgroup
+      \hbox{\formattedcorrespondenceparameter{firstname}\space\formattedcorrespondenceparameter{familyname}}
+      \doifsomething{\correspondenceparameter{title}}
+        {\blank[\v!medium]
+         \hbox{\formattedcorrespondenceparameter{title}}}
+    \egroup
+    \hfill
+    \startframed[\c!location=\v!bottom,\c!align=\v!left,\c!width=\v!fit,\c!frame=\v!off]
+      \doifsomething{\correspondenceparameter{street}}{\formattedcorrespondenceparameter{street}\\}
+      \doifsomething{\correspondenceparameter  {town}}{\formattedcorrespondenceparameter  {town}\\}
+      \doifsomething{\correspondenceparameter{mobile}}{\formattedcorrespondenceparameter{mobile}\\}
+      \doifsomething{\correspondenceparameter {phone}}{\formattedcorrespondenceparameter {phone}\\}
+      \doifsomething{\correspondenceparameter   {fax}}{\formattedcorrespondenceparameter   {fax}\\}
+      \doifsomething{\correspondenceparameter {email}}{\formattedcorrespondenceparameter {email}\\}
+      \doifsomething{\correspondenceparameter  {info}}{\formattedcorrespondenceparameter  {info}\\}
+    \stopframed
+    \quad
+    \framed[\c!offset=2\points,\c!strut=\v!no]{\correspondenceparameter{image}}
+  \egroup
+\stopsetups
+
 % section: content
 
 \defineresumesectionalternative[\v!content:\s!default][\c!renderingsetup=\????resumesectionrenderings:\v!content:\s!default]
@@ -195,6 +308,22 @@
 \appendtoks
   \ifx\currentcorrespondence\v!resume
     \doif{\correspondenceoptionparameter\c!marking}\v!no{\setupresumelayer[\v!topmark,\v!botmark,\v!cutmark,\v!endmark,\v!usermark][\c!state=\v!stop]}%
+  \fi
+\to \t_correspondence_before
+
+\appendtoks
+  \ifx\currentcorrespondence\v!resume
+    \edef\p_correspondence_option_position{\correspondenceoptionparameter\c!position}%
+    \ifx\p_correspondence_option_position\v!yes % low level code, I need a better solution for this!
+      \setbox\scratchbox\vbox
+        {\edef\currentcorrespondencelayer      {\v!resume:\v!head}%
+         \edef\currentcorrespondenceenvironment{\v!resume}%
+         \correspondence_layer_alternative_place}%
+      \normalexpanded
+        {\setupresumelayout
+           [\v!firstpage]
+           [\c!topspace=\dimexpr\namedresumelayerparameter\v!head\c!y+\ht\scratchbox+\namedresumelayerparameter\v!head\c!distance\relax]}%
+    \fi
   \fi
 \to \t_correspondence_before
 

@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=s-cor-00,
-%D      version=2013.01.20,
+%D      version=2014.06.25,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Correspondence,
 %D       author=Wolfgang Schuster,
@@ -195,7 +195,7 @@
   {\iffirstargument
      \setupcurrentcorrespondence[#parameters]%
    \fi
-   \grabbufferdatadirect{\????correspondencebuffer\currentcorrespondence}{\e!start\currentcorrespondence}{\e!stop\currentcorrespondence}}
+   \grabbufferdatadirect{\????correspondencebuffer\currentcorrespondence}{\e!start\currentcorrespondence}{\e!stop\currentcorrespondence}\donothing}
 
 \unexpanded\def\correspondence_stop[#environment]%
   {\correspondence_place[#environment]%
@@ -210,7 +210,7 @@
 \unexpanded\def\correspondence_content_start[#environment]%
   {\begingroup
    \edef\currentcorrespondence{#environment}%
-   \grabbufferdatadirect{\????correspondencebuffer\currentcorrespondence}{\e!start\currentcorrespondence\v!content}{\e!stop\currentcorrespondence\v!content}}
+   \grabbufferdatadirect{\????correspondencebuffer\currentcorrespondence}{\e!start\currentcorrespondence\v!content}{\e!stop\currentcorrespondence\v!content}\donothing}
 
 \unexpanded\def\correspondence_content_stop[#environment]%
   {\endgroup}
@@ -667,7 +667,7 @@
   {\iffirstargument
      \setupcurrentcorrespondenceparagraph[#parameters]%
    \fi
-   \grabbufferdatadirect{\????correspondenceparagraphbuffer\currentcorrespondenceparagraph}{\e!start\currentcorrespondenceelement}{\e!stop\currentcorrespondenceelement}}
+   \grabbufferdatadirect{\????correspondenceparagraphbuffer\currentcorrespondenceparagraph}{\e!start\currentcorrespondenceelement}{\e!stop\currentcorrespondenceelement}\donothing}
 
 \unexpanded\def\correspondence_paragraph_stop[#environment][#element]%
   {\edef\p_correspondence_paragraph_setups{\correspondenceparagraphparameter\c!setups}%

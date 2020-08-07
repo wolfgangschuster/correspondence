@@ -1,8 +1,8 @@
 %D \module
-%D   [     file=letter-imp-swissleft,
-%D      version=2011.10.29,
-%D        title=\CONTEXT\ Letter Style,
-%D     subtitle=Swiss left style,
+%D   [     file=memo-imp-setups,
+%D      version=2012.01.01,
+%D        title=\CONTEXT\ User Module,
+%D     subtitle=Setups style,
 %D       author=Wolfgang Schuster,
 %D         date=\currentdate,
 %D    copyright=Wolfgang Schuster,
@@ -23,36 +23,28 @@
 %C You should have received a copy of the GNU General Public License
 %C along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-\useletterstyle[dinb]
+\setupmemolayer
+  [\v!head,\v!nexthead,\v!lefthead,\v!righthead]
+  [\c!alternative=\v!setups]
 
-\setupletterlayer
-  [\v!head]
-  [\c!y=8mm]
+% \setupmemolayer
+%   [\v!topmark,\v!botmark,\v!cutmark,\v!endmark,\v!usermark]
+%   [\c!alternative=\v!setups]
 
-\setupletterlayer
-  [\v!address]
-  [\c!x=20mm,
-   \c!y=40.5mm]
+\setupmemolayer
+  [\v!memomain,\v!memonext]
+  [\c!alternative=\v!setups]
 
-\setupletterlayer
-  [\v!backaddress]
-  [\c!x=20mm]
+\setupmemosection
+  [\v!head,\v!date,\v!reference,\v!specialnotation,\v!address]
+  [\c!alternative=\v!setups]
 
-\setupletterframe
-  [\v!address,\v!backaddress]
-  [\c!width=100mm]
+\setupmemosection
+  [\v!title,\v!opening,\v!subject,\v!content,\v!closing,\v!appendices]
+  [\c!alternative=\v!setups]
 
-%\setupletterlayer
-%  [\v!reference]
-%  [\c!y=89mm,
-%   \c!spaceafter=\v!line]
-
-\setupletterlayer
-  [\v!reference]
-  [\c!y=89mm]
-
-\setupletterlayer
-  [\v!foldmark]
-  [\c!state=\v!stop]
+\startsetups[\v!memo:\v!section:\v!content] % otherwise no text is shown
+\memoelement[\v!memo][\v!content][\s!default]
+\stopsetups
 
 \endinput

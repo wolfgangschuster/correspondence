@@ -1,0 +1,239 @@
+%D \module
+%D   [     file=s-cor-05,
+%D      version=2012.07.20,
+%D        title=\CONTEXT\ User Module,
+%D     subtitle=Minutes,
+%D       author=Wolfgang Schuster,
+%D         date=\currentdate,
+%D    copyright=Wolfgang Schuster,
+%D      license=GNU General Public License]
+
+%C Copyright (C) 2012 Wolfgang Schuster
+%C
+%C This program is free software: you can redistribute it and/or modify
+%C it under the terms of the GNU General Public License as published by
+%C the Free Software Foundation, either version 3 of the License, or
+%C (at your option) any later version.
+%C
+%C This program is distributed in the hope that it will be useful,
+%C but WITHOUT ANY WARRANTY; without even the implied warranty of
+%C MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%C GNU General Public License for more details.
+%C
+%C You should have received a copy of the GNU General Public License
+%C along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+\unprotect
+
+\startmodule[minutes]
+
+\usemodule[cor-00]
+
+\setupmodule
+  [\c!style=]
+
+% Commands
+
+\definecorrespondence[\v!minutes]
+
+\def\defineminuteslayer       {\dodoubleargument\correspondence_layer_define       [\v!minutes]}
+\def\defineminutessection     {\dodoubleargument\correspondence_section_define     [\v!minutes]}
+\def\defineminuteshead        {\dodoubleargument\correspondence_head_define        [\v!minutes]}
+\def\defineminutesparagraph   {\dodoubleargument\correspondence_paragraph_define   [\v!minutes]}
+
+\def\defineminuteselements    {\dotripleargument\correspondence_elements_define    [\v!minutes]}
+\def\setupminuteselements     {\dotripleargument\correspondence_elements_define    [\v!minutes]}
+
+\def\setupminutesstyle        {\dotripleargument\correspondence_style_setup        [\v!minutes]}
+\def\setupminuteslayer        {\dotripleargument\correspondence_layer_setup        [\v!minutes]}
+\def\setupminutesframe        {\dotripleargument\correspondence_frame_setup        [\v!minutes]}
+\def\setupminuteslayout       {\dotripleargument\correspondence_layout_setup       [\v!minutes]}
+\def\setupminutessection      {\dotripleargument\correspondence_section_setup      [\v!minutes]}
+\def\setupminuteshead         {\dotripleargument\correspondence_head_setup         [\v!minutes]}
+\def\setupminutesparagraph    {\dotripleargument\correspondence_paragraph_setup    [\v!minutes]}
+\def\setupminutesoptions      {\dodoubleargument\correspondence_option_setup       [\v!minutes]}
+\def\setupminutes             {\dodoubleargument\correspondence_setup              [\v!minutes]}
+
+\def\useminutesstyle          {\dodoubleargument\correspondence_file_load          [\v!minutes]}
+
+\def\defineminuteselement     {\doquadrupleargument\correspondence_element_define  [\v!minutes]}
+\def\minuteselement           {\doquadrupleargument\correspondence_element_place   [\v!minutes]}
+
+% Heading
+
+\defineminuteshead [\v!frame]
+
+% Paragraphs
+
+\defineminutesparagraph [\v!frame]
+
+% Layers
+
+\defineminuteslayer [\v!head]
+\defineminuteslayer [\v!foot]
+
+\defineminuteslayer [\v!minutesmain]
+\defineminuteslayer [\v!minutesnext]
+
+% Section
+
+\defineminutessection [\v!content]
+
+% Setups
+
+% section: content
+
+% section: content
+
+\defineminuteselement[\v!section][\v!content][\s!default]
+  {\getbufferdata[\????correspondencebuffer\v!minutes]}
+
+\defineminuteselement[\v!section][\v!content][\v!setups]
+  {\texsetup{\v!minutes:\v!section:\v!content}}
+
+% Labels
+
+\definelabelclass[minutes]
+
+\setupminutestext[\s!en][Moderator={Moderation}]
+\setupminutestext[\s!nl][Moderator={Voorzitter}]
+\setupminutestext[\s!de][Moderator={Moderation}]
+\setupminutestext[\s!fr][Moderator={Animateur}]
+
+\setupminutestext[\s!en][MinutesTaker={Minutes taker}]
+\setupminutestext[\s!nl][MinutesTaker={Notulist}]
+\setupminutestext[\s!de][MinutesTaker={Protokollant}]
+\setupminutestext[\s!fr][MinutesTaker={Secrétaire de séance}]
+
+\setupminutestext[\s!en][Present={Those present}]
+\setupminutestext[\s!nl][Present={Aanwezig}]
+\setupminutestext[\s!de][Present={Anwesend}]
+\setupminutestext[\s!fr][Present={Participant}]
+
+\setupminutestext[\s!en][Absent={Absent}]
+\setupminutestext[\s!nl][Absent={Afwezig}]
+\setupminutestext[\s!de][Absent={Abwesend}]
+\setupminutestext[\s!fr][Absent={Absent}]
+
+\setupminutestext[\s!en][AbsentExcused={Absent (excused)}]
+\setupminutestext[\s!nl][AbsentExcused={Afwezig (met bericht)}]
+\setupminutestext[\s!de][AbsentExcused={Abwesend (entschuldigt)}]
+\setupminutestext[\s!fr][AbsentExcused={Absent (annoncé)}]
+
+\setupminutestext[\s!en][AbsentNoExcuse={Absent (not excused)}]
+\setupminutestext[\s!nl][AbsentNoExcuse={Afwezig (zonder bericht)}]
+\setupminutestext[\s!de][AbsentNoExcuse={Abwesend (unentschuldigt)}]
+\setupminutestext[\s!fr][AbsentNoExcuse={Absent (pas annoncé)}]
+
+\setupminutestext[\s!en][Guest={Guest}]
+\setupminutestext[\s!nl][Guest={Gasten}]
+\setupminutestext[\s!de][Guest={Gäste}]
+\setupminutestext[\s!fr][Guest={Visiteur}]
+
+\setupminutestext[\s!en][Date={Date}]
+\setupminutestext[\s!nl][Date={Datum}]
+\setupminutestext[\s!de][Date={Datum}]
+\setupminutestext[\s!fr][Date={Date}]
+
+\setupminutestext[\s!en][Starttime={Begin of the meeting}]
+\setupminutestext[\s!nl][Starttime={Begin van de bijeenkomst}]
+\setupminutestext[\s!de][Starttime={Beginn der Sitzung}]
+\setupminutestext[\s!fr][Starttime={Commencement}]
+
+\setupminutestext[\s!en][Endtime={End of the meeting}]
+\setupminutestext[\s!nl][Endtime={Eind van de bijeenkomst}]
+\setupminutestext[\s!de][Endtime={Ende der Sitzung}]
+\setupminutestext[\s!fr][Endtime={Fin}]
+
+\setupminutestext[\s!en][Location={Location of the meeting}]
+\setupminutestext[\s!nl][Location={Locatie van de bijeenkomst}]
+\setupminutestext[\s!de][Location={Sitzungsort}]
+\setupminutestext[\s!fr][Location={Lieu}]
+
+\setupminutestext[\s!en][Cc={Distribution}]
+\setupminutestext[\s!nl][Cc={Distributie}]
+\setupminutestext[\s!de][Cc={Verteiler}]
+\setupminutestext[\s!fr][Cc={Distribution}]
+
+\setupminutestext[\s!en][Postscript={Postscript}]
+\setupminutestext[\s!nl][Postscript={Naschrift}]
+\setupminutestext[\s!de][Postscript={Nachtrag}]
+\setupminutestext[\s!fr][Postscript={Supplément}]
+
+\setupminutestext[\s!en][Enclosure={Enclosure}]
+\setupminutestext[\s!nl][Enclosure={Bijlagen}]
+\setupminutestext[\s!de][Enclosure={Anhang}]
+\setupminutestext[\s!fr][Enclosure={Appendice}]
+
+\setupminutestext[\s!en][foreignMinutes={Foreign minutes}]
+\setupminutestext[\s!nl][foreignMinutes={Externe notulen}]
+\setupminutestext[\s!de][foreignMinutes={Fremdes Protokoll}]
+\setupminutestext[\s!fr][Minutes={procès-verbal étrangère}]
+
+\setupminutestext[\s!en][Secret={including non-public informations}]
+\setupminutestext[\s!nl][Secret={inclusief niet openbare informatie}]
+\setupminutestext[\s!de][Secret={mit nichtöffentlichen Informationen}]
+\setupminutestext[\s!fr][Secret={avec des informations secret}]
+
+\setupminutestext[\s!en][Page={page}]
+\setupminutestext[\s!nl][Page={pagina}]
+\setupminutestext[\s!de][Page={Seite}]
+\setupminutestext[\s!fr][Page={page}]
+
+\setupminutestext[\s!en][Foreign={(no \LaTeXe -minute)}]
+\setupminutestext[\s!nl][Foreign={(no \LaTeXe -minute)}]
+\setupminutestext[\s!de][Foreign={(kein \LaTeXe -Protokoll)}]
+\setupminutestext[\s!fr][Foreign={procès-verbal sans \LaTeX}]
+
+\setupminutestext[\s!en][Yes={Yes}]
+\setupminutestext[\s!nl][Yes={Ja}]
+\setupminutestext[\s!de][Yes={Ja}]
+\setupminutestext[\s!fr][Yes={Oui}]
+
+\setupminutestext[\s!en][No={No}]
+\setupminutestext[\s!nl][No={Nee}]
+\setupminutestext[\s!de][No={Nein}]
+\setupminutestext[\s!fr][No={Non}]
+
+\setupminutestext[\s!en][NoVote={no vote}]
+\setupminutestext[\s!nl][NoVote={Geen Mening}]
+\setupminutestext[\s!de][NoVote={Enthaltung}]
+\setupminutestext[\s!fr][NoVote={Sans décision}]
+
+\setupminutestext[\s!en][Decision={Decision}]
+\setupminutestext[\s!nl][Decision={Besluit}]
+\setupminutestext[\s!de][Decision={Beschluss}]
+\setupminutestext[\s!fr][Decision={Décision}]
+
+\setupminutestext[\s!en][Task={Task}]
+\setupminutestext[\s!nl][Task={Aktie}]
+\setupminutestext[\s!de][Task={Aufgabe}]
+\setupminutestext[\s!fr][Task={Devoir}]
+
+\setupminutestext[\s!en][Responsible={Responsible}]
+\setupminutestext[\s!nl][Responsible={Verantwoordelijk}]
+\setupminutestext[\s!de][Responsible={Verantwortlich}]
+\setupminutestext[\s!fr][Responsible={Résponsible}]
+
+\setupminutestext[\s!en][Anybody={Anybody}]
+\setupminutestext[\s!nl][Anybody={Iedereen}]
+\setupminutestext[\s!de][Anybody={Irgendwer}]
+\setupminutestext[\s!fr][Anybody={Quelqu’un}]
+
+\setupminutestext[\s!en][partname={Minutes}]
+\setupminutestext[\s!nl][partname={Notulen}]
+\setupminutestext[\s!de][partname={Protokoll}]
+\setupminutestext[\s!fr][partname={Procès-verbal}]
+
+\setupminutestext[\s!en][mtctitle={List of topics}]
+\setupminutestext[\s!nl][mtctitle={Onderwerpen}]
+\setupminutestext[\s!de][mtctitle={Tagesordnung}]
+\setupminutestext[\s!fr][mtctitle={Table des procès-verbal}]
+
+% Files
+
+\useminutesstyle[default,\currentmoduleparameter\c!style]
+
+\stopmodule
+
+\protect \endinput

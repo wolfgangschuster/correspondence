@@ -1,0 +1,96 @@
+%D \module
+%D   [     file=letter-imp-test,
+%D      version=2011.10.29,
+%D        title=\CONTEXT\ User Module,
+%D     subtitle=Test style,
+%D       author=Wolfgang Schuster,
+%D         date=\currentdate,
+%D    copyright=Wolfgang Schuster,
+%D      license=GNU General Public License]
+
+%C Copyright (C) 2011 Wolfgang Schuster
+%C
+%C This program is free software: you can redistribute it and/or modify
+%C it under the terms of the GNU General Public License as published by
+%C the Free Software Foundation, either version 3 of the License, or
+%C (at your option) any later version.
+%C
+%C This program is distributed in the hope that it will be useful,
+%C but WITHOUT ANY WARRANTY; without even the implied warranty of
+%C MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%C GNU General Public License for more details.
+%C
+%C You should have received a copy of the GNU General Public License
+%C along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+\startsetups[\v!letter:\v!layer:\v!test]
+
+    \vbox\bgroup
+
+        \starttabulate[|l|l|][\c!before=,\c!after=]
+        \NC name \EQ \currentcorrespondencelayer       \NC\NR
+        \NC x    \EQ \the\dimexpr\correspondencelayerparameter\c!x\relax \NC\NR
+        \NC y    \EQ \the\dimexpr\correspondencelayerparameter\c!y\relax \NC\NR
+        \stoptabulate
+
+    \egroup
+
+\stopsetups
+
+\defineletterelement[\v!layer][\v!head     ][\v!test]{\setups[\v!letter:\v!layer:\v!test]}
+\defineletterelement[\v!layer][\v!nexthead ][\v!test]{\setups[\v!letter:\v!layer:\v!test]}
+\defineletterelement[\v!layer][\v!lefthead ][\v!test]{\setups[\v!letter:\v!layer:\v!test]}
+\defineletterelement[\v!layer][\v!righthead][\v!test]{\setups[\v!letter:\v!layer:\v!test]}
+
+\setupletterlayer
+  [\v!head,\v!nexthead,\v!lefthead,\v!righthead]
+  [\c!alternative=\v!test,
+   \c!style=\txx]
+
+\setupletterframe
+  [\v!head,\v!nexthead,\v!lefthead,\v!righthead]
+  [\c!offset=1ex,
+   \c!frame=\v!on]
+
+\defineletterelement[\v!layer][\v!foot     ][\v!test]{\setups[\v!letter:\v!layer:\v!test]}
+\defineletterelement[\v!layer][\v!nextfoot ][\v!test]{\setups[\v!letter:\v!layer:\v!test]}
+\defineletterelement[\v!layer][\v!leftfoot ][\v!test]{\setups[\v!letter:\v!layer:\v!test]}
+\defineletterelement[\v!layer][\v!rightfoot][\v!test]{\setups[\v!letter:\v!layer:\v!test]}
+
+\setupletterlayer
+  [\v!foot,\v!nextfoot,\v!leftfoot,\v!rightfoot]
+  [\c!alternative=\v!test,
+   \c!style=\txx]
+
+\setupletterframe
+  [\v!foot,\v!nextfoot,\v!leftfoot,\v!rightfoot]
+  [\c!offset=1ex,
+   \c!frame=\v!on]
+
+\defineletterelement[\v!layer][\v!address    ][\v!test]{\setups[\v!letter:\v!layer:\v!test]}
+\defineletterelement[\v!layer][\v!backaddress][\v!test]{\setups[\v!letter:\v!layer:\v!test]}
+
+\setupletterlayer
+  [\v!address,\v!backaddress]
+  [\c!alternative=\v!test,
+   \c!style=\txx]
+
+\setupletterframe
+  [\v!address,\v!backaddress]
+  [\c!offset=1ex,
+   \c!frame=\v!on]
+
+\defineletterelement[\v!layer][\v!reference][\v!test]{\setups[\v!letter:\v!layer:\v!test]}
+\defineletterelement[\v!layer][\v!location ][\v!test]{\setups[\v!letter:\v!layer:\v!test]}
+
+\setupletterlayer
+  [\v!reference,\v!location]
+  [\c!alternative=\v!test,
+   \c!style=\txx]
+
+\setupletterframe
+  [\v!reference,\v!location]
+  [\c!offset=1ex,
+   \c!frame=\v!on]
+
+\endinput

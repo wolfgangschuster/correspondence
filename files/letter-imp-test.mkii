@@ -1,8 +1,8 @@
 %D \module
-%D   [     file=letter-imp-swissleft,
+%D   [     file=letter-imp-test,
 %D      version=2011.10.29,
-%D        title=\CONTEXT\ Letter Style,
-%D     subtitle=Swiss left style,
+%D        title=\CONTEXT\ User Module,
+%D     subtitle=Test style,
 %D       author=Wolfgang Schuster,
 %D         date=\currentdate,
 %D    copyright=Wolfgang Schuster,
@@ -23,36 +23,26 @@
 %C You should have received a copy of the GNU General Public License
 %C along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-\useletterstyle[dinb]
+\defineletterelement[\v!head     ][\v!test]{\v!head     }
+\defineletterelement[\v!nexthead ][\v!test]{\v!nexthead }
+\defineletterelement[\v!lefthead ][\v!test]{\v!lefthead }
+\defineletterelement[\v!righthead][\v!test]{\v!righthead}
 
 \setupletterlayer
-  [\v!head]
-  [\c!y=8mm]
+  [\v!head,\v!nexthead,\v!lefthead,\v!righthead]
+  [\c!alternative=\v!test]
 
-\setupletterlayer
-  [\v!address]
-  [\c!x=20mm,
-   \c!y=40.5mm]
-
-\setupletterlayer
-  [\v!backaddress]
-  [\c!x=20mm]
+\definecolor[\v!letter:\v!head     ][r=1.0,g=1.0,b=0.0,t=0.5,a=1]
+\definecolor[\v!letter:\v!nexthead ][r=0.0,g=1.0,b=1.0,t=0.5,a=1]
+\definecolor[\v!letter:\v!lefthead ][r=1.0,g=0.0,b=1.0,t=0.5,a=1]
+\definecolor[\v!letter:\v!righthead][r=0.0,g=1.0,b=0.0,t=0.5,a=1]
 
 \setupletterframe
-  [\v!address,\v!backaddress]
-  [\c!width=100mm]
-
-%\setupletterlayer
-%  [\v!reference]
-%  [\c!y=89mm,
-%   \c!spaceafter=\v!line]
-
-\setupletterlayer
-  [\v!reference]
-  [\c!y=89mm]
-
-\setupletterlayer
-  [\v!foldmark]
-  [\c!state=\v!stop]
+  [\v!head,\v!nexthead,\v!lefthead,\v!righthead]
+  [\c!foregroundstyle=\WORD\tt,
+   \c!foregroundcolor=\currentcorrespondenceframe,
+   \c!framecolor=\currentcorrespondenceframe,
+   \c!offset=1ex,
+   \c!frame=\v!on]
 
 \endinput

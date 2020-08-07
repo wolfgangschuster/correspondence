@@ -1,0 +1,110 @@
+%D \module
+%D   [     file=s-cor-04,
+%D      version=2012.12.13,
+%D        title=\CONTEXT\ User Module,
+%D     subtitle=Frames,
+%D       author=Wolfgang Schuster,
+%D         date=\currentdate,
+%D    copyright=Wolfgang Schuster,
+%D      license=GNU General Public License]
+
+%C Copyright (C) 2012 Wolfgang Schuster
+%C
+%C This program is free software: you can redistribute it and/or modify
+%C it under the terms of the GNU General Public License as published by
+%C the Free Software Foundation, either version 3 of the License, or
+%C (at your option) any later version.
+%C
+%C This program is distributed in the hope that it will be useful,
+%C but WITHOUT ANY WARRANTY; without even the implied warranty of
+%C MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%C GNU General Public License for more details.
+%C
+%C You should have received a copy of the GNU General Public License
+%C along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+\unprotect
+
+\startmodule[frames]
+
+\usemodule[cor-00]
+
+\setupmodule
+  [\c!style=]
+
+% Commands
+
+\definecorrespondence[\v!frames]
+
+\def\defineframeslayer              {\dodoubleargument\correspondence_layer_define               [\v!frames]}
+\def\defineframessection            {\dodoubleargument\correspondence_section_define             [\v!frames]}
+\def\defineframeshead               {\dodoubleargument\correspondence_head_define                [\v!frames]}
+\def\defineframesparagraph          {\dodoubleargument\correspondence_paragraph_define           [\v!frames]}
+
+\def\defineframeslayeralternative   {\doquadrupleempty\correspondence_layer_alternative_define   [\v!frames]}
+\def\defineframessectionalternative {\doquadrupleempty\correspondence_section_alternative_define [\v!frames]}
+\def\defineframesheadalternative    {\doquadrupleempty\correspondence_head_alternative_define    [\v!frames]}
+
+\def\defineframeselements           {\dotripleargument\correspondence_elements_define            [\v!frames]}
+\def\setupframeselements            {\dotripleargument\correspondence_elements_define            [\v!frames]}
+
+\def\setupframesstyle               {\dotripleargument\correspondence_style_setup                [\v!frames]}
+\def\setupframeslayer               {\dotripleargument\correspondence_layer_setup                [\v!frames]}
+\def\setupframesframe               {\dotripleargument\correspondence_frame_setup                [\v!frames]}
+\def\setupframeslayout              {\dotripleargument\correspondence_layout_setup               [\v!frames]}
+\def\setupframessection             {\dotripleargument\correspondence_section_setup              [\v!frames]}
+\def\setupframeshead                {\dotripleargument\correspondence_head_setup                 [\v!frames]}
+\def\setupframesparagraph           {\dotripleargument\correspondence_paragraph_setup            [\v!frames]}
+\def\setupframesoptions             {\dodoubleargument\correspondence_option_setup               [\v!frames]}
+\def\setupframes                    {\dodoubleargument\correspondence_setup                      [\v!frames]}
+
+\def\setupframeslayeralternative    {\dotripleargument\correspondence_layer_alternative_setup    [\v!frames]}
+\def\setupframessectionalternative  {\dotripleargument\correspondence_section_alternative_setup  [\v!frames]}
+\def\setupframesheadalternative     {\dotripleargument\correspondence_head_alternative_setup     [\v!frames]}
+
+\def\useframesstyle                 {\dodoubleargument\correspondence_file_load                  [\v!frames]}
+
+\def\defineframeselement            {\doquadrupleargument\correspondence_element_define          [\v!frames]}
+\def\frameselement                  {\doquadrupleargument\correspondence_element_place           [\v!frames]}
+
+% Heading
+
+\defineframeshead [\v!frame]
+
+% Paragraphs
+
+\defineframesparagraph [\v!frame]
+
+% Layers
+
+\defineframeslayer [\v!head]
+\defineframeslayer [\v!foot]
+
+\defineframeslayer [\v!framesmain]
+\defineframeslayer [\v!framesnext]
+
+% Section
+
+\defineframessection [\v!content]
+
+% Setups
+
+% section: content
+
+\defineframessectionalternative[\v!content:\s!default][\c!renderingsetup=\????correspondencesectionrenderings:\v!frames:\v!content:\s!default]
+
+\startsetups[\????correspondencesectionrenderings:\v!frames:\v!content:\s!default]
+  \getbufferdata[\????correspondencebuffer\v!frames]
+\stopsetups
+
+% Labels
+
+\definelabelclass[frames]
+
+% Files
+
+\useframesstyle[default,\currentmoduleparameter\c!style]
+
+\stopmodule
+
+\protect \endinput

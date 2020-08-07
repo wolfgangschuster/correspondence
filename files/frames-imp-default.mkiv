@@ -1,8 +1,8 @@
 %D \module
-%D   [     file=letter-imp-swissleft,
-%D      version=2011.10.29,
-%D        title=\CONTEXT\ Letter Style,
-%D     subtitle=Swiss left style,
+%D   [     file=frames-imp-default,
+%D      version=2012.04.03,
+%D        title=\CONTEXT\ User Module,
+%D     subtitle=Default frames style,
 %D       author=Wolfgang Schuster,
 %D         date=\currentdate,
 %D    copyright=Wolfgang Schuster,
@@ -23,36 +23,15 @@
 %C You should have received a copy of the GNU General Public License
 %C along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-\useletterstyle[dinb]
+\defineframeselements
+  [\v!layer]
+  [\v!framesmain,
+   \v!framesnext,
+   \v!head,
+   \v!foot]
 
-\setupletterlayer
-  [\v!head]
-  [\c!y=8mm]
-
-\setupletterlayer
-  [\v!address]
-  [\c!x=20mm,
-   \c!y=40.5mm]
-
-\setupletterlayer
-  [\v!backaddress]
-  [\c!x=20mm]
-
-\setupletterframe
-  [\v!address,\v!backaddress]
-  [\c!width=100mm]
-
-%\setupletterlayer
-%  [\v!reference]
-%  [\c!y=89mm,
-%   \c!spaceafter=\v!line]
-
-\setupletterlayer
-  [\v!reference]
-  [\c!y=89mm]
-
-\setupletterlayer
-  [\v!foldmark]
-  [\c!state=\v!stop]
+\defineframeselements
+  [\v!section]
+  [\v!content]
 
 \endinput

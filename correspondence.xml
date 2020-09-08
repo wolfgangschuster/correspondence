@@ -2,50 +2,29 @@
     <!-- Documentation -->
 	<file>doc/context/third/letter/README</file>
 	<!-- Source – letter styles -->
-	<file>tex/context/third/letter/style/letter-imp-blockstyle.mkii</file>
 	<file>tex/context/third/letter/style/letter-imp-blockstyle.mkiv</file>
-	<file>tex/context/third/letter/style/letter-imp-default.mkii</file>
 	<file>tex/context/third/letter/style/letter-imp-default.mkiv</file>
-	<file>tex/context/third/letter/style/letter-imp-dina.mkii</file>
 	<file>tex/context/third/letter/style/letter-imp-dina.mkiv</file>
-	<file>tex/context/third/letter/style/letter-imp-dinb.mkii</file>
 	<file>tex/context/third/letter/style/letter-imp-dinb.mkiv</file>
-	<file>tex/context/third/letter/style/letter-imp-dutch.mkii</file>
 	<file>tex/context/third/letter/style/letter-imp-dutch.mkiv</file>
-	<file>tex/context/third/letter/style/letter-imp-french.mkii</file>
 	<file>tex/context/third/letter/style/letter-imp-french.mkiv</file>
-	<file>tex/context/third/letter/style/letter-imp-fullblock.mkii</file>
 	<file>tex/context/third/letter/style/letter-imp-fullblock.mkiv</file>
-	<file>tex/context/third/letter/style/letter-imp-gbrief.mkii</file>
 	<file>tex/context/third/letter/style/letter-imp-gbrief.mkiv</file>
-	<file>tex/context/third/letter/style/letter-imp-hanging.mkii</file>
 	<file>tex/context/third/letter/style/letter-imp-hanging.mkiv</file>
-	<file>tex/context/third/letter/style/letter-imp-knuth.mkii</file>
 	<file>tex/context/third/letter/style/letter-imp-knuth.mkiv</file>
-	<file>tex/context/third/letter/style/letter-imp-modified.mkii</file>
 	<file>tex/context/third/letter/style/letter-imp-modified.mkiv</file>
-	<file>tex/context/third/letter/style/letter-imp-semiblock.mkii</file>
 	<file>tex/context/third/letter/style/letter-imp-semiblock.mkiv</file>
-	<file>tex/context/third/letter/style/letter-imp-setups.mkii</file>
 	<file>tex/context/third/letter/style/letter-imp-setups.mkiv</file>
-	<file>tex/context/third/letter/style/letter-imp-simplified.mkii</file>
 	<file>tex/context/third/letter/style/letter-imp-simplified.mkiv</file>
-	<file>tex/context/third/letter/style/letter-imp-swiss.mkii</file>
 	<file>tex/context/third/letter/style/letter-imp-swiss.mkiv</file>
-	<file>tex/context/third/letter/style/letter-imp-swissleft.mkii</file>
 	<file>tex/context/third/letter/style/letter-imp-swissleft.mkiv</file>
 	<!--
-	<file>tex/context/third/letter/style/letter-imp-test.mkii</file>
 	<file>tex/context/third/letter/style/letter-imp-test.mkiv</file>
 	-->
 	<!-- Source – memo styles -->
-	<file>tex/context/third/letter/style/memo-imp-default.mkii</file>
 	<file>tex/context/third/letter/style/memo-imp-default.mkiv</file>
-	<file>tex/context/third/letter/style/memo-imp-margin.mkii</file>
 	<file>tex/context/third/letter/style/memo-imp-margin.mkiv</file>
-	<file>tex/context/third/letter/style/memo-imp-memo.mkii</file>
 	<file>tex/context/third/letter/style/memo-imp-memo.mkiv</file>
-	<file>tex/context/third/letter/style/memo-imp-table.mkii</file>
 	<file>tex/context/third/letter/style/memo-imp-table.mkiv</file>
 	<!-- Source – resume styles -->
 	<file>tex/context/third/letter/style/resume-imp-casual-blue.mkiv</file>
@@ -71,10 +50,6 @@
 	<file>tex/context/third/letter/base/s-cor-02.mkvi</file>
 	<file>tex/context/third/letter/base/s-cor-03.mkvi</file>
 	<file>tex/context/third/letter/base/s-cor-06.mkvi</file>
-	<file>tex/context/third/letter/base/t-letter.mkii</file>
-	<file>tex/context/third/letter/base/t-letter.mkiv</file>
-	<file>tex/context/third/letter/base/t-memo.mkii</file>
-	<file>tex/context/third/letter/base/t-memo.mkiv</file>
 	<!-- Interface -->
 	<file>tex/context/interface/third/t-letter.xml</file>
 	<file>tex/context/interface/third/t-memo.xml</file>
